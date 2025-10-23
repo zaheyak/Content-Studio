@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Run linting and formatting
+npm run lint
+npm run format
+
+# Run tests
+npm run test
+

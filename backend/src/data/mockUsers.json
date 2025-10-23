@@ -1,0 +1,88 @@
+[
+  {
+    "id": "user_1",
+    "email": "admin@contentstudio.com",
+    "name": "Admin User",
+    "password": "admin123",
+    "role": "ADMIN",
+    "profile_data": {
+      "bio": "System Administrator",
+      "avatar": "https://via.placeholder.com/150",
+      "department": "IT Administration"
+    },
+    "preferences": {
+      "theme": "light",
+      "notifications": true,
+      "ai_assistance": true
+    },
+    "created_at": "2025-01-01T00:00:00.000Z",
+    "updated_at": "2025-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "user_2",
+    "email": "trainer@contentstudio.com",
+    "name": "Dr. Sarah Johnson",
+    "password": "trainer123",
+    "role": "TRAINER",
+    "profile_data": {
+      "bio": "Senior Software Engineer & Technical Trainer",
+      "avatar": "https://via.placeholder.com/150",
+      "specialties": ["JavaScript", "React", "Node.js", "Python", "Machine Learning"],
+      "experience": "8 years",
+      "certifications": ["AWS Certified", "Google Cloud Professional"]
+    },
+    "preferences": {
+      "theme": "dark",
+      "notifications": true,
+      "ai_assistance": true,
+      "auto_transcription": true,
+      "ai_avatar": false
+    },
+    "created_at": "2025-01-01T00:00:00.000Z",
+    "updated_at": "2025-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "user_3",
+    "email": "learner@contentstudio.com",
+    "name": "Alex Martinez",
+    "password": "learner123",
+    "role": "LEARNER",
+    "profile_data": {
+      "bio": "Aspiring Full-Stack Developer",
+      "avatar": "https://via.placeholder.com/150",
+      "learning_goals": ["Web Development", "JavaScript", "React", "Node.js"],
+      "current_level": "Intermediate",
+      "learning_style": "Visual"
+    },
+    "preferences": {
+      "theme": "light",
+      "notifications": true,
+      "ai_assistance": true
+    },
+    "created_at": "2025-01-01T00:00:00.000Z",
+    "updated_at": "2025-01-01T00:00:00.000Z"
+  },
+  {
+    "id": "user_4",
+    "email": "trainer2@contentstudio.com",
+    "name": "Michael Chen",
+    "password": "trainer123",
+    "role": "TRAINER",
+    "profile_data": {
+      "bio": "Data Science & AI Specialist",
+      "avatar": "https://via.placeholder.com/150",
+      "specialties": ["Python", "Machine Learning", "Data Analysis", "Statistics"],
+      "experience": "6 years",
+      "certifications": ["Data Science Professional", "TensorFlow Developer"]
+    },
+    "preferences": {
+      "theme": "light",
+      "notifications": true,
+      "ai_assistance": true,
+      "auto_transcription": true,
+      "ai_avatar": true
+    },
+    "created_at": "2025-01-15T00:00:00.000Z",
+    "updated_at": "2025-01-15T00:00:00.000Z"
+  }
+]

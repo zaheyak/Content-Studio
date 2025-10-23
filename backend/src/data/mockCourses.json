@@ -1,0 +1,154 @@
+[
+  {
+    "id": "course_1",
+    "title": "Introduction to Web Development",
+    "description": "Learn the fundamentals of web development including HTML, CSS, and JavaScript.",
+    "author_id": "user_1",
+    "author_name": "John Smith",
+    "status": "PUBLISHED",
+    "difficulty": "BEGINNER",
+    "estimated_duration": "4 weeks",
+    "created_at": "2024-01-15T10:00:00Z",
+    "updated_at": "2024-01-20T15:30:00Z",
+    "lessons": [
+      {
+        "id": "lesson_1",
+        "title": "HTML Basics",
+        "description": "Introduction to HTML structure and elements",
+        "type": "LESSON",
+        "course_id": "course_1",
+        "status": "COMPLETED",
+        "estimated_duration": "2 hours",
+        "content_data": {
+          "contentFormats": {
+            "video": { "completed": true, "required": true, "data": { "transcription": "Welcome to HTML basics. In this lesson, we'll cover the fundamental structure of HTML documents..." } },
+            "text": { "completed": true, "required": true, "data": { "content": "HTML (HyperText Markup Language) is the standard markup language for creating web pages..." } },
+            "presentation": { "completed": true, "required": true, "data": { "slides": [{ "id": 1, "title": "What is HTML?", "content": "HTML stands for HyperText Markup Language", "notes": "Key concept introduction" }] } },
+            "mindmap": { "completed": true, "required": true, "data": { "nodes": [{ "id": "1", "label": "HTML", "x": 400, "y": 200, "level": 0, "color": "#3B82F6" }], "connections": [] } },
+            "code": { "completed": true, "required": true, "data": { "code": "<!DOCTYPE html>\n<html>\n<head>\n    <title>My First Page</title>\n</head>\n<body>\n    <h1>Hello World!</h1>\n</body>\n</html>" } },
+            "images": { "completed": true, "required": true, "data": { "files": [{ "name": "html-structure.png", "description": "HTML document structure diagram" }] } }
+          },
+          "completionStatus": "COMPLETED",
+          "allFormatsCompleted": true
+        },
+        "created_at": "2024-01-15T10:30:00Z",
+        "updated_at": "2024-01-18T14:20:00Z"
+      },
+      {
+        "id": "lesson_2",
+        "title": "CSS Styling",
+        "description": "Learn how to style HTML elements with CSS",
+        "type": "LESSON",
+        "course_id": "course_1",
+        "status": "IN_PROGRESS",
+        "estimated_duration": "3 hours",
+        "content_data": {
+          "contentFormats": {
+            "video": { "completed": false, "required": true, "data": null },
+            "text": { "completed": true, "required": true, "data": { "content": "CSS (Cascading Style Sheets) allows you to style your HTML elements..." } },
+            "presentation": { "completed": false, "required": true, "data": null },
+            "mindmap": { "completed": false, "required": true, "data": null },
+            "code": { "completed": true, "required": true, "data": { "code": "body {\n    font-family: Arial, sans-serif;\n    margin: 0;\n    padding: 20px;\n    background-color: #f4f4f4;\n}" } },
+            "images": { "completed": false, "required": true, "data": null }
+          },
+          "completionStatus": "IN_PROGRESS",
+          "allFormatsCompleted": false
+        },
+        "created_at": "2024-01-16T09:00:00Z",
+        "updated_at": "2024-01-19T11:15:00Z"
+      }
+    ],
+    "metadata": {
+      "difficulty": "BEGINNER",
+      "estimatedDuration": "4 weeks",
+      "tags": ["web-development", "html", "css", "javascript"],
+      "language": "en"
+    }
+  },
+  {
+    "id": "course_2",
+    "title": "Advanced JavaScript Concepts",
+    "description": "Deep dive into advanced JavaScript topics including closures, prototypes, and async programming.",
+    "author_id": "user_2",
+    "author_name": "Sarah Johnson",
+    "status": "PUBLISHED",
+    "difficulty": "ADVANCED",
+    "estimated_duration": "6 weeks",
+    "created_at": "2024-01-10T08:00:00Z",
+    "updated_at": "2024-01-22T16:45:00Z",
+    "lessons": [
+      {
+        "id": "lesson_3",
+        "title": "Closures and Scope",
+        "description": "Understanding JavaScript closures and lexical scoping",
+        "type": "LESSON",
+        "course_id": "course_2",
+        "status": "COMPLETED",
+        "estimated_duration": "4 hours",
+        "content_data": {
+          "contentFormats": {
+            "video": { "completed": true, "required": true, "data": { "transcription": "Closures are one of the most powerful features in JavaScript..." } },
+            "text": { "completed": true, "required": true, "data": { "content": "A closure is a function that has access to variables in its outer scope..." } },
+            "presentation": { "completed": true, "required": true, "data": { "slides": [{ "id": 1, "title": "What are Closures?", "content": "Functions that remember their lexical environment", "notes": "Key concept" }] } },
+            "mindmap": { "completed": true, "required": true, "data": { "nodes": [{ "id": "1", "label": "Closures", "x": 400, "y": 200, "level": 0, "color": "#3B82F6" }], "connections": [] } },
+            "code": { "completed": true, "required": true, "data": { "code": "function outerFunction(x) {\n    return function innerFunction(y) {\n        return x + y;\n    };\n}\n\nconst addFive = outerFunction(5);\nconsole.log(addFive(3)); // 8" } },
+            "images": { "completed": true, "required": true, "data": { "files": [{ "name": "closure-diagram.png", "description": "Visual representation of closure concept" }] } }
+          },
+          "completionStatus": "COMPLETED",
+          "allFormatsCompleted": true
+        },
+        "created_at": "2024-01-10T09:00:00Z",
+        "updated_at": "2024-01-15T13:30:00Z"
+      }
+    ],
+    "metadata": {
+      "difficulty": "ADVANCED",
+      "estimatedDuration": "6 weeks",
+      "tags": ["javascript", "closures", "scope", "advanced"],
+      "language": "en"
+    }
+  },
+  {
+    "id": "course_3",
+    "title": "React Fundamentals",
+    "description": "Learn React from the ground up with hands-on projects and real-world examples.",
+    "author_id": "user_1",
+    "author_name": "John Smith",
+    "status": "DRAFT",
+    "difficulty": "INTERMEDIATE",
+    "estimated_duration": "5 weeks",
+    "created_at": "2024-01-20T14:00:00Z",
+    "updated_at": "2024-01-22T10:20:00Z",
+    "lessons": [
+      {
+        "id": "lesson_4",
+        "title": "Components and JSX",
+        "description": "Introduction to React components and JSX syntax",
+        "type": "LESSON",
+        "course_id": "course_3",
+        "status": "DRAFT",
+        "estimated_duration": "3 hours",
+        "content_data": {
+          "contentFormats": {
+            "video": { "completed": false, "required": true, "data": null },
+            "text": { "completed": false, "required": true, "data": null },
+            "presentation": { "completed": false, "required": true, "data": null },
+            "mindmap": { "completed": false, "required": true, "data": null },
+            "code": { "completed": false, "required": true, "data": null },
+            "images": { "completed": false, "required": true, "data": null }
+          },
+          "completionStatus": "NOT_STARTED",
+          "allFormatsCompleted": false
+        },
+        "created_at": "2024-01-20T14:30:00Z",
+        "updated_at": "2024-01-20T14:30:00Z"
+      }
+    ],
+    "metadata": {
+      "difficulty": "INTERMEDIATE",
+      "estimatedDuration": "5 weeks",
+      "tags": ["react", "javascript", "frontend", "components"],
+      "language": "en"
+    }
+  }
+]

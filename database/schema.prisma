@@ -1,0 +1,127 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  password     String
+  role         Role      @default(LEARNER)
+  profile_data Json?
+  preferences  Json?
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+
+  // Relations
+  courses      Course[]
+  content      Content[]
+  enrollments  Enrollment[]
+
+  @@map("users")
+}
+
+model Course {
+  id          String      @id @default(cuid())
+  title       String
+  description String
+  status      CourseStatus @default(DRAFT)
+  metadata    Json?
+  created_at  DateTime    @default(now())
+  updated_at  DateTime    @updatedAt
+
+  // Relations
+  author_id   String
+  author      User        @relation(fields: [author_id], references: [id], onDelete: Cascade)
+  contents    Content[]
+  enrollments Enrollment[]
+
+  @@map("courses")
+}
+
+model Content {
+  id           String        @id @default(cuid())
+  title        String
+  description  String?
+  type         ContentType
+  content_data Json
+  status        ContentStatus @default(DRAFT)
+  tags         String[]
+  metadata     Json?
+  created_at   DateTime      @default(now())
+  updated_at   DateTime      @updatedAt
+
+  // Relations
+  author_id    String
+  author       User          @relation(fields: [author_id], references: [id], onDelete: Cascade)
+  course_id    String?
+  course       Course?       @relation(fields: [course_id], references: [id], onDelete: SetNull)
+  versions     ContentVersion[]
+
+  @@map("content")
+}
+
+model ContentVersion {
+  id           String   @id @default(cuid())
+  version      Int
+  content_data Json
+  created_at   DateTime @default(now())
+
+  // Relations
+  content_id   String
+  content      Content  @relation(fields: [content_id], references: [id], onDelete: Cascade)
+
+  @@unique([content_id, version])
+  @@map("content_versions")
+}
+
+model Enrollment {
+  id         String   @id @default(cuid())
+  created_at DateTime @default(now())
+
+  // Relations
+  user_id    String
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  course_id  String
+  course     Course   @relation(fields: [course_id], references: [id], onDelete: Cascade)
+
+  @@unique([user_id, course_id])
+  @@map("enrollments")
+}
+
+enum Role {
+  LEARNER
+  TRAINER
+  ADMIN
+}
+
+enum ContentType {
+  TEXT
+  PRESENTATION
+  VIDEO
+  AUDIO
+  INTERACTIVE
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  DELETED
+}
+
+enum CourseStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+  PUBLISHED
+}
+
