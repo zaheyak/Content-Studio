@@ -31,7 +31,7 @@ export default function VideoContentCreation({ lesson, course, onComplete, onNex
         const formData = new FormData();
         formData.append('file', file);
 
-        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/upload/${lesson.id}/videos`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/upload/${lesson.id}/videos`, {
           method: 'POST',
           body: formData
         });

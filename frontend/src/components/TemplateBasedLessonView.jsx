@@ -22,7 +22,7 @@ const TemplateBasedLessonView = () => {
 
       try {
         setLoading(true);
-        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/content/lesson/${currentLessonId}`);
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/content/lesson/${currentLessonId}`);
         const data = await response.json();
         
         if (data.success) {
