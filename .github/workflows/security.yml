@@ -61,7 +61,7 @@ jobs:
           cd ../frontend && npm audit --json > frontend-audit.json
 
       - name: Upload audit results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: security-audit-results
           path: |
