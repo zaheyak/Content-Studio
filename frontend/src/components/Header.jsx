@@ -15,11 +15,7 @@ const Header = () => {
           <div className="flex items-center space-x-4">
             <div className="flex-shrink-0 h-[80px] w-auto  relative">
               <img
-                src={
-                  theme === 'day-mode'
-                    ? 'http://localhost:3001/uploads/content/logo-light.jpg'
-                    : 'http://localhost:3001/uploads/content/logo-dark.jpg'
-                }
+                src={`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/logo/${theme === 'day-mode' ? 'light' : 'dark'}`}
                 alt="EDUCORE AI Logo"
                 className="h-full w-auto object-contain mb-4 transition-all duration-300 hover:scale-105 drop-shadow-lg hover:drop-shadow-xl"
               />

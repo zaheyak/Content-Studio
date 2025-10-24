@@ -27,6 +27,51 @@ app.get('/health', (req, res) => {
   });
 });
 
+// Logo endpoint
+app.get('/api/logo/:type', (req, res) => {
+  const { type } = req.params;
+  const logoPath = path.join(__dirname, '../uploads/content');
+  
+  let logoFile;
+  if (type === 'dark') {
+    logoFile = 'logo-dark.jpg';
+  } else if (type === 'light') {
+    logoFile = 'logo-light.jpg';
+  } else {
+    return res.status(400).json({ error: 'Invalid logo type. Use "dark" or "light"' });
+  }
+  
+  const fullPath = path.join(logoPath, logoFile);
+  
+  // Check if file exists
+  if (!require('fs').existsSync(fullPath)) {
+    return res.status(404).json({ error: 'Logo file not found' });
+  }
+  
+  // Send the logo file
+  res.sendFile(fullPath);
+});
+
+// Logo info endpoint
+app.get('/api/logo', (req, res) => {
+  const logoPath = path.join(__dirname, '../uploads/content');
+  const fs = require('fs');
+  
+  const logos = {
+    dark: fs.existsSync(path.join(logoPath, 'logo-dark.jpg')),
+    light: fs.existsSync(path.join(logoPath, 'logo-light.jpg'))
+  };
+  
+  res.json({
+    success: true,
+    data: {
+      logos,
+      darkUrl: '/api/logo/dark',
+      lightUrl: '/api/logo/light'
+    }
+  });
+});
+
 // API Routes
 app.use('/api/courses', require('./routes/courses'));
 app.use('/api/lessons', require('./routes/lessons'));

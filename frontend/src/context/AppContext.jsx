@@ -38,12 +38,12 @@ export const AppProvider = ({ children }) => {
       setLoading(true)
       
       // Fetch courses from API
-      const coursesResponse = await fetch('http://localhost:3001/api/courses')
+      const coursesResponse = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/courses`)
       const coursesData = await coursesResponse.json()
       setCourses(coursesData.data || [])
       
       // Fetch lessons from API
-      const lessonsResponse = await fetch('http://localhost:3001/api/lessons')
+      const lessonsResponse = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/lessons`)
       const lessonsData = await lessonsResponse.json()
       setLessons(lessonsData.data || [])
       

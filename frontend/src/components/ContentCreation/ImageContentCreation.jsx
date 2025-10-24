@@ -30,7 +30,7 @@ export default function ImageContentCreation({ lesson, course, onComplete, onNex
           formData.append('files', file);
         });
 
-        const response = await fetch(`http://localhost:3001/api/upload/${lesson.id}/images/multiple`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/upload/${lesson.id}/images/multiple`, {
           method: 'POST',
           body: formData
         });
