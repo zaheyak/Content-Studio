@@ -1,0 +1,33 @@
+# Global code owners
+* @content-studio-team
+
+# Backend specific
+/backend/ @backend-team
+/backend/src/ @backend-team @senior-developers
+/backend/tests/ @backend-team @qa-team
+
+# Frontend specific
+/frontend/ @frontend-team
+/frontend/src/ @frontend-team @senior-developers
+/frontend/tests/ @frontend-team @qa-team
+
+# Database and infrastructure
+/database/ @devops-team @backend-team
+/prisma/ @backend-team @devops-team
+
+# Documentation
+/docs/ @content-studio-team @technical-writers
+/README.md @content-studio-team
+
+# CI/CD and deployment
+/.github/ @devops-team @senior-developers
+/.github/workflows/ @devops-team
+
+# Configuration files
+/package.json @content-studio-team
+/backend/package.json @backend-team
+/frontend/package.json @frontend-team
+
+# Security sensitive files
+/.env* @devops-team @security-team
+/secrets/ @security-team @devops-team

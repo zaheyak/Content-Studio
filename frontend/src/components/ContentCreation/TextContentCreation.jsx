@@ -6,6 +6,7 @@ import {
   ArrowRightIcon,
   ArrowLeftIcon
 } from '@heroicons/react/24/outline';
+import { theme } from '../../theme';
 
 export default function TextContentCreation({ lesson, course, onComplete, onNext, onPrev, isFirstStep, isLastStep }) {
   const [activeTab, setActiveTab] = useState('manual');
@@ -53,11 +54,6 @@ export default function TextContentCreation({ lesson, course, onComplete, onNext
     }
   };
 
-  const handleManualChange = (e) => {
-    setManualContent(e.target.value);
-    setIsCompleted(e.target.value.trim().length > 0);
-  };
-
   const handleComplete = () => {
     const content = {
       type: 'text',
@@ -76,155 +72,381 @@ export default function TextContentCreation({ lesson, course, onComplete, onNext
     onComplete(content);
   };
 
+  const styles = {
+    container: {
+      padding: '1.5rem',
+      height: '100%',
+      overflowY: 'auto',
+      backgroundColor: theme.colors.background
+    },
+    header: {
+      marginBottom: '1.5rem'
+    },
+    title: {
+      fontSize: '1.125rem',
+      fontWeight: '500',
+      color: theme.colors.text,
+      marginBottom: '0.5rem'
+    },
+    subtitle: {
+      fontSize: '0.875rem',
+      color: theme.colors.textSecondary
+    },
+    tabContainer: {
+      marginBottom: '1.5rem'
+    },
+    tabButtons: {
+      display: 'flex',
+      gap: '1rem'
+    },
+    tabButton: {
+      display: 'flex',
+      alignItems: 'center',
+      padding: '0.75rem 1rem',
+      borderRadius: theme.borderRadius.medium,
+      border: `1px solid ${theme.colors.border}`,
+      backgroundColor: theme.colors.surface,
+      color: theme.colors.text,
+      cursor: 'pointer',
+      transition: 'all 0.3s ease'
+    },
+    tabButtonActive: {
+      borderColor: theme.colors.primary,
+      backgroundColor: `${theme.colors.primary}20`,
+      color: theme.colors.primary
+    },
+    tabButtonHover: {
+      backgroundColor: theme.colors.borderLight
+    },
+    contentArea: {
+      marginBottom: '1.5rem'
+    },
+    textarea: {
+      width: '100%',
+      minHeight: '200px',
+      padding: '0.75rem',
+      border: `1px solid ${theme.colors.border}`,
+      borderRadius: theme.borderRadius.medium,
+      fontSize: '0.875rem',
+      fontFamily: 'inherit',
+      resize: 'vertical',
+      outline: 'none',
+      transition: 'border-color 0.3s ease'
+    },
+    textareaFocus: {
+      borderColor: theme.colors.primary
+    },
+    aiPromptArea: {
+      marginBottom: '1rem'
+    },
+    generateButton: {
+      backgroundColor: theme.colors.primary,
+      color: 'white',
+      border: 'none',
+      padding: '0.75rem 1.5rem',
+      borderRadius: theme.borderRadius.medium,
+      fontSize: '0.875rem',
+      fontWeight: '500',
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.5rem',
+      transition: 'background-color 0.3s ease'
+    },
+    generateButtonHover: {
+      backgroundColor: theme.colors.primaryHover
+    },
+    generateButtonDisabled: {
+      backgroundColor: theme.colors.textSecondary,
+      cursor: 'not-allowed'
+    },
+    generatedContent: {
+      backgroundColor: theme.colors.surface,
+      border: `1px solid ${theme.colors.border}`,
+      borderRadius: theme.borderRadius.medium,
+      padding: '1rem',
+      marginTop: '1rem',
+      whiteSpace: 'pre-wrap',
+      fontSize: '0.875rem',
+      lineHeight: '1.6'
+    },
+    navigation: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingTop: '1.5rem',
+      borderTop: `1px solid ${theme.colors.border}`
+    },
+    navButton: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.5rem',
+      padding: '0.75rem 1.5rem',
+      borderRadius: theme.borderRadius.medium,
+      border: 'none',
+      fontSize: '0.875rem',
+      fontWeight: '500',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease'
+    },
+    navButtonPrimary: {
+      backgroundColor: theme.colors.primary,
+      color: 'white'
+    },
+    navButtonSecondary: {
+      backgroundColor: theme.colors.borderLight,
+      color: theme.colors.text
+    },
+    navButtonHover: {
+      transform: 'translateY(-2px)',
+      boxShadow: theme.shadows.medium
+    },
+    completeButton: {
+      backgroundColor: theme.colors.success,
+      color: 'white',
+      border: 'none',
+      padding: '0.75rem 1.5rem',
+      borderRadius: theme.borderRadius.medium,
+      fontSize: '0.875rem',
+      fontWeight: '500',
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.5rem',
+      transition: 'all 0.3s ease'
+    },
+    completeButtonHover: {
+      backgroundColor: theme.colors.successHover,
+      transform: 'translateY(-2px)',
+      boxShadow: theme.shadows.medium
+    },
+    icon: {
+      width: '1.25rem',
+      height: '1.25rem'
+    }
+  };
+
   return (
-    <div className="p-6 h-full overflow-y-auto">
-      <div className="mb-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-2">Text & Explanations Creation</h3>
-        <p className="text-sm text-gray-600">
+    <div style={styles.container}>
+      <div style={styles.header}>
+        <h3 style={styles.title}>Text & Explanations Creation</h3>
+        <p style={styles.subtitle}>
           Create detailed explanations and summaries for your lesson. Choose between manual writing or AI assistance.
         </p>
       </div>
 
       {/* Method Selection */}
-      <div className="mb-6">
-        <div className="flex space-x-4">
+      <div style={styles.tabContainer}>
+        <div style={styles.tabButtons}>
           <button
             onClick={() => setActiveTab('manual')}
-            className={`flex items-center px-4 py-2 rounded-lg border ${
-              activeTab === 'manual'
-                ? 'border-primary-500 bg-primary-50 text-primary-700'
-                : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
-            }`}
+            style={{
+              ...styles.tabButton,
+              ...(activeTab === 'manual' ? styles.tabButtonActive : {})
+            }}
+            onMouseEnter={(e) => {
+              if (activeTab !== 'manual') {
+                e.target.style.backgroundColor = styles.tabButtonHover.backgroundColor;
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (activeTab !== 'manual') {
+                e.target.style.backgroundColor = styles.tabButton.backgroundColor;
+              }
+            }}
           >
-            <DocumentTextIcon className="h-5 w-5 mr-2" />
+            <DocumentTextIcon style={styles.icon} />
             Manual Writing
           </button>
           <button
             onClick={() => setActiveTab('ai')}
-            className={`flex items-center px-4 py-2 rounded-lg border ${
-              activeTab === 'ai'
-                ? 'border-primary-500 bg-primary-50 text-primary-700'
-                : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
-            }`}
+            style={{
+              ...styles.tabButton,
+              ...(activeTab === 'ai' ? styles.tabButtonActive : {})
+            }}
+            onMouseEnter={(e) => {
+              if (activeTab !== 'ai') {
+                e.target.style.backgroundColor = styles.tabButtonHover.backgroundColor;
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (activeTab !== 'ai') {
+                e.target.style.backgroundColor = styles.tabButton.backgroundColor;
+              }
+            }}
           >
-            <SparklesIcon className="h-5 w-5 mr-2" />
-            AI Generation
+            <SparklesIcon style={styles.icon} />
+            AI Assistance
           </button>
         </div>
       </div>
 
       {/* Content Area */}
-      <div className="space-y-6">
-        {activeTab === 'manual' && (
+      <div style={styles.contentArea}>
+        {activeTab === 'manual' ? (
           <div>
-            <label htmlFor="manual-content" className="block text-sm font-medium text-gray-700 mb-2">
-              Write your lesson content
+            <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: theme.colors.text }}>
+              Write your content:
             </label>
             <textarea
-              id="manual-content"
-              rows={12}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-              placeholder="Enter your lesson content, explanations, and summaries here..."
               value={manualContent}
-              onChange={handleManualChange}
+              onChange={(e) => setManualContent(e.target.value)}
+              placeholder="Write detailed explanations, summaries, and educational content for your lesson..."
+              style={styles.textarea}
+              onFocus={(e) => {
+                e.target.style.borderColor = styles.textareaFocus.borderColor;
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = theme.colors.border;
+              }}
             />
-            <p className="text-sm text-gray-500 mt-2">
-              {manualContent.split(' ').length} words
-            </p>
+            {manualContent && (
+              <p style={{ fontSize: '0.75rem', color: theme.colors.textSecondary, marginTop: '0.5rem' }}>
+                Word count: {manualContent.split(' ').length}
+              </p>
+            )}
           </div>
-        )}
-
-        {activeTab === 'ai' && (
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="ai-prompt" className="block text-sm font-medium text-gray-700 mb-2">
-                Describe what you want to explain
+        ) : (
+          <div>
+            <div style={styles.aiPromptArea}>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: theme.colors.text }}>
+                Describe what you want to generate:
               </label>
               <textarea
-                id="ai-prompt"
-                rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                placeholder="Example: Explain JavaScript variables and data types with examples..."
                 value={aiPrompt}
                 onChange={(e) => setAiPrompt(e.target.value)}
+                placeholder="Describe the content you want to generate. Be specific about the topic, format, and educational goals..."
+                style={styles.textarea}
+                onFocus={(e) => {
+                  e.target.style.borderColor = styles.textareaFocus.borderColor;
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = theme.colors.border;
+                }}
               />
             </div>
             
             <button
               onClick={handleAiGeneration}
               disabled={!aiPrompt.trim() || isGenerating}
-              className="btn-primary flex items-center"
+              style={{
+                ...styles.generateButton,
+                ...(isGenerating || !aiPrompt.trim() ? styles.generateButtonDisabled : {})
+              }}
+              onMouseEnter={(e) => {
+                if (!isGenerating && aiPrompt.trim()) {
+                  e.target.style.backgroundColor = styles.generateButtonHover.backgroundColor;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isGenerating && aiPrompt.trim()) {
+                  e.target.style.backgroundColor = styles.generateButton.backgroundColor;
+                }
+              }}
             >
-              {isGenerating ? (
-                <>
-                  <SparklesIcon className="h-5 w-5 mr-2 animate-spin" />
-                  Generating Content...
-                </>
-              ) : (
-                <>
-                  <SparklesIcon className="h-5 w-5 mr-2" />
-                  Generate AI Content
-                </>
-              )}
+              <SparklesIcon style={styles.icon} />
+              {isGenerating ? 'Generating...' : 'Generate Content'}
             </button>
-            
+
             {generatedContent && (
-              <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                <div className="flex items-center mb-3">
-                  <SparklesIcon className="h-5 w-5 text-green-600 mr-2" />
-                  <span className="text-sm font-medium text-green-800">
-                    AI Content Generated Successfully!
-                  </span>
-                </div>
-                <div className="bg-white p-4 rounded border">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Generated Content
-                  </label>
-                  <div className="bg-gray-50 p-4 rounded-lg max-h-64 overflow-y-auto">
-                    <pre className="whitespace-pre-wrap text-sm text-gray-700">{generatedContent}</pre>
-                  </div>
-                  <p className="text-sm text-gray-500 mt-2">
-                    {generatedContent.split(' ').length} words generated
-                  </p>
-                </div>
+              <div style={styles.generatedContent}>
+                <h4 style={{ marginBottom: '0.5rem', fontWeight: '500', color: theme.colors.text }}>
+                  Generated Content:
+                </h4>
+                {generatedContent}
               </div>
             )}
           </div>
         )}
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex justify-between items-center mt-8 pt-6 border-t">
-        <div>
+      {/* Navigation */}
+      <div style={styles.navigation}>
+        <div style={{ display: 'flex', gap: '1rem' }}>
           {!isFirstStep && (
             <button
               onClick={onPrev}
-              className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+              style={styles.navButton}
+              onMouseEnter={(e) => {
+                e.target.style.transform = styles.navButtonHover.transform;
+                e.target.style.boxShadow = styles.navButtonHover.boxShadow;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'none';
+                e.target.style.boxShadow = 'none';
+              }}
             >
-              <ArrowLeftIcon className="h-4 w-4 mr-2" />
+              <ArrowLeftIcon style={styles.icon} />
               Previous
             </button>
           )}
         </div>
-        
-        <div className="flex space-x-3">
-          <button
-            onClick={handleComplete}
-            disabled={!isCompleted}
-            className="flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isCompleted ? (
-              <>
-                <CheckIcon className="h-4 w-4 mr-2" />
-                Complete Step
-              </>
-            ) : (
-              'Complete Step'
-            )}
-          </button>
+
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          {activeTab === 'manual' && manualContent.trim() && (
+            <button
+              onClick={handleComplete}
+              style={styles.completeButton}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = styles.completeButtonHover.backgroundColor;
+                e.target.style.transform = styles.completeButtonHover.transform;
+                e.target.style.boxShadow = styles.completeButtonHover.boxShadow;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = styles.completeButton.backgroundColor;
+                e.target.style.transform = 'none';
+                e.target.style.boxShadow = 'none';
+              }}
+            >
+              <CheckIcon style={styles.icon} />
+              Complete Text
+            </button>
+          )}
+          
+          {activeTab === 'ai' && generatedContent && (
+            <button
+              onClick={handleComplete}
+              style={styles.completeButton}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = styles.completeButtonHover.backgroundColor;
+                e.target.style.transform = styles.completeButtonHover.transform;
+                e.target.style.boxShadow = styles.completeButtonHover.boxShadow;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = styles.completeButton.backgroundColor;
+                e.target.style.transform = 'none';
+                e.target.style.boxShadow = 'none';
+              }}
+            >
+              <CheckIcon style={styles.icon} />
+              Complete Text
+            </button>
+          )}
+
+          {!isLastStep && (
+            <button
+              onClick={onNext}
+              style={{
+                ...styles.navButton,
+                ...styles.navButtonPrimary
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = styles.navButtonHover.backgroundColor;
+                e.target.style.transform = styles.navButtonHover.transform;
+                e.target.style.boxShadow = styles.navButtonHover.boxShadow;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = styles.navButtonPrimary.backgroundColor;
+                e.target.style.transform = 'none';
+                e.target.style.boxShadow = 'none';
+              }}
+            >
+              Next
+              <ArrowRightIcon style={styles.icon} />
+            </button>
+          )}
         </div>
       </div>
     </div>
   );
 }
-

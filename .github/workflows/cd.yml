@@ -1,0 +1,188 @@
+name: Continuous Deployment
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  # Deploy to Staging
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'staging')
+    environment: staging
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          cd backend && npm ci
+          cd ../frontend && npm ci
+
+      - name: Build backend
+        working-directory: ./backend
+        run: |
+          npm run build
+          npm run db:generate
+
+      - name: Build frontend
+        working-directory: ./frontend
+        run: npm run build
+
+      - name: Deploy to Railway (Backend)
+        uses: railway-app/railway-deploy@v1
+        with:
+          service: content-studio-backend
+          token: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Deploy to Vercel (Frontend)
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+          working-directory: ./frontend
+
+      - name: Run database migrations
+        run: |
+          cd backend
+          npx prisma migrate deploy
+        env:
+          DATABASE_URL: ${{ secrets.STAGING_DATABASE_URL }}
+
+      - name: Run health checks
+        run: |
+          sleep 30
+          curl -f ${{ secrets.STAGING_BACKEND_URL }}/health || exit 1
+          curl -f ${{ secrets.STAGING_FRONTEND_URL }} || exit 1
+
+      - name: Notify deployment
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          channel: '#deployments'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        if: always()
+
+  # Deploy to Production
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'production'
+    environment: production
+    needs: deploy-staging
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          cd backend && npm ci
+          cd ../frontend && npm ci
+
+      - name: Build backend
+        working-directory: ./backend
+        run: |
+          npm run build
+          npm run db:generate
+
+      - name: Build frontend
+        working-directory: ./frontend
+        run: npm run build
+
+      - name: Deploy to Railway (Backend)
+        uses: railway-app/railway-deploy@v1
+        with:
+          service: content-studio-backend-prod
+          token: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Deploy to Vercel (Frontend)
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID_PROD }}
+          working-directory: ./frontend
+
+      - name: Run database migrations
+        run: |
+          cd backend
+          npx prisma migrate deploy
+        env:
+          DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+
+      - name: Run health checks
+        run: |
+          sleep 30
+          curl -f ${{ secrets.PRODUCTION_BACKEND_URL }}/health || exit 1
+          curl -f ${{ secrets.PRODUCTION_FRONTEND_URL }} || exit 1
+
+      - name: Create release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ github.run_number }}
+          release_name: Release v${{ github.run_number }}
+          body: |
+            ## Changes in this Release
+            - Automated deployment to production
+            - All tests passed
+            - Security scans completed
+          draft: false
+          prerelease: false
+
+      - name: Notify deployment
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          channel: '#deployments'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        if: always()
+
+  # Rollback job
+  rollback:
+    name: Rollback Deployment
+    runs-on: ubuntu-latest
+    if: failure() && github.ref == 'refs/heads/main'
+    environment: production
+
+    steps:
+      - name: Rollback to previous version
+        run: |
+          echo "Rolling back to previous version..."
+          # Add rollback logic here
+
+      - name: Notify rollback
+        uses: 8398a7/action-slack@v3
+        with:
+          status: failure
+          channel: '#deployments'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        if: always()

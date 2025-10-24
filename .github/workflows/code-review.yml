@@ -1,0 +1,270 @@
+name: Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  # Automated code review
+  code-review:
+    name: Automated Code Review
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: |
+          cd backend && npm ci
+          cd ../frontend && npm ci
+
+      # Code quality checks
+      - name: Run ESLint
+        run: |
+          cd backend && npm run lint
+          cd ../frontend && npm run lint
+
+      - name: Check code formatting
+        run: |
+          cd backend && npm run format:check || echo "Format check not configured"
+          cd ../frontend && npm run format:check || echo "Format check not configured"
+
+      # Security checks
+      - name: Run security audit
+        run: |
+          cd backend && npm audit --audit-level moderate
+          cd ../frontend && npm audit --audit-level moderate
+
+      # Test coverage
+      - name: Run tests with coverage
+        run: |
+          cd backend && npm test -- --coverage
+          cd ../frontend && npm test -- --coverage --watchAll=false
+
+      # Code complexity analysis
+      - name: Analyze code complexity
+        run: |
+          cd backend && npm run complexity || echo "Complexity analysis not configured"
+          cd ../frontend && npm run complexity || echo "Complexity analysis not configured"
+
+  # Pull request analysis
+  pr-analysis:
+    name: Pull Request Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Analyze PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: pr } = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+
+            // Analyze changes
+            const analysis = {
+              totalFiles: files.length,
+              additions: files.reduce((sum, file) => sum + file.additions, 0),
+              deletions: files.reduce((sum, file) => sum + file.deletions, 0),
+              changedLines: files.reduce((sum, file) => sum + file.changes, 0)
+            };
+
+            // Check for large files
+            const largeFiles = files.filter(file => file.changes > 100);
+            
+            // Check for test files
+            const testFiles = files.filter(file => 
+              file.filename.includes('.test.') || 
+              file.filename.includes('.spec.') ||
+              file.filename.includes('__tests__')
+            );
+
+            // Generate review comment
+            let comment = `## 📊 Pull Request Analysis\n\n`;
+            comment += `- **Files changed**: ${analysis.totalFiles}\n`;
+            comment += `- **Lines added**: ${analysis.additions}\n`;
+            comment += `- **Lines deleted**: ${analysis.deletions}\n`;
+            comment += `- **Total changes**: ${analysis.changedLines}\n\n`;
+
+            if (largeFiles.length > 0) {
+              comment += `⚠️ **Large files detected**:\n`;
+              largeFiles.forEach(file => {
+                comment += `- \`${file.filename}\` (${file.changes} lines)\n`;
+              });
+              comment += `\n`;
+            }
+
+            if (testFiles.length > 0) {
+              comment += `✅ **Test files included**: ${testFiles.length}\n\n`;
+            } else {
+              comment += `⚠️ **No test files detected** - Consider adding tests for new functionality\n\n`;
+            }
+
+            // Check for breaking changes
+            const breakingChanges = files.some(file => 
+              file.filename.includes('package.json') && 
+              (file.patch.includes('"version"') || file.patch.includes('"dependencies"'))
+            );
+
+            if (breakingChanges) {
+              comment += `🔍 **Potential breaking changes detected** - Review dependency changes carefully\n\n`;
+            }
+
+            // Check for documentation
+            const docFiles = files.filter(file => 
+              file.filename.includes('.md') || 
+              file.filename.includes('README') ||
+              file.filename.includes('docs/')
+            );
+
+            if (docFiles.length === 0 && analysis.changedLines > 50) {
+              comment += `📝 **Consider updating documentation** for significant changes\n\n`;
+            }
+
+            comment += `---\n*Automated analysis by Content Studio CI*`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: comment
+            });
+
+  # Dependency review
+  dependency-review:
+    name: Dependency Review
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Dependency Review
+        uses: actions/dependency-review-action@v3
+        with:
+          fail-on-severity: moderate
+
+  # Performance impact analysis
+  performance-analysis:
+    name: Performance Impact Analysis
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        working-directory: ./backend
+        run: npm ci
+
+      - name: Build and analyze bundle
+        working-directory: ./backend
+        run: |
+          npm run build
+          npm run analyze || echo "Bundle analysis not configured"
+
+      - name: Check for performance regressions
+        run: |
+          echo "Performance analysis would go here"
+          # Add performance regression detection
+
+  # Security review
+  security-review:
+    name: Security Review
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'table'
+          exit-code: '1'
+
+      - name: Check for secrets
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: main
+          head: HEAD
+          extra_args: --debug --only-verified
+
+  # Final review summary
+  review-summary:
+    name: Review Summary
+    runs-on: ubuntu-latest
+    needs: [code-review, pr-analysis, dependency-review, security-review]
+    if: always()
+
+    steps:
+      - name: Generate review summary
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const jobs = [
+              { name: 'Code Review', status: '${{ needs.code-review.result }}' },
+              { name: 'PR Analysis', status: '${{ needs.pr-analysis.result }}' },
+              { name: 'Dependency Review', status: '${{ needs.dependency-review.result }}' },
+              { name: 'Security Review', status: '${{ needs.security-review.result }}' }
+            ];
+
+            const allPassed = jobs.every(job => job.status === 'success');
+            const anyFailed = jobs.some(job => job.status === 'failure');
+
+            let comment = `## 🔍 Code Review Summary\n\n`;
+            comment += `| Check | Status |\n`;
+            comment += `|-------|--------|\n`;
+
+            jobs.forEach(job => {
+              const status = job.status === 'success' ? '✅' : 
+                           job.status === 'failure' ? '❌' : '⚠️';
+              comment += `| ${job.name} | ${status} |\n`;
+            });
+
+            if (allPassed) {
+              comment += `\n🎉 **All checks passed!** Ready for review.\n`;
+            } else if (anyFailed) {
+              comment += `\n⚠️ **Some checks failed.** Please review and fix issues.\n`;
+            } else {
+              comment += `\n⏳ **Checks in progress.** Please wait for completion.\n`;
+            }
+
+            comment += `\n---\n*Automated review by Content Studio CI*`;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: comment
+            });

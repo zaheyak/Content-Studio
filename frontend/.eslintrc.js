@@ -1,27 +1,20 @@
 module.exports = {
+  root: true,
+  env: { browser: true, es2020: true },
   extends: [
-    'next/core-web-vitals',
-    'prettier',
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:react/jsx-runtime',
+    'plugin:react-hooks/recommended',
   ],
-  plugins: ['prettier'],
+  ignorePatterns: ['dist', '.eslintrc.js'],
+  parserOptions: { ecmaVersion: 'latest', sourceType: 'module' },
+  settings: { react: { version: '18.2' } },
+  plugins: ['react-refresh'],
   rules: {
-    'prettier/prettier': 'error',
-    'react/prop-types': 'off',
-    'react/react-in-jsx-scope': 'off',
-    'no-unused-vars': 'warn',
-    'no-console': 'warn',
+    'react-refresh/only-export-components': [
+      'warn',
+      { allowConstantExport: true },
+    ],
   },
-  env: {
-    browser: true,
-    es2021: true,
-    node: true,
-  },
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    ecmaFeatures: {
-      jsx: true,
-    },
-  },
-};
-
+}

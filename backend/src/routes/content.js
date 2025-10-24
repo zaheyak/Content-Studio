@@ -1,273 +1,251 @@
 const express = require('express');
-const mockData = require('../services/mockDataService');
-const { auth, authorize } = require('../middleware/auth');
-
 const router = express.Router();
 
-// GET /api/v1/content - Get all content
-router.get('/', auth, async (req, res) => {
-  try {
-    const { type, status, course_id, author_id } = req.query;
-    
-    const filters = {};
-    if (type) filters.type = type;
-    if (status) filters.status = status;
-    if (course_id) filters.course_id = course_id;
-    if (author_id) filters.author_id = author_id;
-    
-    // If user is not admin, only show their content
-    if (req.user.role !== 'ADMIN') {
-      filters.author_id = req.user.id;
+// GET /api/content - Get content by type or lesson
+router.get('/', (req, res) => {
+  const { lessonId, type } = req.query;
+  
+  // Mock data for now - will be replaced with database queries
+  const content = [
+    {
+      id: 'content-1',
+      lessonId: lessonId || 'lesson-1',
+      type: type || 'text',
+      title: 'Introduction to Variables',
+      content: 'JavaScript variables are containers for storing data values...',
+      format: 'text',
+      createdAt: '2024-01-15T10:00:00Z',
+      updatedAt: '2024-01-20T14:30:00Z'
+    },
+    {
+      id: 'content-2',
+      lessonId: lessonId || 'lesson-1',
+      type: 'presentation',
+      title: 'Variables Presentation',
+      content: 'https://example.com/presentation.pdf',
+      format: 'pdf',
+      createdAt: '2024-01-15T10:00:00Z',
+      updatedAt: '2024-01-20T14:30:00Z'
     }
-    
-    const content = await mockData.getContent(filters);
-    
-    res.json({
-      success: true,
-      data: content
-    });
-  } catch (error) {
-    console.error('Get content error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Internal server error'
-    });
-  }
+  ];
+
+  res.json({
+    success: true,
+    data: content,
+    total: content.length
+  });
 });
 
-// GET /api/v1/content/:id - Get content by ID
-router.get('/:id', auth, async (req, res) => {
-  try {
-    const { id } = req.params;
-    
-    const content = await prisma.content.findUnique({
-      where: { id },
-      include: {
-        author: {
-          select: { id: true, name: true, email: true }
-        },
-        course: {
-          select: { id: true, title: true }
-        },
-        versions: {
-          orderBy: { created_at: 'desc' },
-          take: 5
-        }
+// GET /api/content/lesson/:lessonId - Get all content for a specific lesson
+router.get('/lesson/:lessonId', (req, res) => {
+  const { lessonId } = req.params;
+  
+  // Mock comprehensive lesson content data
+  const lessonContent = {
+    lessonId: lessonId,
+    lesson: {
+      id: lessonId,
+      title: 'JavaScript Fundamentals',
+      description: 'Learn the basics of JavaScript programming',
+      courseId: 'course-1'
+    },
+    content: {
+      video: {
+        id: 'content-video-1',
+        type: 'video',
+        title: 'Introduction Video',
+        content: 'Welcome to JavaScript Fundamentals! In this lesson, we will cover...',
+        url: 'https://example.com/video1.mp4',
+        duration: '15:30',
+        format: 'mp4',
+        createdAt: '2024-01-15T10:00:00Z',
+        updatedAt: '2024-01-20T14:30:00Z'
+      },
+      text: {
+        id: 'content-text-1',
+        type: 'text',
+        title: 'Lesson Explanation',
+        content: 'JavaScript is a high-level, interpreted programming language. It is primarily used for web development and can be used on both the client and server side...',
+        format: 'text',
+        createdAt: '2024-01-15T10:00:00Z',
+        updatedAt: '2024-01-20T14:30:00Z'
+      },
+      presentation: {
+        id: 'content-presentation-1',
+        type: 'presentation',
+        title: 'Key Concepts',
+        content: 'https://example.com/presentation.pdf',
+        slides: 25,
+        format: 'pdf',
+        createdAt: '2024-01-15T10:00:00Z',
+        updatedAt: '2024-01-20T14:30:00Z'
+      },
+      mindmap: {
+        id: 'content-mindmap-1',
+        type: 'mindmap',
+        title: 'Knowledge Map',
+        content: 'https://example.com/mindmap.json',
+        nodes: 12,
+        format: 'json',
+        createdAt: '2024-01-15T10:00:00Z',
+        updatedAt: '2024-01-20T14:30:00Z'
+      },
+      code: {
+        id: 'content-code-1',
+        type: 'code',
+        title: 'Code Examples',
+        content: '// Basic JavaScript examples\nconst greeting = "Hello, World!";\nconsole.log(greeting);',
+        language: 'javascript',
+        format: 'js',
+        createdAt: '2024-01-15T10:00:00Z',
+        updatedAt: '2024-01-20T14:30:00Z'
+      },
+      images: {
+        id: 'content-images-1',
+        type: 'images',
+        title: 'Visual Aids',
+        content: [
+          'https://example.com/image1.png',
+          'https://example.com/image2.jpg'
+        ],
+        count: 2,
+        format: 'png,jpg',
+        createdAt: '2024-01-15T10:00:00Z',
+        updatedAt: '2024-01-20T14:30:00Z'
       }
-    });
-
-    if (!content) {
-      return res.status(404).json({
-        success: false,
-        error: 'Content not found'
-      });
+    },
+    template: {
+      id: 'learning-flow',
+      name: 'Learning Flow',
+      description: 'Traditional learning progression from video to practice',
+      formats: [
+        { name: 'Video', icon: '🎥', order: 1 },
+        { name: 'Explanation', icon: '🧾', order: 2 },
+        { name: 'Code', icon: '💻', order: 3 },
+        { name: 'Mind Map', icon: '🧠', order: 4 },
+        { name: 'Image', icon: '🖼️', order: 5 },
+        { name: 'Presentation', icon: '📊', order: 6 }
+      ]
+    },
+    metadata: {
+      totalContent: 6,
+      completedContent: 4,
+      progress: 67,
+      estimatedTime: '45 minutes',
+      difficulty: 'beginner',
+      tags: ['javascript', 'programming', 'fundamentals']
     }
+  };
 
-    // Check if user has access to this content
-    if (req.user.role !== 'ADMIN' && content.author_id !== req.user.id) {
-      return res.status(403).json({
-        success: false,
-        error: 'Access denied'
-      });
-    }
-
-    res.json({
-      success: true,
-      data: content
-    });
-  } catch (error) {
-    console.error('Get content error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Internal server error'
-    });
-  }
+  res.json({
+    success: true,
+    data: lessonContent,
+    message: 'Lesson content retrieved successfully'
+  });
 });
 
-// POST /api/v1/content - Create new content
-router.post('/', auth, authorize('TRAINER', 'ADMIN'), async (req, res) => {
-  try {
-    const { title, description, type, content_data, course_id, tags, metadata } = req.body;
-    
-    // Validation
-    if (!title || !type || !content_data) {
-      return res.status(400).json({
-        success: false,
-        error: 'Title, type, and content_data are required'
-      });
-    }
+// POST /api/content/upload - Upload content (manual upload)
+router.post('/upload', (req, res) => {
+  const { lessonId, type, content, metadata } = req.body;
+  
+  // Mock upload processing - will be replaced with actual file handling
+  const uploadedContent = {
+    id: `content-${Date.now()}`,
+    lessonId,
+    type,
+    content,
+    metadata,
+    status: 'processing',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
 
-    if (!['TEXT', 'PRESENTATION', 'VIDEO', 'AUDIO', 'INTERACTIVE'].includes(type)) {
-      return res.status(400).json({
-        success: false,
-        error: 'Invalid content type'
-      });
-    }
-
-    // If course_id is provided, verify course exists and user has access
-    if (course_id) {
-      const course = await mockData.getCourseById(course_id);
-
-      if (!course) {
-        return res.status(404).json({
-          success: false,
-          error: 'Course not found'
-        });
-      }
-
-      if (req.user.role !== 'ADMIN' && course.author_id !== req.user.id) {
-        return res.status(403).json({
-          success: false,
-          error: 'Access denied to course'
-        });
-      }
-    }
-
-    const content = await mockData.createContent({
-      title,
-      description,
-      type,
-      content_data,
-      course_id: course_id || null,
-      tags: tags || [],
-      metadata: metadata || {},
-      author_id: req.user.id
-    });
-
-    // Content created successfully
-
-    res.status(201).json({
-      success: true,
-      data: content
-    });
-  } catch (error) {
-    console.error('Create content error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Internal server error'
-    });
-  }
+  res.status(201).json({
+    success: true,
+    data: uploadedContent,
+    message: 'Content uploaded successfully'
+  });
 });
 
-// PUT /api/v1/content/:id - Update content
-router.put('/:id', auth, async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { title, description, content_data, status, tags, metadata } = req.body;
-    
-    // Check if content exists
-    const existingContent = await prisma.content.findUnique({
-      where: { id }
-    });
-
-    if (!existingContent) {
-      return res.status(404).json({
-        success: false,
-        error: 'Content not found'
-      });
+// POST /api/content/generate - Generate content using AI
+router.post('/generate', (req, res) => {
+  const { lessonId, type, prompt, options } = req.body;
+  
+  // Mock AI generation - will be replaced with actual AI integration
+  const generatedContent = {
+    id: `content-${Date.now()}`,
+    lessonId,
+    type,
+    content: `AI-generated content based on prompt: ${prompt}`,
+    format: type,
+    status: 'generated',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    aiMetadata: {
+      model: 'gpt-4',
+      prompt: prompt,
+      options: options
     }
+  };
 
-    // Check if user has access to this content
-    if (req.user.role !== 'ADMIN' && existingContent.author_id !== req.user.id) {
-      return res.status(403).json({
-        success: false,
-        error: 'Access denied'
-      });
-    }
-
-    const updateData = {};
-    if (title !== undefined) updateData.title = title;
-    if (description !== undefined) updateData.description = description;
-    if (content_data !== undefined) updateData.content_data = content_data;
-    if (status !== undefined) updateData.status = status;
-    if (tags !== undefined) updateData.tags = tags;
-    if (metadata !== undefined) updateData.metadata = metadata;
-
-    const content = await prisma.content.update({
-      where: { id },
-      data: updateData,
-      include: {
-        author: {
-          select: { id: true, name: true, email: true }
-        },
-        course: {
-          select: { id: true, title: true }
-        }
-      }
-    });
-
-    // Create new version if content_data changed
-    if (content_data !== undefined) {
-      const latestVersion = await prisma.contentVersion.findFirst({
-        where: { content_id: id },
-        orderBy: { version_number: 'desc' }
-      });
-
-      await prisma.contentVersion.create({
-        data: {
-          content_id: id,
-          version_number: (latestVersion?.version_number || 0) + 1,
-          content_data,
-          created_by: req.user.id
-        }
-      });
-    }
-
-    res.json({
-      success: true,
-      data: content
-    });
-  } catch (error) {
-    console.error('Update content error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Internal server error'
-    });
-  }
+  res.status(201).json({
+    success: true,
+    data: generatedContent,
+    message: 'Content generated successfully'
+  });
 });
 
-// DELETE /api/v1/content/:id - Delete content
-router.delete('/:id', auth, async (req, res) => {
-  try {
-    const { id } = req.params;
-    
-    // Check if content exists
-    const existingContent = await prisma.content.findUnique({
-      where: { id }
-    });
+// GET /api/content/:id - Get specific content
+router.get('/:id', (req, res) => {
+  const { id } = req.params;
+  
+  // Mock data for now
+  const content = {
+    id,
+    lessonId: 'lesson-1',
+    type: 'text',
+    title: 'Introduction to Variables',
+    content: 'JavaScript variables are containers for storing data values...',
+    format: 'text',
+    createdAt: '2024-01-15T10:00:00Z',
+    updatedAt: '2024-01-20T14:30:00Z'
+  };
 
-    if (!existingContent) {
-      return res.status(404).json({
-        success: false,
-        error: 'Content not found'
-      });
-    }
+  res.json({
+    success: true,
+    data: content
+  });
+});
 
-    // Check if user has access to this content
-    if (req.user.role !== 'ADMIN' && existingContent.author_id !== req.user.id) {
-      return res.status(403).json({
-        success: false,
-        error: 'Access denied'
-      });
-    }
+// PUT /api/content/:id - Update content
+router.put('/:id', (req, res) => {
+  const { id } = req.params;
+  const { content, metadata } = req.body;
+  
+  // Mock update - will be replaced with database operations
+  const updatedContent = {
+    id,
+    content,
+    metadata,
+    updatedAt: new Date().toISOString()
+  };
 
-    await prisma.content.delete({
-      where: { id }
-    });
+  res.json({
+    success: true,
+    data: updatedContent,
+    message: 'Content updated successfully'
+  });
+});
 
-    res.json({
-      success: true,
-      message: 'Content deleted successfully'
-    });
-  } catch (error) {
-    console.error('Delete content error:', error);
-    res.status(500).json({
-      success: false,
-      error: 'Internal server error'
-    });
-  }
+// DELETE /api/content/:id - Delete content
+router.delete('/:id', (req, res) => {
+  const { id } = req.params;
+  
+  // Mock deletion - will be replaced with database operations
+  res.json({
+    success: true,
+    message: 'Content deleted successfully'
+  });
 });
 
 module.exports = router;
-
-

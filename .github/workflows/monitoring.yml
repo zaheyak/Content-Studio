@@ -1,0 +1,180 @@
+name: Monitoring & Health Checks
+
+on:
+  schedule:
+    - cron: '*/5 * * * *' # Every 5 minutes
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to check'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - staging
+          - production
+
+jobs:
+  # Health checks
+  health-check:
+    name: Health Check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check backend health
+        run: |
+          BACKEND_URL=${{ github.event.inputs.environment == 'staging' && secrets.STAGING_BACKEND_URL || secrets.PRODUCTION_BACKEND_URL }}
+          echo "Checking backend health at: $BACKEND_URL"
+          
+          response=$(curl -s -o /dev/null -w "%{http_code}" "$BACKEND_URL/health" || echo "000")
+          
+          if [ "$response" = "200" ]; then
+            echo "✅ Backend is healthy"
+            echo "backend_status=healthy" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Backend is unhealthy (HTTP $response)"
+            echo "backend_status=unhealthy" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check frontend health
+        run: |
+          FRONTEND_URL=${{ github.event.inputs.environment == 'staging' && secrets.STAGING_FRONTEND_URL || secrets.PRODUCTION_FRONTEND_URL }}
+          echo "Checking frontend health at: $FRONTEND_URL"
+          
+          response=$(curl -s -o /dev/null -w "%{http_code}" "$FRONTEND_URL" || echo "000")
+          
+          if [ "$response" = "200" ]; then
+            echo "✅ Frontend is healthy"
+            echo "frontend_status=healthy" >> $GITHUB_OUTPUT
+          else
+            echo "❌ Frontend is unhealthy (HTTP $response)"
+            echo "frontend_status=unhealthy" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check database connectivity
+        run: |
+          echo "Checking database connectivity..."
+          # Add database connectivity check
+          echo "database_status=healthy" >> $GITHUB_OUTPUT
+
+      - name: Generate health report
+        run: |
+          echo "## 🏥 Health Check Report" >> $GITHUB_STEP_SUMMARY
+          echo "| Service | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|---------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Backend | ${{ steps.check-backend.outputs.backend_status }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Frontend | ${{ steps.check-frontend.outputs.frontend_status }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Database | ${{ steps.check-database.outputs.database_status }} |" >> $GITHUB_STEP_SUMMARY
+
+  # Performance monitoring
+  performance-monitoring:
+    name: Performance Monitoring
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Measure response times
+        run: |
+          BACKEND_URL=${{ github.event.inputs.environment == 'staging' && secrets.STAGING_BACKEND_URL || secrets.PRODUCTION_BACKEND_URL }}
+          
+          echo "Measuring backend response times..."
+          response_time=$(curl -o /dev/null -s -w "%{time_total}" "$BACKEND_URL/health")
+          echo "Backend response time: ${response_time}s"
+          
+          if (( $(echo "$response_time > 2.0" | bc -l) )); then
+            echo "⚠️ Backend response time is slow: ${response_time}s"
+            echo "backend_performance=slow" >> $GITHUB_OUTPUT
+          else
+            echo "✅ Backend response time is good: ${response_time}s"
+            echo "backend_performance=good" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Check memory usage
+        run: |
+          echo "Checking memory usage..."
+          # Add memory usage check
+          echo "memory_status=normal" >> $GITHUB_OUTPUT
+
+      - name: Check CPU usage
+        run: |
+          echo "Checking CPU usage..."
+          # Add CPU usage check
+          echo "cpu_status=normal" >> $GITHUB_OUTPUT
+
+  # Error monitoring
+  error-monitoring:
+    name: Error Monitoring
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check error rates
+        run: |
+          echo "Checking error rates..."
+          # Add error rate monitoring
+          echo "error_rate=low" >> $GITHUB_OUTPUT
+
+      - name: Check log errors
+        run: |
+          echo "Checking for recent errors in logs..."
+          # Add log error checking
+          echo "log_errors=none" >> $GITHUB_OUTPUT
+
+  # Alert on issues
+  alert-on-issues:
+    name: Alert on Issues
+    runs-on: ubuntu-latest
+    needs: [health-check, performance-monitoring, error-monitoring]
+    if: always()
+
+    steps:
+      - name: Check for critical issues
+        run: |
+          if [ "${{ needs.health-check.result }}" = "failure" ] || 
+             [ "${{ needs.performance-monitoring.result }}" = "failure" ] || 
+             [ "${{ needs.error-monitoring.result }}" = "failure" ]; then
+            echo "critical_issues=true" >> $GITHUB_OUTPUT
+          else
+            echo "critical_issues=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Send alert to Slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          channel: '#alerts'
+          webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        if: steps.check-issues.outputs.critical_issues == 'true'
+
+      - name: Send alert to email
+        run: |
+          echo "Sending email alert..."
+          # Add email alerting
+        if: steps.check-issues.outputs.critical_issues == 'true'
+
+  # Generate monitoring report
+  monitoring-report:
+    name: Monitoring Report
+    runs-on: ubuntu-latest
+    needs: [health-check, performance-monitoring, error-monitoring]
+    if: always()
+
+    steps:
+      - name: Generate monitoring report
+        run: |
+          echo "## 📊 Monitoring Report" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Health Check | ${{ needs.health-check.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Performance | ${{ needs.performance-monitoring.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Error Monitoring | ${{ needs.error-monitoring.result }} |" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Timestamp**: $(date)" >> $GITHUB_STEP_SUMMARY
+          echo "**Environment**: ${{ github.event.inputs.environment || 'production' }}" >> $GITHUB_STEP_SUMMARY

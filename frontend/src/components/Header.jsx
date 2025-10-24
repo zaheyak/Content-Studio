@@ -1,129 +1,120 @@
-import { useState } from 'react';
-import { Bars3Icon, XMarkIcon, UserCircleIcon } from '@heroicons/react/24/outline';
+import React from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useApp } from '../context/AppContext';
 
-export default function Header({ user, onLogin, onLogout }) {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
+const Header = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { theme, toggleTheme, handleNewLesson } = useApp();
 
   return (
-    <header className="bg-white shadow-sm">
-      <nav className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8" aria-label="Top">
-        <div className="flex w-full items-center justify-between py-6">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <h1 className="text-2xl font-bold text-primary-600">
-                Content Studio
-              </h1>
+    <header className="fixed top-0 left-0 right-0 z-50 w-full bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-gray-700 shadow-lg h-32" >
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-20">
+          {/* EDUCORE AI Logo */}
+          <div className="flex items-center space-x-4">
+            <div className="flex-shrink-0 h-[80px] w-auto  relative">
+              <img
+                src={
+                  theme === 'day-mode'
+                    ? 'http://localhost:3001/uploads/content/logo-light.jpg'
+                    : 'http://localhost:3001/uploads/content/logo-dark.jpg'
+                }
+                alt="EDUCORE AI Logo"
+                className="h-full w-auto object-contain mb-4 transition-all duration-300 hover:scale-105 drop-shadow-lg hover:drop-shadow-xl"
+              />
             </div>
-          </div>
-          
-          {user ? (
-            <div className="ml-10 flex items-center space-x-4">
-              <div className="relative">
-                <button
-                  onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center space-x-2 text-gray-700 hover:text-gray-900"
-                >
-                  <UserCircleIcon className="h-8 w-8" />
-                  <span className="hidden md:block">{user.name}</span>
-                </button>
-                
-                {userMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50">
-                    <div className="px-4 py-2 text-sm text-gray-700 border-b">
-                      <div className="font-medium">{user.name}</div>
-                      <div className="text-gray-500">{user.email}</div>
-                      <div className="text-xs text-gray-400 capitalize">{user.role.toLowerCase()}</div>
-                    </div>
-                    <button
-                      onClick={() => {
-                        setUserMenuOpen(false);
-                        onLogout();
-                      }}
-                      className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    >
-                      Sign out
-                    </button>
-                  </div>
-                )}
+            <div className="flex flex-col justify-center">
+              <div className="text-xl font-bold text-gray-800 dark:text-white leading-tight font-display bg-gradient-to-r from-emerald-600 to-emerald-700 bg-clip-text text-transparent">
+                EDUCORE AI
               </div>
             </div>
-          ) : (
-            <div className="ml-10 space-x-4">
-              <button 
-                onClick={onLogin}
-                className="btn-primary"
-              >
-                Get Started
-              </button>
-              <button 
-                onClick={onLogin}
-                className="btn-secondary"
-              >
-                Sign In
-              </button>
-            </div>
-          )}
-          
-          <div className="ml-6 md:hidden">
-            <button
-              type="button"
-              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
-              onClick={() => setMobileMenuOpen(true)}
+          </div>
+
+          {/* Navigation */}
+          <nav className="hidden md:flex items-center space-x-3">
+            <button 
+              onClick={() => navigate('/')}
+              className={`transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium ${
+                location.pathname === '/' 
+                  ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/20' 
+                  : 'text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/20'
+              }`}
             >
-              <span className="sr-only">Open main menu</span>
-              <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+              <i className="fas fa-home w-4 h-4 flex-shrink-0"></i>
+              <span>Home</span>
+            </button>
+            <button 
+              onClick={() => navigate('/courses')}
+              className={`transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium ${
+                location.pathname.startsWith('/courses') 
+                  ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/20' 
+                  : 'text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/20'
+              }`}
+            >
+              <i className="fas fa-graduation-cap w-4 h-4 flex-shrink-0"></i>
+              <span>Courses</span>
+            </button>
+            <button 
+              onClick={() => navigate('/lessons')}
+              className={`transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium ${
+                location.pathname === '/lessons' 
+                  ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/20' 
+                  : 'text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/20'
+              }`}
+            >
+              <i className="fas fa-book w-4 h-4 flex-shrink-0"></i>
+              <span>Lessons</span>
+            </button>
+            <button 
+              onClick={() => navigate('/analytics')}
+              className={`transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium ${
+                location.pathname === '/analytics' 
+                  ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/20' 
+                  : 'text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/20'
+              }`}
+            >
+              <i className="fas fa-chart-line w-4 h-4 flex-shrink-0"></i>
+              <span>Analytics</span>
+            </button>
+          </nav>
+
+          {/* Header Controls */}
+          <div className="flex items-center gap-6">
+            {/* Create Course Button */}
+            <button
+              onClick={() => navigate('/courses')}
+              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white border border-emerald-600 hover:border-emerald-700 rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm font-medium flex items-center gap-2"
+            >
+              <i className="fas fa-plus w-4 h-4"></i>
+              Create Course
+            </button>
+
+            {/* Create Lesson Button */}
+            <button
+              onClick={() => {
+                navigate('/lessons');
+                handleNewLesson();
+              }}
+              className="px-4 py-2 bg-transparent text-emerald-600 dark:text-emerald-400 border border-emerald-600 dark:border-emerald-400 rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:border-emerald-700 dark:hover:border-emerald-300 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm font-medium flex items-center gap-2"
+            >
+              <i className="fas fa-plus w-4 h-4"></i>
+              Create Lesson
+            </button>
+
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="w-10 h-10 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/20 hover:scale-110 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              title="Toggle Theme"
+            >
+              <i className={`fas ${theme === 'day-mode' ? 'fa-moon' : 'fa-sun'} text-sm`}></i>
             </button>
           </div>
         </div>
-        
-        {mobileMenuOpen && (
-          <div className="md:hidden">
-            <div className="space-y-1 px-2 pb-3 pt-2">
-              {user ? (
-                <>
-                  <div className="px-3 py-2 text-sm text-gray-700">
-                    <div className="font-medium">{user.name}</div>
-                    <div className="text-gray-500">{user.email}</div>
-                  </div>
-                  <button 
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      onLogout();
-                    }}
-                    className="btn-secondary block w-full text-left"
-                  >
-                    Sign out
-                  </button>
-                </>
-              ) : (
-                <>
-                  <button 
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      onLogin();
-                    }}
-                    className="btn-primary block w-full text-left"
-                  >
-                    Get Started
-                  </button>
-                  <button 
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      onLogin();
-                    }}
-                    className="btn-secondary block w-full text-left"
-                  >
-                    Sign In
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
-        )}
-      </nav>
+      </div>
     </header>
   );
-}
+};
 
-
+export default Header;

@@ -10,6 +10,7 @@ import {
   ArrowRightIcon,
   ArrowLeftIcon
 } from '@heroicons/react/24/outline';
+import { theme } from '../../theme';
 
 export default function VideoContentCreation({ lesson, course, onComplete, onNext, onPrev, isFirstStep, isLastStep }) {
   const [activeTab, setActiveTab] = useState('upload');
@@ -22,17 +23,51 @@ export default function VideoContentCreation({ lesson, course, onComplete, onNex
   const [isCompleted, setIsCompleted] = useState(false);
   const fileInputRef = useRef(null);
 
-  const handleFileUpload = (event) => {
+  const handleFileUpload = async (event) => {
     const file = event.target.files[0];
     if (file) {
-      setUploadedFile(file);
-      // Simulate transcription
-      setIsTranscribing(true);
-      setTimeout(() => {
-        setTranscription(`Transcription of ${file.name}:\n\n[This is a simulated transcription. In a real application, this would be processed by an AI transcription service.]`);
-        setIsTranscribing(false);
-        setIsCompleted(true);
-      }, 2000);
+      try {
+        // Upload file to backend
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await fetch(`http://localhost:3001/api/upload/${lesson.id}/videos`, {
+          method: 'POST',
+          body: formData
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          setUploadedFile(result.data);
+          // Simulate transcription
+          setIsTranscribing(true);
+          setTimeout(() => {
+            setTranscription(`Transcription of ${result.data.name}:\n\n[This is a simulated transcription. In a real application, this would be processed by an AI transcription service.]`);
+            setIsTranscribing(false);
+            setIsCompleted(true);
+          }, 2000);
+        } else {
+          console.error('Upload failed:', await response.text());
+          // Fallback to local storage
+          setUploadedFile(file);
+          setIsTranscribing(true);
+          setTimeout(() => {
+            setTranscription(`Transcription of ${file.name}:\n\n[This is a simulated transcription. In a real application, this would be processed by an AI transcription service.]`);
+            setIsTranscribing(false);
+            setIsCompleted(true);
+          }, 2000);
+        }
+      } catch (error) {
+        console.error('Upload error:', error);
+        // Fallback to local storage
+        setUploadedFile(file);
+        setIsTranscribing(true);
+        setTimeout(() => {
+          setTranscription(`Transcription of ${file.name}:\n\n[This is a simulated transcription. In a real application, this would be processed by an AI transcription service.]`);
+          setIsTranscribing(false);
+          setIsCompleted(true);
+        }, 2000);
+      }
     }
   };
 
@@ -55,15 +90,18 @@ export default function VideoContentCreation({ lesson, course, onComplete, onNex
     }, 3000);
   };
 
-  const handleYouTubeUrl = (url) => {
-    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+  const handleYouTubeProcessing = async (url) => {
+    // Simulate YouTube video processing
+    setTimeout(() => {
       setGeneratedContent({
         type: 'youtube',
         url: url,
-        status: 'linked'
+        title: 'YouTube Video Title',
+        duration: '5:45',
+        status: 'processed'
       });
       setIsCompleted(true);
-    }
+    }, 2000);
   };
 
   const handleComplete = () => {
@@ -78,7 +116,7 @@ export default function VideoContentCreation({ lesson, course, onComplete, onNex
         generated: generatedContent
       } : {
         url: generatedContent?.url,
-        type: 'youtube'
+        processed: generatedContent
       },
       completed: true
     };
@@ -86,113 +124,384 @@ export default function VideoContentCreation({ lesson, course, onComplete, onNex
     onComplete(content);
   };
 
+  const styles = {
+    container: {
+      padding: '1.5rem',
+      height: '100%',
+      overflowY: 'auto',
+      backgroundColor: theme.colors.background
+    },
+    header: {
+      marginBottom: '1.5rem'
+    },
+    title: {
+      fontSize: '1.125rem',
+      fontWeight: '500',
+      color: theme.colors.text,
+      marginBottom: '0.5rem'
+    },
+    subtitle: {
+      fontSize: '0.875rem',
+      color: theme.colors.textSecondary
+    },
+    tabContainer: {
+      marginBottom: '1.5rem'
+    },
+    tabButtons: {
+      display: 'flex',
+      gap: '1rem',
+      marginBottom: '1.5rem'
+    },
+    tabButton: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      padding: '1rem',
+      borderRadius: theme.borderRadius.medium,
+      border: `1px solid ${theme.colors.border}`,
+      backgroundColor: theme.colors.surface,
+      color: theme.colors.text,
+      cursor: 'pointer',
+      transition: 'all 0.3s ease',
+      minWidth: '120px',
+      textAlign: 'center'
+    },
+    tabButtonActive: {
+      borderColor: theme.colors.primary,
+      backgroundColor: `${theme.colors.primary}10`,
+      color: theme.colors.primary
+    },
+    tabButtonHover: {
+      backgroundColor: theme.colors.borderLight,
+      transform: 'translateY(-2px)',
+      boxShadow: theme.shadows.small
+    },
+    tabIcon: {
+      width: '1.5rem',
+      height: '1.5rem',
+      marginBottom: '0.5rem'
+    },
+    tabLabel: {
+      fontSize: '0.875rem',
+      fontWeight: '500',
+      margin: 0
+    },
+    contentArea: {
+      marginBottom: '1.5rem'
+    },
+    uploadArea: {
+      border: `2px dashed ${theme.colors.border}`,
+      borderRadius: theme.borderRadius.medium,
+      padding: '2rem',
+      textAlign: 'center',
+      backgroundColor: theme.colors.surface,
+      cursor: 'pointer',
+      transition: 'all 0.3s ease'
+    },
+    uploadAreaHover: {
+      borderColor: theme.colors.primary,
+      backgroundColor: `${theme.colors.primary}05`
+    },
+    uploadIcon: {
+      width: '2rem',
+      height: '2rem',
+      color: theme.colors.textSecondary,
+      marginBottom: '1rem'
+    },
+    uploadText: {
+      fontSize: '1rem',
+      fontWeight: '500',
+      color: theme.colors.text,
+      marginBottom: '0.5rem'
+    },
+    uploadSubtext: {
+      fontSize: '0.875rem',
+      color: theme.colors.textSecondary
+    },
+    fileInput: {
+      display: 'none'
+    },
+    avatarPrompt: {
+      width: '100%',
+      minHeight: '100px',
+      padding: '0.75rem',
+      border: `1px solid ${theme.colors.border}`,
+      borderRadius: theme.borderRadius.medium,
+      fontSize: '0.875rem',
+      fontFamily: 'inherit',
+      resize: 'vertical',
+      outline: 'none',
+      transition: 'border-color 0.3s ease'
+    },
+    avatarPromptFocus: {
+      borderColor: theme.colors.primary
+    },
+    generateButton: {
+      backgroundColor: theme.colors.primary,
+      color: 'white',
+      border: 'none',
+      padding: '0.75rem 1.5rem',
+      borderRadius: theme.borderRadius.medium,
+      fontSize: '0.875rem',
+      fontWeight: '500',
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.5rem',
+      transition: 'background-color 0.3s ease',
+      marginTop: '1rem'
+    },
+    generateButtonHover: {
+      backgroundColor: theme.colors.primaryHover
+    },
+    generateButtonDisabled: {
+      backgroundColor: theme.colors.textSecondary,
+      cursor: 'not-allowed'
+    },
+    youtubeInput: {
+      width: '100%',
+      padding: '0.75rem',
+      border: `1px solid ${theme.colors.border}`,
+      borderRadius: theme.borderRadius.medium,
+      fontSize: '0.875rem',
+      fontFamily: 'inherit',
+      outline: 'none',
+      transition: 'border-color 0.3s ease'
+    },
+    youtubeInputFocus: {
+      borderColor: theme.colors.primary
+    },
+    processButton: {
+      backgroundColor: theme.colors.success,
+      color: 'white',
+      border: 'none',
+      padding: '0.75rem 1.5rem',
+      borderRadius: theme.borderRadius.medium,
+      fontSize: '0.875rem',
+      fontWeight: '500',
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.5rem',
+      transition: 'background-color 0.3s ease',
+      marginTop: '1rem'
+    },
+    processButtonHover: {
+      backgroundColor: theme.colors.successHover
+    },
+    generatedContent: {
+      backgroundColor: theme.colors.surface,
+      border: `1px solid ${theme.colors.border}`,
+      borderRadius: theme.borderRadius.medium,
+      padding: '1rem',
+      marginTop: '1rem'
+    },
+    contentTitle: {
+      fontSize: '1rem',
+      fontWeight: '600',
+      color: theme.colors.text,
+      marginBottom: '0.5rem'
+    },
+    contentText: {
+      fontSize: '0.875rem',
+      color: theme.colors.textSecondary,
+      whiteSpace: 'pre-wrap',
+      lineHeight: '1.6'
+    },
+    navigation: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      paddingTop: '1.5rem',
+      borderTop: `1px solid ${theme.colors.border}`
+    },
+    navButton: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.5rem',
+      padding: '0.75rem 1.5rem',
+      borderRadius: theme.borderRadius.medium,
+      border: 'none',
+      fontSize: '0.875rem',
+      fontWeight: '500',
+      cursor: 'pointer',
+      transition: 'all 0.3s ease'
+    },
+    navButtonPrimary: {
+      backgroundColor: theme.colors.primary,
+      color: 'white'
+    },
+    navButtonSecondary: {
+      backgroundColor: theme.colors.borderLight,
+      color: theme.colors.text
+    },
+    navButtonHover: {
+      transform: 'translateY(-2px)',
+      boxShadow: theme.shadows.medium
+    },
+    completeButton: {
+      backgroundColor: theme.colors.success,
+      color: 'white',
+      border: 'none',
+      padding: '0.75rem 1.5rem',
+      borderRadius: theme.borderRadius.medium,
+      fontSize: '0.875rem',
+      fontWeight: '500',
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.5rem',
+      transition: 'all 0.3s ease'
+    },
+    completeButtonHover: {
+      backgroundColor: theme.colors.successHover,
+      transform: 'translateY(-2px)',
+      boxShadow: theme.shadows.medium
+    },
+    icon: {
+      width: '1.25rem',
+      height: '1.25rem'
+    },
+    loading: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: '0.5rem',
+      color: theme.colors.textSecondary,
+      fontSize: '0.875rem'
+    }
+  };
+
   return (
-    <div className="p-6 h-full overflow-y-auto">
-      <div className="mb-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-2">Video Content Creation</h3>
-        <p className="text-sm text-gray-600">
+    <div style={styles.container}>
+      <div style={styles.header}>
+        <h3 style={styles.title}>Video Content Creation</h3>
+        <p style={styles.subtitle}>
           Add video content to your lesson. Choose between AI-assisted creation or manual upload.
         </p>
       </div>
 
       {/* Method Selection */}
-      <div className="mb-6">
-        <div className="flex space-x-4">
+      <div style={styles.tabContainer}>
+        <div style={styles.tabButtons}>
           <button
             onClick={() => setActiveTab('upload')}
-            className={`flex items-center px-4 py-2 rounded-lg border ${
-              activeTab === 'upload'
-                ? 'border-primary-500 bg-primary-50 text-primary-700'
-                : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
-            }`}
+            style={{
+              ...styles.tabButton,
+              ...(activeTab === 'upload' ? styles.tabButtonActive : {})
+            }}
+            onMouseEnter={(e) => {
+              if (activeTab !== 'upload') {
+                e.target.style.backgroundColor = styles.tabButtonHover.backgroundColor;
+                e.target.style.transform = styles.tabButtonHover.transform;
+                e.target.style.boxShadow = styles.tabButtonHover.boxShadow;
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (activeTab !== 'upload') {
+                e.target.style.backgroundColor = styles.tabButton.backgroundColor;
+                e.target.style.transform = 'none';
+                e.target.style.boxShadow = 'none';
+              }
+            }}
           >
-            <UploadIcon className="h-5 w-5 mr-2" />
-            Manual Upload
+            <UploadIcon style={styles.tabIcon} />
+            <span style={styles.tabLabel}>Manual Upload</span>
           </button>
+          
           <button
             onClick={() => setActiveTab('avatar')}
-            className={`flex items-center px-4 py-2 rounded-lg border ${
-              activeTab === 'avatar'
-                ? 'border-primary-500 bg-primary-50 text-primary-700'
-                : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
-            }`}
+            style={{
+              ...styles.tabButton,
+              ...(activeTab === 'avatar' ? styles.tabButtonActive : {})
+            }}
+            onMouseEnter={(e) => {
+              if (activeTab !== 'avatar') {
+                e.target.style.backgroundColor = styles.tabButtonHover.backgroundColor;
+                e.target.style.transform = styles.tabButtonHover.transform;
+                e.target.style.boxShadow = styles.tabButtonHover.boxShadow;
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (activeTab !== 'avatar') {
+                e.target.style.backgroundColor = styles.tabButton.backgroundColor;
+                e.target.style.transform = 'none';
+                e.target.style.boxShadow = 'none';
+              }
+            }}
           >
-            <SparklesIcon className="h-5 w-5 mr-2" />
-            AI Avatar
+            <SparklesIcon style={styles.tabIcon} />
+            <span style={styles.tabLabel}>AI Avatar</span>
           </button>
+          
           <button
             onClick={() => setActiveTab('youtube')}
-            className={`flex items-center px-4 py-2 rounded-lg border ${
-              activeTab === 'youtube'
-                ? 'border-primary-500 bg-primary-50 text-primary-700'
-                : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
-            }`}
+            style={{
+              ...styles.tabButton,
+              ...(activeTab === 'youtube' ? styles.tabButtonActive : {})
+            }}
+            onMouseEnter={(e) => {
+              if (activeTab !== 'youtube') {
+                e.target.style.backgroundColor = styles.tabButtonHover.backgroundColor;
+                e.target.style.transform = styles.tabButtonHover.transform;
+                e.target.style.boxShadow = styles.tabButtonHover.boxShadow;
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (activeTab !== 'youtube') {
+                e.target.style.backgroundColor = styles.tabButton.backgroundColor;
+                e.target.style.transform = 'none';
+                e.target.style.boxShadow = 'none';
+              }
+            }}
           >
-            <PlayIcon className="h-5 w-5 mr-2" />
-            YouTube Link
+            <PlayIcon style={styles.tabIcon} />
+            <span style={styles.tabLabel}>YouTube Link</span>
           </button>
         </div>
       </div>
 
       {/* Content Area */}
-      <div className="space-y-6">
+      <div style={styles.contentArea}>
         {activeTab === 'upload' && (
-          <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
-            <div className="text-center">
-              <VideoCameraIcon className="mx-auto h-12 w-12 text-gray-400" />
-              <div className="mt-4">
-                <label htmlFor="file-upload" className="cursor-pointer">
-                  <span className="mt-2 block text-sm font-medium text-gray-900">
-                    Upload video file
-                  </span>
-                  <input
-                    ref={fileInputRef}
-                    id="file-upload"
-                    type="file"
-                    accept="video/*"
-                    onChange={handleFileUpload}
-                    className="sr-only"
-                  />
-                </label>
-                <p className="mt-1 text-xs text-gray-500">
-                  MP4, MOV, AVI up to 100MB
-                </p>
-              </div>
+          <div>
+            <div
+              style={styles.uploadArea}
+              onClick={() => fileInputRef.current?.click()}
+              onMouseEnter={(e) => {
+                e.target.style.borderColor = styles.uploadAreaHover.borderColor;
+                e.target.style.backgroundColor = styles.uploadAreaHover.backgroundColor;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.borderColor = theme.colors.border;
+                e.target.style.backgroundColor = theme.colors.surface;
+              }}
+            >
+              <UploadIcon style={styles.uploadIcon} />
+              <div style={styles.uploadText}>Click to upload video file</div>
+              <div style={styles.uploadSubtext}>MP4, MOV, AVI files supported</div>
             </div>
             
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="video/*"
+              onChange={handleFileUpload}
+              style={styles.fileInput}
+            />
+            
             {uploadedFile && (
-              <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <VideoCameraIcon className="h-8 w-8 text-primary-600 mr-3" />
-                    <div>
-                      <p className="text-sm font-medium text-gray-900">{uploadedFile.name}</p>
-                      <p className="text-xs text-gray-500">
-                        {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => setUploadedFile(null)}
-                    className="text-red-500 hover:text-red-700"
-                  >
-                    <TrashIcon className="h-5 w-5" />
-                  </button>
-                </div>
-                
+              <div style={styles.generatedContent}>
+                <div style={styles.contentTitle}>Uploaded File:</div>
+                <div style={styles.contentText}>{uploadedFile.name}</div>
                 {isTranscribing && (
-                  <div className="mt-4 flex items-center text-sm text-gray-600">
-                    <MicrophoneIcon className="h-4 w-4 mr-2 animate-pulse" />
-                    Transcribing video...
+                  <div style={styles.loading}>
+                    <div>Transcribing video...</div>
                   </div>
                 )}
-                
                 {transcription && (
-                  <div className="mt-4">
-                    <h4 className="text-sm font-medium text-gray-900 mb-2">Transcription:</h4>
-                    <div className="bg-white p-3 rounded border text-sm text-gray-700 max-h-32 overflow-y-auto">
-                      {transcription}
-                    </div>
+                  <div style={{ marginTop: '1rem' }}>
+                    <div style={styles.contentTitle}>Transcription:</div>
+                    <div style={styles.contentText}>{transcription}</div>
                   </div>
                 )}
               </div>
@@ -201,64 +510,54 @@ export default function VideoContentCreation({ lesson, course, onComplete, onNex
         )}
 
         {activeTab === 'avatar' && (
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="avatar-prompt" className="block text-sm font-medium text-gray-700 mb-2">
-                Describe the video content you want to generate
+          <div>
+            <div style={{ marginBottom: '1rem' }}>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: theme.colors.text }}>
+                Describe the video content you want to generate:
               </label>
               <textarea
-                id="avatar-prompt"
-                rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                placeholder="Example: Explain JavaScript variables and data types with examples..."
                 value={avatarPrompt}
                 onChange={(e) => setAvatarPrompt(e.target.value)}
+                placeholder="Describe the educational content, presentation style, and key points you want the AI avatar to cover..."
+                style={styles.avatarPrompt}
+                onFocus={(e) => {
+                  e.target.style.borderColor = styles.avatarPromptFocus.borderColor;
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = theme.colors.border;
+                }}
               />
             </div>
             
             <button
               onClick={handleAvatarGeneration}
               disabled={!avatarPrompt.trim() || isGeneratingAvatar}
-              className="btn-primary flex items-center"
+              style={{
+                ...styles.generateButton,
+                ...(isGeneratingAvatar || !avatarPrompt.trim() ? styles.generateButtonDisabled : {})
+              }}
+              onMouseEnter={(e) => {
+                if (!isGeneratingAvatar && avatarPrompt.trim()) {
+                  e.target.style.backgroundColor = styles.generateButtonHover.backgroundColor;
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isGeneratingAvatar && avatarPrompt.trim()) {
+                  e.target.style.backgroundColor = styles.generateButton.backgroundColor;
+                }
+              }}
             >
-              {isGeneratingAvatar ? (
-                <>
-                  <SparklesIcon className="h-5 w-5 mr-2 animate-spin" />
-                  Generating Avatar Video...
-                </>
-              ) : (
-                <>
-                  <SparklesIcon className="h-5 w-5 mr-2" />
-                  Generate AI Avatar Video
-                </>
-              )}
+              <SparklesIcon style={styles.icon} />
+              {isGeneratingAvatar ? 'Generating Avatar Video...' : 'Generate Avatar Video'}
             </button>
-            
+
             {generatedContent && (
-              <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                <div className="flex items-center mb-3">
-                  <SparklesIcon className="h-5 w-5 text-green-600 mr-2" />
-                  <span className="text-sm font-medium text-green-800">
-                    AI Avatar Video Generated Successfully!
-                  </span>
-                </div>
-                <div className="bg-white p-4 rounded border">
-                  <div className="space-y-2">
-                    <p className="text-sm text-gray-700">
-                      <strong>Prompt:</strong> {generatedContent.prompt}
-                    </p>
-                    <p className="text-sm text-gray-700">
-                      <strong>Duration:</strong> {generatedContent.duration}
-                    </p>
-                    <p className="text-sm text-gray-700">
-                      <strong>Status:</strong> {generatedContent.status}
-                    </p>
-                  </div>
-                  <div className="mt-3 p-3 bg-blue-50 rounded">
-                    <p className="text-xs text-blue-700">
-                      💡 In a real deployment, this would be an actual AI-generated avatar video created by Gemini AI.
-                    </p>
-                  </div>
+              <div style={styles.generatedContent}>
+                <div style={styles.contentTitle}>Generated Avatar Video:</div>
+                <div style={styles.contentText}>
+                  Prompt: {generatedContent.prompt}
+                  Duration: {generatedContent.duration}
+                  Status: {generatedContent.status}
                 </div>
               </div>
             )}
@@ -266,27 +565,56 @@ export default function VideoContentCreation({ lesson, course, onComplete, onNex
         )}
 
         {activeTab === 'youtube' && (
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="youtube-url" className="block text-sm font-medium text-gray-700 mb-2">
-                YouTube Video URL
+          <div>
+            <div style={{ marginBottom: '1rem' }}>
+              <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: theme.colors.text }}>
+                YouTube Video URL:
               </label>
               <input
                 type="url"
-                id="youtube-url"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                 placeholder="https://www.youtube.com/watch?v=..."
-                onChange={(e) => handleYouTubeUrl(e.target.value)}
+                style={styles.youtubeInput}
+                onFocus={(e) => {
+                  e.target.style.borderColor = styles.youtubeInputFocus.borderColor;
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = theme.colors.border;
+                }}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter') {
+                    handleYouTubeProcessing(e.target.value);
+                  }
+                }}
               />
             </div>
             
+            <button
+              onClick={() => {
+                const input = document.querySelector('input[type="url"]');
+                if (input?.value) {
+                  handleYouTubeProcessing(input.value);
+                }
+              }}
+              style={styles.processButton}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = styles.processButtonHover.backgroundColor;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = styles.processButton.backgroundColor;
+              }}
+            >
+              <PlayIcon style={styles.icon} />
+              Process YouTube Video
+            </button>
+
             {generatedContent && (
-              <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                <div className="flex items-center">
-                  <PlayIcon className="h-5 w-5 text-blue-600 mr-2" />
-                  <span className="text-sm font-medium text-blue-800">
-                    YouTube video linked successfully!
-                  </span>
+              <div style={styles.generatedContent}>
+                <div style={styles.contentTitle}>Processed YouTube Video:</div>
+                <div style={styles.contentText}>
+                  URL: {generatedContent.url}
+                  Title: {generatedContent.title}
+                  Duration: {generatedContent.duration}
+                  Status: {generatedContent.status}
                 </div>
               </div>
             )}
@@ -294,38 +622,73 @@ export default function VideoContentCreation({ lesson, course, onComplete, onNex
         )}
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex justify-between items-center mt-8 pt-6 border-t">
-        <div>
+      {/* Navigation */}
+      <div style={styles.navigation}>
+        <div style={{ display: 'flex', gap: '1rem' }}>
           {!isFirstStep && (
             <button
               onClick={onPrev}
-              className="flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+              style={styles.navButton}
+              onMouseEnter={(e) => {
+                e.target.style.transform = styles.navButtonHover.transform;
+                e.target.style.boxShadow = styles.navButtonHover.boxShadow;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.transform = 'none';
+                e.target.style.boxShadow = 'none';
+              }}
             >
-              <ArrowLeftIcon className="h-4 w-4 mr-2" />
+              <ArrowLeftIcon style={styles.icon} />
               Previous
             </button>
           )}
         </div>
-        
-        <div className="flex space-x-3">
-          <button
-            onClick={handleComplete}
-            disabled={!isCompleted}
-            className="flex items-center px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-md hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isCompleted ? (
-              <>
-                <CheckIcon className="h-4 w-4 mr-2" />
-                Complete Step
-              </>
-            ) : (
-              'Complete Step'
-            )}
-          </button>
+
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          {isCompleted && (
+            <button
+              onClick={handleComplete}
+              style={styles.completeButton}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = styles.completeButtonHover.backgroundColor;
+                e.target.style.transform = styles.completeButtonHover.transform;
+                e.target.style.boxShadow = styles.completeButtonHover.boxShadow;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = styles.completeButton.backgroundColor;
+                e.target.style.transform = 'none';
+                e.target.style.boxShadow = 'none';
+              }}
+            >
+              <CheckIcon style={styles.icon} />
+              Complete Video
+            </button>
+          )}
+          
+          {!isLastStep && (
+            <button
+              onClick={onNext}
+              style={{
+                ...styles.navButton,
+                ...styles.navButtonPrimary
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = styles.navButtonHover.backgroundColor;
+                e.target.style.transform = styles.navButtonHover.transform;
+                e.target.style.boxShadow = styles.navButtonHover.boxShadow;
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = styles.navButtonPrimary.backgroundColor;
+                e.target.style.transform = 'none';
+                e.target.style.boxShadow = 'none';
+              }}
+            >
+              Next
+              <ArrowRightIcon style={styles.icon} />
+            </button>
+          )}
         </div>
       </div>
     </div>
   );
 }
-

@@ -1,41 +1,32 @@
 {
   "name": "content-studio-frontend",
   "version": "1.0.0",
-  "description": "Content Studio Frontend - AI-powered educational content creation platform",
+  "description": "Content Studio Frontend - Simple React with JSX",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
-    "lint:fix": "next lint --fix"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint src --ext js,jsx"
   },
   "dependencies": {
-    "next": "^14.0.0",
+    "@heroicons/react": "^2.2.0",
+    "axios": "^1.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "@heroicons/react": "^2.0.18",
-    "reactflow": "^11.10.1",
-    "d3": "^7.8.5",
-    "d3-hierarchy": "^3.1.2",
-    "axios": "^1.6.0",
-    "clsx": "^2.0.0",
-    "tailwind-merge": "^2.0.0"
+    "react-router-dom": "^7.9.4"
   },
   "devDependencies": {
-    "@types/node": "^20.8.0",
+    "@tailwindcss/postcss": "^4.1.16",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    "autoprefixer": "^10.4.16",
-    "eslint": "^8.52.0",
-    "eslint-config-next": "^14.0.0",
-    "postcss": "^8.4.31",
-    "prettier": "^3.0.3",
-    "tailwindcss": "^3.3.5",
-    "typescript": "^5.2.2"
-  },
-  "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=8.0.0"
+    "@vitejs/plugin-react": "^4.2.0",
+    "autoprefixer": "^10.4.21",
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.34.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.16",
+    "vite": "^5.0.0"
   }
 }
