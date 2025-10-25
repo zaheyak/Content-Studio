@@ -5,7 +5,7 @@ const Lessons = ({ lessons, hasLessonContent, onOpenContentCreation, onNewLesson
   const { theme } = useApp();
   
   return (
-    <div className="pt-20 space-y-6">
+    <div className="pt-28 space-y-4">
       {/* Page Title */}
       <div className="text-center  from-emerald-600 via-emerald-700 to-emerald-800 p-12 relative overflow-hidden">
         <div className="absolute inset-0 "></div>

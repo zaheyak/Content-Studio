@@ -15,7 +15,7 @@ const Courses = ({
 }) => {
   const { theme } = useApp();
   return (
-    <div className="space-y-6 pt-20">
+    <div className="space-y-6 pt-28">
       {/* Page Title */}
       <div className="text-center from-emerald-600 via-emerald-700 to-emerald-800 p-8 relative overflow-hidden">
         <div className="absolute inset-0 "></div>

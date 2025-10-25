@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const GeminiService = require('../services/GeminiService');
 
 // POST /api/ai/process-video - Process video to transcript
 router.post('/process-video', (req, res) => {
@@ -27,70 +28,90 @@ router.post('/process-video', (req, res) => {
 });
 
 // POST /api/ai/generate-lesson - Generate lesson from transcript
-router.post('/generate-lesson', (req, res) => {
-  const { transcript, options } = req.body;
-  
-  // Mock lesson generation - will be replaced with actual AI integration
-  const generatedLesson = {
-    id: `lesson-${Date.now()}`,
-    title: 'AI-Generated Lesson Title',
-    description: 'This lesson was generated from the provided transcript',
-    content: {
-      text: 'This is the AI-generated lesson content based on the transcript...',
-      summary: 'Key points from the lesson...',
-      examples: ['Example 1', 'Example 2'],
-      exercises: ['Exercise 1', 'Exercise 2']
-    },
-    formats: {
-      text: 'Full lesson text...',
-      presentation: 'https://example.com/presentation.pdf',
-      mindmap: 'https://example.com/mindmap.json',
-      audio: 'https://example.com/audio.mp3'
-    },
-    status: 'generated',
-    createdAt: new Date().toISOString()
-  };
+router.post('/generate-lesson', async (req, res) => {
+  try {
+    const { transcript, options } = req.body;
+    
+    if (!transcript) {
+      return res.status(400).json({
+        success: false,
+        message: 'Transcript is required'
+      });
+    }
 
-  res.status(201).json({
-    success: true,
-    data: generatedLesson,
-    message: 'Lesson generated successfully'
-  });
+    const generatedContent = await GeminiService.generateLessonContent(transcript, options);
+    
+    const generatedLesson = {
+      id: `lesson-${Date.now()}`,
+      title: 'AI-Generated Lesson',
+      description: 'This lesson was generated using Gemini AI',
+      content: {
+        text: generatedContent,
+        summary: 'AI-generated educational content',
+        examples: [],
+        exercises: []
+      },
+      formats: {
+        text: generatedContent,
+        presentation: null,
+        mindmap: null,
+        audio: null
+      },
+      status: 'generated',
+      createdAt: new Date().toISOString()
+    };
+
+    res.status(201).json({
+      success: true,
+      data: generatedLesson,
+      message: 'Lesson generated successfully with Gemini AI'
+    });
+  } catch (error) {
+    console.error('Error generating lesson:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to generate lesson content',
+      error: error.message
+    });
+  }
 });
 
 // POST /api/ai/generate-mindmap - Generate mind map for lesson
-router.post('/generate-mindmap', (req, res) => {
-  const { lessonId, content } = req.body;
-  
-  // Mock mind map generation - will be replaced with actual AI integration
-  const mindmap = {
-    id: `mindmap-${Date.now()}`,
-    lessonId,
-    title: 'Lesson Mind Map',
-    nodes: [
-      {
-        id: 'node-1',
-        label: 'Main Concept',
-        position: { x: 0, y: 0 },
-        children: [
-          { id: 'node-2', label: 'Sub-concept 1', position: { x: -100, y: 100 } },
-          { id: 'node-3', label: 'Sub-concept 2', position: { x: 100, y: 100 } }
-        ]
-      }
-    ],
-    connections: [
-      { from: 'node-1', to: 'node-2' },
-      { from: 'node-1', to: 'node-3' }
-    ],
-    status: 'generated',
-    createdAt: new Date().toISOString()
-  };
+router.post('/generate-mindmap', async (req, res) => {
+  try {
+    const { lessonId, content } = req.body;
+    
+    if (!content) {
+      return res.status(400).json({
+        success: false,
+        message: 'Content is required for mind map generation'
+      });
+    }
 
-  res.status(201).json({
-    success: true,
-    data: mindmap,
-    message: 'Mind map generated successfully'
-  });
+    const mindmapData = await GeminiService.generateMindMap(content);
+    
+    const mindmap = {
+      id: `mindmap-${Date.now()}`,
+      lessonId,
+      title: 'AI-Generated Mind Map',
+      data: mindmapData,
+      status: 'generated',
+      createdAt: new Date().toISOString()
+    };
+
+    res.status(201).json({
+      success: true,
+      data: mindmap,
+      message: 'Mind map generated successfully with Gemini AI'
+    });
+  } catch (error) {
+    console.error('Error generating mind map:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to generate mind map',
+      error: error.message
+    });
+  }
 });
 
 // POST /api/ai/translate - Translate content to multiple languages
@@ -114,35 +135,77 @@ router.post('/translate', (req, res) => {
   });
 });
 
-// POST /api/ai/quality-check - Check content quality and originality
-router.post('/quality-check', (req, res) => {
-  const { content, type } = req.body;
-  
-  // Mock quality check - will be replaced with actual AI integration
-  const qualityReport = {
-    id: `quality-${Date.now()}`,
-    content,
-    type,
-    scores: {
-      originality: 0.95,
-      clarity: 0.88,
-      difficulty: 0.75,
-      structure: 0.92
-    },
-    issues: [],
-    recommendations: [
-      'Consider adding more examples',
-      'Simplify complex sentences'
-    ],
-    status: 'completed',
-    createdAt: new Date().toISOString()
-  };
+// POST /api/v1/ai/generate-text - Generate text content using Gemini
+router.post('/v1/ai/generate-text', async (req, res) => {
+  try {
+    const { prompt, options } = req.body;
+    
+    if (!prompt) {
+      return res.status(400).json({
+        success: false,
+        message: 'Prompt is required for text generation'
+      });
+    }
 
-  res.status(201).json({
-    success: true,
-    data: qualityReport,
-    message: 'Quality check completed'
-  });
+    const generatedText = await GeminiService.generateText(prompt);
+    
+    res.status(201).json({
+      success: true,
+      data: {
+        id: `text-${Date.now()}`,
+        prompt,
+        generatedText,
+        model: 'gemini-1.5-flash',
+        createdAt: new Date().toISOString()
+      },
+      message: 'Text generated successfully with Gemini AI'
+    });
+  } catch (error) {
+    console.error('Error generating text:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to generate text content',
+      error: error.message
+    });
+  }
+});
+
+// POST /api/ai/quality-check - Check content quality and originality
+router.post('/quality-check', async (req, res) => {
+  try {
+    const { content, type } = req.body;
+    
+    if (!content) {
+      return res.status(400).json({
+        success: false,
+        message: 'Content is required for quality check'
+      });
+    }
+
+    const qualityAnalysis = await GeminiService.qualityCheck(content);
+    
+    const qualityReport = {
+      id: `quality-${Date.now()}`,
+      content,
+      type,
+      analysis: qualityAnalysis,
+      status: 'completed',
+      createdAt: new Date().toISOString()
+    };
+
+    res.status(201).json({
+      success: true,
+      data: qualityReport,
+      message: 'Quality check completed with Gemini AI'
+    });
+  } catch (error) {
+    console.error('Error in quality check:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to perform quality check',
+      error: error.message
+    });
+  }
 });
 
 // GET /api/ai/status/:id - Get AI processing status
