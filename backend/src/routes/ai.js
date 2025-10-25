@@ -135,8 +135,8 @@ router.post('/translate', (req, res) => {
   });
 });
 
-// POST /api/v1/ai/generate-text - Generate text content using Gemini
-router.post('/v1/ai/generate-text', async (req, res) => {
+// POST /api/ai/generate-text - Generate text content using Gemini
+router.post('/generate-text', async (req, res) => {
   try {
     const { prompt, options } = req.body;
     

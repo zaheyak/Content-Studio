@@ -63,17 +63,17 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
   const { courseId, title, description } = req.body;
   
-  if (!courseId || !title || !description) {
+  if (!title || !description) {
     return res.status(400).json({
       success: false,
-      message: 'CourseId, title and description are required'
+      message: 'Title and description are required'
     });
   }
 
   const lessonsData = loadLessons();
   const newLesson = {
     id: `lesson_${Date.now()}`,
-    courseId,
+    courseId: courseId || 'default-course',
     title,
     description,
     created_at: new Date().toISOString(),
