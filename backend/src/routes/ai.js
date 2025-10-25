@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const GeminiService = require('../services/GeminiService');
+const GeminiService = require('../services/geminiService');
 
 // POST /api/ai/process-video - Process video to transcript
 router.post('/process-video', (req, res) => {
