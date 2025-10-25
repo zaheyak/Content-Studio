@@ -7,8 +7,8 @@ const Lessons = ({ lessons, hasLessonContent, onOpenContentCreation, onNewLesson
   return (
     <div className="pt-20 space-y-6">
       {/* Page Title */}
-      <div className="text-center bg-gradient-to-r from-emerald-600 via-emerald-700 to-emerald-800 p-12 relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/10"></div>
+      <div className="text-center  from-emerald-600 via-emerald-700 to-emerald-800 p-12 relative overflow-hidden">
+        <div className="absolute inset-0 "></div>
         <div className="relative z-10">
           <h1 className="text-6xl font-bold mb-4 drop-shadow-lg" style={{ 
             background: 'var(--gradient-primary)', 

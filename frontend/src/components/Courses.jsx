@@ -17,8 +17,8 @@ const Courses = ({
   return (
     <div className="space-y-6 pt-20">
       {/* Page Title */}
-      <div className="text-center bg-gradient-to-r from-emerald-600 via-emerald-700 to-emerald-800 p-8 relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/10"></div>
+      <div className="text-center from-emerald-600 via-emerald-700 to-emerald-800 p-8 relative overflow-hidden">
+        <div className="absolute inset-0 "></div>
         <div className="relative z-10">
           <h1 className="text-5xl font-bold mb-4 drop-shadow-lg" style={{ 
             background: 'var(--gradient-primary)', 

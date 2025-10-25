@@ -17,7 +17,7 @@ const Header = () => {
                <img
                  src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/logo/${theme === 'day-mode' ? 'light' : 'dark'}`}
                  alt="EDUCORE AI Logo"
-                 className="h-full w-auto object-contain transition-all duration-300 hover:scale-105 drop-shadow-lg hover:drop-shadow-xl"
+                 className="h-full w-auto object-contain transition-all duration-300 "
                />
             </div>
             <div className="flex flex-col justify-center">

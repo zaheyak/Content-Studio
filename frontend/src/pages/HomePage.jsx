@@ -5,7 +5,7 @@ const HomePage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen" style={{ background: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
+    <div className="min-h-screen">
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-container">
