@@ -162,6 +162,16 @@ router.post('/generate-text', async (req, res) => {
     });
   } catch (error) {
     console.error('Error generating text:', error);
+    
+    // Check if it's a Gemini API key issue
+    if (error.message.includes('GEMINI_API_KEY')) {
+      return res.status(500).json({
+        success: false,
+        message: 'Gemini API key is not configured. Please set GEMINI_API_KEY environment variable.',
+        error: 'API_KEY_MISSING'
+      });
+    }
+    
     res.status(500).json({
       success: false,
       message: 'Failed to generate text content',

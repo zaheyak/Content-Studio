@@ -4,17 +4,32 @@ class GeminiService {
   constructor() {
     this.apiKey = process.env.GEMINI_API_KEY; // מגיע מ־Railway
     this.model = 'gemini-1.5-flash';
+    
+    if (!this.apiKey) {
+      console.error('GEMINI_API_KEY is not set in environment variables');
+      throw new Error('GEMINI_API_KEY environment variable is required');
+    }
+    
     this.genAI = new GoogleGenerativeAI(this.apiKey);
   }
 
   async generateText(prompt) {
     try {
+      if (!this.apiKey) {
+        throw new Error('GEMINI_API_KEY is not configured');
+      }
+      
       const model = this.genAI.getGenerativeModel({ model: this.model });
       const result = await model.generateContent(prompt);
       return result.response.text();
     } catch (error) {
       console.error('Gemini API Error:', error);
-      throw new Error('Failed to generate text with Gemini');
+      console.error('Error details:', {
+        message: error.message,
+        code: error.code,
+        status: error.status
+      });
+      throw new Error(`Failed to generate text with Gemini: ${error.message}`);
     }
   }
 
