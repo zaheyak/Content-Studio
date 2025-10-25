@@ -97,6 +97,11 @@
 header {
   height: 6rem !important;
   min-height: 6rem !important;
+  background: white !important;
+}
+
+.night-mode header {
+  background: #0f172a !important;
 }
 
 body {

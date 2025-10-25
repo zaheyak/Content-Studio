@@ -8,22 +8,20 @@ const Header = () => {
   const { theme, toggleTheme, handleNewLesson } = useApp();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 w-full bg-white dark:bg-slate-900 border-b border-gray-200 dark:border-gray-700 shadow-lg h-32" >
+    <header className={`fixed top-0 left-0 right-0 z-50 w-full border-b shadow-lg h-20 backdrop-blur-md ${theme === 'day-mode' ? 'bg-white/95 border-gray-200' : 'bg-slate-900/95 border-gray-600'}`} >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* EDUCORE AI Logo */}
           <div className="flex items-center space-x-4">
-            <div className="flex-shrink-0 h-[80px] w-auto  relative">
-              <img
-                src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/logo/${theme === 'day-mode' ? 'light' : 'dark'}`}
-                alt="EDUCORE AI Logo"
-                className="h-full w-auto object-contain mb-4 transition-all duration-300 hover:scale-105 drop-shadow-lg hover:drop-shadow-xl"
-              />
+             <div className="flex-shrink-0 h-20 w-auto relative">
+               <img
+                 src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/logo/${theme === 'day-mode' ? 'light' : 'dark'}`}
+                 alt="EDUCORE AI Logo"
+                 className="h-full w-auto object-contain transition-all duration-300 hover:scale-105 drop-shadow-lg hover:drop-shadow-xl"
+               />
             </div>
             <div className="flex flex-col justify-center">
-              <div className="text-xl font-bold text-gray-800 dark:text-white leading-tight font-display bg-gradient-to-r from-emerald-600 to-emerald-700 bg-clip-text text-transparent">
-                EDUCORE AI
-              </div>
+                    
             </div>
           </div>
 
@@ -33,54 +31,51 @@ const Header = () => {
               onClick={() => navigate('/')}
               className={`transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium ${
                 location.pathname === '/' 
-                  ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/20' 
-                  : 'text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/20'
+                  ? theme === 'day-mode' ? 'text-emerald-600 bg-emerald-100' : 'text-emerald-400 bg-emerald-900/20' 
+                  : theme === 'day-mode' ? 'text-gray-600 hover:text-emerald-600 hover:bg-emerald-50' : 'text-gray-300 hover:text-emerald-400 hover:bg-emerald-900/20'
               }`}
             >
-              <i className="fas fa-home w-4 h-4 flex-shrink-0"></i>
+              <i className={`fas fa-home w-4 h-4 flex-shrink-0 ${location.pathname === '/' ? (theme === 'day-mode' ? 'text-emerald-600' : 'text-emerald-400') : (theme === 'day-mode' ? 'text-gray-600' : 'text-gray-300')}`}></i>
               <span>Home</span>
             </button>
             <button 
               onClick={() => navigate('/courses')}
               className={`transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium ${
                 location.pathname.startsWith('/courses') 
-                  ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/20' 
-                  : 'text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/20'
+                  ? theme === 'day-mode' ? 'text-emerald-600 bg-emerald-100' : 'text-emerald-400 bg-emerald-900/20' 
+                  : theme === 'day-mode' ? 'text-gray-600 hover:text-emerald-600 hover:bg-emerald-50' : 'text-gray-300 hover:text-emerald-400 hover:bg-emerald-900/20'
               }`}
             >
-              <i className="fas fa-graduation-cap w-4 h-4 flex-shrink-0"></i>
+              <i className={`fas fa-graduation-cap w-4 h-4 flex-shrink-0 ${location.pathname.startsWith('/courses') ? (theme === 'day-mode' ? 'text-emerald-600' : 'text-emerald-400') : (theme === 'day-mode' ? 'text-gray-600' : 'text-gray-300')}`}></i>
               <span>Courses</span>
             </button>
             <button 
               onClick={() => navigate('/lessons')}
               className={`transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium ${
                 location.pathname === '/lessons' 
-                  ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/20' 
-                  : 'text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/20'
+                  ? theme === 'day-mode' ? 'text-emerald-600 bg-emerald-100' : 'text-emerald-400 bg-emerald-900/20' 
+                  : theme === 'day-mode' ? 'text-gray-600 hover:text-emerald-600 hover:bg-emerald-50' : 'text-gray-300 hover:text-emerald-400 hover:bg-emerald-900/20'
               }`}
             >
-              <i className="fas fa-book w-4 h-4 flex-shrink-0"></i>
+              <i className={`fas fa-book w-4 h-4 flex-shrink-0 ${location.pathname === '/lessons' ? (theme === 'day-mode' ? 'text-emerald-600' : 'text-emerald-400') : (theme === 'day-mode' ? 'text-gray-600' : 'text-gray-300')}`}></i>
               <span>Lessons</span>
             </button>
-            <button 
-              onClick={() => navigate('/analytics')}
-              className={`transition-all duration-300 flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium ${
-                location.pathname === '/analytics' 
-                  ? 'text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/20' 
-                  : 'text-gray-600 dark:text-gray-300 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/20'
-              }`}
-            >
-              <i className="fas fa-chart-line w-4 h-4 flex-shrink-0"></i>
-              <span>Analytics</span>
-            </button>
+           
           </nav>
-
+    {/* Theme Toggle */}
+    <button
+              onClick={toggleTheme}
+              className={`w-10 h-10 border rounded-full flex items-center justify-center hover:scale-110 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 ${theme === 'day-mode' ? 'bg-gray-100 border-gray-200 text-gray-600 hover:bg-emerald-100' : 'bg-gray-800 border-gray-700 text-white hover:bg-emerald-900/20'}`}
+              title="Toggle Theme"
+            >
+              <i className={`fas ${theme === 'day-mode' ? 'fa-moon' : 'fa-sun'} text-sm`}></i>
+            </button>
           {/* Header Controls */}
           <div className="flex items-center gap-6">
             {/* Create Course Button */}
             <button
               onClick={() => navigate('/courses')}
-              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white border border-emerald-600 hover:border-emerald-700 rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm font-medium flex items-center gap-2"
+              className={`px-4 py-2 rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm font-medium flex items-center gap-2 ${theme === 'day-mode' ? 'bg-transparent text-emerald-600 border border-emerald-600 hover:bg-emerald-50 hover:border-emerald-700' : 'bg-emerald-500 hover:bg-emerald-600 text-white border border-emerald-500 hover:border-emerald-600 shadow-lg'}`}
             >
               <i className="fas fa-plus w-4 h-4"></i>
               Create Course
@@ -92,20 +87,13 @@ const Header = () => {
                 navigate('/lessons');
                 handleNewLesson();
               }}
-              className="px-4 py-2 bg-transparent text-emerald-600 dark:text-emerald-400 border border-emerald-600 dark:border-emerald-400 rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:border-emerald-700 dark:hover:border-emerald-300 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm font-medium flex items-center gap-2"
+              className={`px-4 py-2 rounded-xl transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-sm font-medium flex items-center gap-2 ${theme === 'day-mode' ? 'bg-transparent text-emerald-600 border border-emerald-600 hover:bg-emerald-50 hover:border-emerald-700' : 'bg-emerald-500 hover:bg-emerald-600 text-white border border-emerald-500 hover:border-emerald-600 shadow-lg'}`}
             >
               <i className="fas fa-plus w-4 h-4"></i>
               Create Lesson
             </button>
 
-            {/* Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              className="w-10 h-10 bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-full flex items-center justify-center text-gray-600 dark:text-gray-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/20 hover:scale-110 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-              title="Toggle Theme"
-            >
-              <i className={`fas ${theme === 'day-mode' ? 'fa-moon' : 'fa-sun'} text-sm`}></i>
-            </button>
+        
           </div>
         </div>
       </div>

@@ -22,7 +22,7 @@ function AppContent() {
 
   return (
     <Router>
-      <div className={`min-h-screen bg-gray-50 dark:bg-slate-900 text-gray-800 dark:text-white transition-colors duration-300 ${theme}`}>
+      <div className={`min-h-screen text-gray-800 transition-colors duration-300 ${theme === 'day-mode' ? 'bg-gray-50' : 'bg-slate-900 text-white'}`}>
         <BackgroundAnimation />
         
         <Header />

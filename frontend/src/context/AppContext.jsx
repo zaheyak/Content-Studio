@@ -30,6 +30,7 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     loadData()
     document.body.className = theme
+    document.documentElement.className = theme
   }, [theme])
 
   // Data loading function

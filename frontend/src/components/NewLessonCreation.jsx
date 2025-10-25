@@ -5,7 +5,7 @@ import { dataService } from '../services/dataService';
 import { theme } from '../theme';
 
 export default function NewLessonCreation({ isOpen, onClose, onNavigateToContent, courseId, courseTitle }) {
-  const { setLessons, setError } = useApp();
+  const { setLessons, setError, theme } = useApp();
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -75,257 +75,60 @@ export default function NewLessonCreation({ isOpen, onClose, onNavigateToContent
     });
   };
 
-  const styles = {
-    overlay: {
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      backgroundColor: 'rgba(0, 0, 0, 0.5)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      zIndex: 50
-    },
-    modal: {
-      backgroundColor: theme.colors.surface,
-      borderRadius: theme.borderRadius.large,
-      boxShadow: theme.shadows.large,
-      maxWidth: '48rem',
-      width: '100%',
-      margin: '0 1rem',
-      maxHeight: '90vh',
-      overflowY: 'auto'
-    },
-    header: {
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      padding: '1.5rem',
-      borderBottom: `1px solid ${theme.colors.border}`
-    },
-    headerContent: {
-      flex: 1
-    },
-    title: {
-      fontSize: '1.125rem',
-      fontWeight: '500',
-      color: theme.colors.text,
-      margin: 0
-    },
-    subtitle: {
-      fontSize: '0.875rem',
-      color: theme.colors.textSecondary,
-      marginTop: '0.25rem',
-      margin: 0
-    },
-    closeButton: {
-      color: theme.colors.textSecondary,
-      background: 'none',
-      border: 'none',
-      cursor: 'pointer',
-      padding: '0.5rem',
-      borderRadius: theme.borderRadius.small,
-      transition: 'color 0.3s ease'
-    },
-    closeButtonHover: {
-      color: theme.colors.text
-    },
-    form: {
-      padding: '1.5rem'
-    },
-    formGroup: {
-      marginBottom: '1.5rem'
-    },
-    label: {
-      display: 'block',
-      fontSize: '0.875rem',
-      fontWeight: '500',
-      color: theme.colors.text,
-      marginBottom: '0.5rem'
-    },
-    input: {
-      width: '100%',
-      padding: '0.75rem',
-      border: `1px solid ${theme.colors.border}`,
-      borderRadius: theme.borderRadius.medium,
-      fontSize: '0.875rem',
-      fontFamily: 'inherit',
-      outline: 'none',
-      transition: 'border-color 0.3s ease'
-    },
-    inputFocus: {
-      borderColor: theme.colors.primary
-    },
-    textarea: {
-      width: '100%',
-      padding: '0.75rem',
-      border: `1px solid ${theme.colors.border}`,
-      borderRadius: theme.borderRadius.medium,
-      fontSize: '0.875rem',
-      fontFamily: 'inherit',
-      outline: 'none',
-      resize: 'vertical',
-      transition: 'border-color 0.3s ease'
-    },
-    grid: {
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-      gap: '1.5rem'
-    },
-    select: {
-      width: '100%',
-      padding: '0.75rem',
-      border: `1px solid ${theme.colors.border}`,
-      borderRadius: theme.borderRadius.medium,
-      fontSize: '0.875rem',
-      fontFamily: 'inherit',
-      outline: 'none',
-      backgroundColor: theme.colors.surface,
-      cursor: 'pointer',
-      transition: 'border-color 0.3s ease'
-    },
-    outcomesContainer: {
-      marginTop: '1rem'
-    },
-    outcomeItem: {
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.75rem',
-      marginBottom: '0.75rem'
-    },
-    outcomeText: {
-      flex: 1,
-      padding: '0.75rem',
-      backgroundColor: theme.colors.borderLight,
-      borderRadius: theme.borderRadius.medium,
-      fontSize: '0.875rem',
-      color: theme.colors.text
-    },
-    removeButton: {
-      color: theme.colors.error,
-      background: 'none',
-      border: 'none',
-      cursor: 'pointer',
-      padding: '0.25rem',
-      borderRadius: theme.borderRadius.small,
-      transition: 'color 0.3s ease'
-    },
-    removeButtonHover: {
-      color: '#d32f2f'
-    },
-    addOutcomeContainer: {
-      display: 'flex',
-      gap: '0.75rem',
-      marginTop: '0.75rem'
-    },
-    addButton: {
-      backgroundColor: theme.colors.primary,
-      color: 'white',
-      border: 'none',
-      padding: '0.75rem 1rem',
-      borderRadius: theme.borderRadius.medium,
-      fontSize: '0.875rem',
-      fontWeight: '500',
-      cursor: 'pointer',
-      display: 'flex',
-      alignItems: 'center',
-      gap: '0.5rem',
-      transition: 'background-color 0.3s ease'
-    },
-    addButtonHover: {
-      backgroundColor: theme.colors.primaryHover
-    },
-    actions: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-      gap: '0.75rem',
-      marginTop: '2rem'
-    },
-    button: {
-      padding: '0.75rem 1rem',
-      fontSize: '0.875rem',
-      fontWeight: '500',
-      borderRadius: theme.borderRadius.medium,
-      cursor: 'pointer',
-      transition: 'all 0.3s ease',
-      border: 'none'
-    },
-    cancelButton: {
-      backgroundColor: theme.colors.borderLight,
-      color: theme.colors.text
-    },
-    cancelButtonHover: {
-      backgroundColor: theme.colors.border
-    },
-    submitButton: {
-      backgroundColor: theme.colors.primary,
-      color: 'white'
-    },
-    submitButtonHover: {
-      backgroundColor: theme.colors.primaryHover
-    },
-    submitButtonDisabled: {
-      backgroundColor: theme.colors.textSecondary,
-      cursor: 'not-allowed'
-    },
-    icon: {
-      width: '1.25rem',
-      height: '1.25rem'
-    }
-  };
 
   if (!isOpen) return null;
 
-  return (
-    <div style={styles.overlay}>
-      <div style={styles.modal}>
-        <div style={styles.header}>
-          <div style={styles.headerContent}>
-            <h3 style={styles.title}>Create New Lesson</h3>
-            <p style={styles.subtitle}>Course: {courseTitle}</p>
+        return (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className={`rounded-2xl shadow-2xl max-w-3xl w-full mx-4 max-h-[90vh] overflow-y-auto ${theme === 'day-mode' ? 'bg-white' : 'bg-gray-800'}`}>
+        <div className={`flex items-center justify-between p-6 border-b ${theme === 'day-mode' ? 'border-gray-200' : 'border-gray-700'}`}>
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold" style={{ 
+              background: 'var(--gradient-primary)', 
+              WebkitBackgroundClip: 'text', 
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}>Create New Lesson</h3>
+            <p className={`text-sm mt-1 ${theme === 'day-mode' ? 'text-gray-600' : 'text-white'}`}>Course: {courseTitle}</p>
           </div>
           <button
             onClick={onClose}
-            style={styles.closeButton}
-            onMouseEnter={(e) => {
-              e.target.style.color = styles.closeButtonHover.color;
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.color = styles.closeButton.color;
-            }}
+            className={`p-2 rounded-lg transition-colors ${theme === 'day-mode' ? 'text-gray-400 hover:text-gray-600' : 'text-gray-400 hover:text-gray-300'}`}
           >
-            <XMarkIcon style={styles.icon} />
+            <XMarkIcon className="w-5 h-5" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} style={styles.form}>
+        <form onSubmit={handleSubmit} className="p-6">
           <div>
-            <div style={styles.formGroup}>
-              <label htmlFor="title" style={styles.label}>
-                Lesson Name *
-              </label>
-              <input
-                type="text"
-                id="title"
-                name="title"
-                value={formData.title}
-                onChange={handleChange}
-                required
-                style={styles.input}
-                onFocus={(e) => {
-                  e.target.style.borderColor = styles.inputFocus.borderColor;
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = theme.colors.border;
-                }}
-                placeholder="Enter lesson name"
-              />
-            </div>
+          <div className="mb-6">
+            <label htmlFor="title" className="block text-sm font-medium mb-2" style={{ 
+              background: 'var(--gradient-primary)', 
+              WebkitBackgroundClip: 'text', 
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}>
+              Lesson Name *
+            </label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              required
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors ${theme === 'day-mode' ? 'border-gray-300 bg-white text-gray-900 placeholder-gray-500' : 'border-gray-600 bg-gray-700 text-white placeholder-gray-400'}`}
+              placeholder="Enter lesson name"
+            />
+          </div>
 
-            <div style={styles.formGroup}>
-              <label htmlFor="description" style={styles.label}>
+            <div className="mb-6">
+              <label htmlFor="description" className="block text-sm font-medium mb-2" style={{ 
+                background: 'var(--gradient-primary)', 
+                WebkitBackgroundClip: 'text', 
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>
                 Lesson Description *
               </label>
               <textarea
@@ -335,74 +138,55 @@ export default function NewLessonCreation({ isOpen, onClose, onNavigateToContent
                 onChange={handleChange}
                 required
                 rows={4}
-                style={styles.textarea}
-                onFocus={(e) => {
-                  e.target.style.borderColor = styles.inputFocus.borderColor;
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = theme.colors.border;
-                }}
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors resize-vertical ${theme === 'day-mode' ? 'border-gray-300 bg-white text-gray-900 placeholder-gray-500' : 'border-gray-600 bg-gray-700 text-white placeholder-gray-400'}`}
                 placeholder="Describe what this lesson covers"
               />
             </div>
 
 
-            <div style={styles.formGroup}>
-              <label style={styles.label}>
+            <div className="mb-6">
+              <label className="block text-sm font-medium mb-2" style={{ 
+                background: 'var(--gradient-primary)', 
+                WebkitBackgroundClip: 'text', 
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text'
+              }}>
                 Learning Outcomes
               </label>
-              <p style={{ fontSize: '0.875rem', color: theme.colors.textSecondary, marginBottom: '1rem' }}>
+              <p className={`text-sm mb-4 ${theme === 'day-mode' ? 'text-gray-600' : 'text-white'}`}>
                 Define what students will be able to do after completing this lesson.
               </p>
               
-              <div style={styles.outcomesContainer}>
+              <div className="mt-4">
                 {formData.learningOutcomes.map((outcome, index) => (
-                  <div key={index} style={styles.outcomeItem}>
-                    <div style={styles.outcomeText}>
+                  <div key={index} className="flex items-center gap-3 mb-3">
+                    <div className={`flex-1 px-3 py-2 rounded-lg text-sm ${theme === 'day-mode' ? 'bg-gray-100 text-gray-900' : 'bg-gray-700 text-white'}`}>
                       <span>{outcome}</span>
                     </div>
                     <button
                       type="button"
                       onClick={() => removeOutcome(index)}
-                      style={styles.removeButton}
-                      onMouseEnter={(e) => {
-                        e.target.style.color = styles.removeButtonHover.color;
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.color = styles.removeButton.color;
-                      }}
+                      className={`p-1 rounded transition-colors ${theme === 'day-mode' ? 'text-red-500 hover:text-red-700' : 'text-emerald-400 hover:text-emerald-300'}`}
                     >
-                      <TrashIcon style={{ width: '1rem', height: '1rem' }} />
+                      <TrashIcon className="w-4 h-4" />
                     </button>
                   </div>
                 ))}
                 
-                <div style={styles.addOutcomeContainer}>
-                  <input
-                    type="text"
-                    value={newOutcome}
-                    onChange={(e) => setNewOutcome(e.target.value)}
-                    placeholder="Add a learning outcome..."
-                    style={styles.input}
-                    onFocus={(e) => {
-                      e.target.style.borderColor = styles.inputFocus.borderColor;
-                    }}
-                    onBlur={(e) => {
-                      e.target.style.borderColor = theme.colors.border;
-                    }}
-                  />
+                <div className="flex gap-3 mt-3">
+                        <input
+                          type="text"
+                          value={newOutcome}
+                          onChange={(e) => setNewOutcome(e.target.value)}
+                          placeholder="Add a learning outcome..."
+                          className={`flex-1 px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-colors ${theme === 'day-mode' ? 'border-gray-300 bg-white text-gray-900 placeholder-gray-500' : 'border-gray-600 bg-gray-700 text-white placeholder-gray-400'}`}
+                        />
                   <button
                     type="button"
                     onClick={addOutcome}
-                    style={styles.addButton}
-                    onMouseEnter={(e) => {
-                      e.target.style.backgroundColor = styles.addButtonHover.backgroundColor;
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.backgroundColor = styles.addButton.backgroundColor;
-                    }}
+                    className={`px-4 py-2 rounded-lg transition-colors flex items-center gap-2 font-medium ${theme === 'day-mode' ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg'}`}
                   >
-                    <PlusIcon style={styles.icon} />
+                    <PlusIcon className="w-4 h-4" />
                     Add
                   </button>
                 </div>
@@ -410,41 +194,18 @@ export default function NewLessonCreation({ isOpen, onClose, onNavigateToContent
             </div>
           </div>
 
-          <div style={styles.actions}>
+          <div className="flex justify-end gap-3 mt-8">
             <button
               type="button"
               onClick={onClose}
-              style={{
-                ...styles.button,
-                ...styles.cancelButton
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = styles.cancelButtonHover.backgroundColor;
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.backgroundColor = styles.cancelButton.backgroundColor;
-              }}
+              className={`px-4 py-2 rounded-lg transition-colors font-medium ${theme === 'day-mode' ? 'bg-gray-100 text-gray-700 hover:bg-gray-200' : 'bg-emerald-600/20 text-emerald-100 hover:bg-emerald-600/30 border border-emerald-500/30'}`}
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              style={{
-                ...styles.button,
-                ...styles.submitButton,
-                ...(isSubmitting ? styles.submitButtonDisabled : {})
-              }}
-              onMouseEnter={(e) => {
-                if (!isSubmitting) {
-                  e.target.style.backgroundColor = styles.submitButtonHover.backgroundColor;
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isSubmitting) {
-                  e.target.style.backgroundColor = styles.submitButton.backgroundColor;
-                }
-              }}
+              className={`px-4 py-2 rounded-lg transition-colors font-medium ${theme === 'day-mode' ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg'} disabled:bg-gray-400 disabled:cursor-not-allowed`}
             >
               {isSubmitting ? 'Creating...' : 'Create Lesson'}
             </button>
