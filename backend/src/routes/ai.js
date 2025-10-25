@@ -155,7 +155,7 @@ router.post('/generate-text', async (req, res) => {
         id: `text-${Date.now()}`,
         prompt,
         generatedText,
-        model: 'gemini-1.5-flash',
+        model: 'gemini-1.5-pro',
         createdAt: new Date().toISOString()
       },
       message: 'Text generated successfully with Gemini AI'

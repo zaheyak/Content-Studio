@@ -3,7 +3,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 class GeminiService {
   constructor() {
     this.apiKey = process.env.GEMINI_API_KEY; // מגיע מ־Railway
-    this.model = 'gemini-1.5-flash';
+    this.model = 'gemini-1.5-pro';
     
     if (!this.apiKey) {
       console.error('GEMINI_API_KEY is not set in environment variables');
