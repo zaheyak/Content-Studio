@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 3001;
 // ✅ בדיקה האם ה-OpenAI API Key נטען
 console.log("OpenAI key detected:", !!process.env.OPENAI_API_KEY);
 console.log("Environment variables with 'API' in name:", Object.keys(process.env).filter(key => key.includes('API')));
+console.log("All environment variables:", Object.keys(process.env).sort());
 // DEBUG: Show OpenAI SDK info
 try {
   const pkg = require("openai/package.json");
