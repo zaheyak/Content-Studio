@@ -98,10 +98,9 @@ export const AppProvider = ({ children }) => {
     console.log('Content completed:', result)
     console.log('Closing content creation...')
     closeContentCreation()
-    console.log('Opening template selector...')
-    // Navigate to template selector after content creation is complete
-    setShowTemplateSelector(true)
-    console.log('Template selector should be open now')
+    console.log('Navigating to template selector...')
+    // Navigate to template selector page after content creation is complete
+    window.location.href = '/template-selector'
   }
 
   const openNewLessonModal = (courseId = null, courseTitle = null) => {
