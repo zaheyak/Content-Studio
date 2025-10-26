@@ -1,7 +1,6 @@
 {
   "build": {
-    "builder": "NIXPACKS",
-    "buildCommand": "npm ci --prefer-offline --no-audit --no-fund"
+    "builder": "NIXPACKS"
   },
   "deploy": {
     "startCommand": "npm start",
