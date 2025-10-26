@@ -16,9 +16,14 @@ console.log("Environment variables with 'API' in name:", Object.keys(process.env
 console.log("All environment variables:", Object.keys(process.env).sort());
 // DEBUG: Show OpenAI SDK info
 try {
+  // Try to get package info without the .js extension
   const pkg = require("openai/package.json");
   console.log("📦 OpenAI SDK version:", pkg.version);
+} catch (pkgErr) {
+  console.log("📦 Could not read OpenAI package.json, but SDK should still work");
+}
 
+try {
   if (process.env.OPENAI_API_KEY) {
     const OpenAI = require("openai");
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
@@ -27,7 +32,7 @@ try {
     console.log("🤖 OpenAI model test: NO API key");
   }
 } catch (err) {
-  console.error("❌ OpenAI SDK info error:", err.message);
+  console.error("❌ OpenAI SDK initialization error:", err.message);
 }
 
 // Middleware
