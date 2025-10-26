@@ -10,7 +10,9 @@ class GeminiService {
       console.warn('GEMINI_API_KEY is not set in environment variables - AI features will be disabled');
       this.genAI = null;
     } else {
-      this.genAI = new GoogleGenerativeAI(this.apiKey);
+      this.genAI = new GoogleGenerativeAI(this.apiKey, {
+        apiVersion: 'v1'
+      });
     }
   }
 
