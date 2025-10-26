@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useApp } from '../context/AppContext';
 
 const TemplateSelector = ({ onSelectTemplate }) => {
   console.log('TemplateSelector component loaded');
+  const { theme } = useApp();
   const [selectedTemplate, setSelectedTemplate] = useState(null);
 
   // Mock templates with all lesson formats in different orders
@@ -11,12 +13,12 @@ const TemplateSelector = ({ onSelectTemplate }) => {
       name: 'Learning Flow',
       description: 'Traditional learning progression from video to practice',
       formats: [
-        { name: 'Video', icon: '🎥', color: 'bg-red-100 text-red-600' },
-        { name: 'Explanation', icon: '🧾', color: 'bg-blue-100 text-blue-600' },
-        { name: 'Code', icon: '💻', color: 'bg-green-100 text-green-600' },
-        { name: 'Mind Map', icon: '🧠', color: 'bg-purple-100 text-purple-600' },
-        { name: 'Image', icon: '🖼️', color: 'bg-yellow-100 text-yellow-600' },
-        { name: 'Presentation', icon: '📊', color: 'bg-indigo-100 text-indigo-600' }
+        { name: 'Video', icon: '🎥', color: theme === 'day-mode' ? 'bg-red-100 text-red-600' : 'bg-red-900/20 text-red-400' },
+        { name: 'Explanation', icon: '🧾', color: theme === 'day-mode' ? 'bg-blue-100 text-blue-600' : 'bg-blue-900/20 text-blue-400' },
+        { name: 'Code', icon: '💻', color: theme === 'day-mode' ? 'bg-green-100 text-green-600' : 'bg-green-900/20 text-green-400' },
+        { name: 'Mind Map', icon: '🧠', color: theme === 'day-mode' ? 'bg-purple-100 text-purple-600' : 'bg-purple-900/20 text-purple-400' },
+        { name: 'Image', icon: '🖼️', color: theme === 'day-mode' ? 'bg-yellow-100 text-yellow-600' : 'bg-yellow-900/20 text-yellow-400' },
+        { name: 'Presentation', icon: '📊', color: theme === 'day-mode' ? 'bg-indigo-100 text-indigo-600' : 'bg-indigo-900/20 text-indigo-400' }
       ]
     },
     {
@@ -24,12 +26,12 @@ const TemplateSelector = ({ onSelectTemplate }) => {
       name: 'Code First',
       description: 'Start with hands-on coding, then explain concepts',
       formats: [
-        { name: 'Code', icon: '💻', color: 'bg-green-100 text-green-600' },
-        { name: 'Explanation', icon: '🧾', color: 'bg-blue-100 text-blue-600' },
-        { name: 'Mind Map', icon: '🧠', color: 'bg-purple-100 text-purple-600' },
-        { name: 'Video', icon: '🎥', color: 'bg-red-100 text-red-600' },
-        { name: 'Presentation', icon: '📊', color: 'bg-indigo-100 text-indigo-600' },
-        { name: 'Image', icon: '🖼️', color: 'bg-yellow-100 text-yellow-600' }
+        { name: 'Code', icon: '💻', color: theme === 'day-mode' ? 'bg-green-100 text-green-600' : 'bg-green-900/20 text-green-400' },
+        { name: 'Explanation', icon: '🧾', color: theme === 'day-mode' ? 'bg-blue-100 text-blue-600' : 'bg-blue-900/20 text-blue-400' },
+        { name: 'Mind Map', icon: '🧠', color: theme === 'day-mode' ? 'bg-purple-100 text-purple-600' : 'bg-purple-900/20 text-purple-400' },
+        { name: 'Video', icon: '🎥', color: theme === 'day-mode' ? 'bg-red-100 text-red-600' : 'bg-red-900/20 text-red-400' },
+        { name: 'Presentation', icon: '📊', color: theme === 'day-mode' ? 'bg-indigo-100 text-indigo-600' : 'bg-indigo-900/20 text-indigo-400' },
+        { name: 'Image', icon: '🖼️', color: theme === 'day-mode' ? 'bg-yellow-100 text-yellow-600' : 'bg-yellow-900/20 text-yellow-400' }
       ]
     },
     {
@@ -37,12 +39,12 @@ const TemplateSelector = ({ onSelectTemplate }) => {
       name: 'Visual First',
       description: 'Lead with visual content to engage learners',
       formats: [
-        { name: 'Image', icon: '🖼️', color: 'bg-yellow-100 text-yellow-600' },
-        { name: 'Mind Map', icon: '🧠', color: 'bg-purple-100 text-purple-600' },
-        { name: 'Video', icon: '🎥', color: 'bg-red-100 text-red-600' },
-        { name: 'Explanation', icon: '🧾', color: 'bg-blue-100 text-blue-600' },
-        { name: 'Code', icon: '💻', color: 'bg-green-100 text-green-600' },
-        { name: 'Presentation', icon: '📊', color: 'bg-indigo-100 text-indigo-600' }
+        { name: 'Image', icon: '🖼️', color: theme === 'day-mode' ? 'bg-yellow-100 text-yellow-600' : 'bg-yellow-900/20 text-yellow-400' },
+        { name: 'Mind Map', icon: '🧠', color: theme === 'day-mode' ? 'bg-purple-100 text-purple-600' : 'bg-purple-900/20 text-purple-400' },
+        { name: 'Video', icon: '🎥', color: theme === 'day-mode' ? 'bg-red-100 text-red-600' : 'bg-red-900/20 text-red-400' },
+        { name: 'Explanation', icon: '🧾', color: theme === 'day-mode' ? 'bg-blue-100 text-blue-600' : 'bg-blue-900/20 text-blue-400' },
+        { name: 'Code', icon: '💻', color: theme === 'day-mode' ? 'bg-green-100 text-green-600' : 'bg-green-900/20 text-green-400' },
+        { name: 'Presentation', icon: '📊', color: theme === 'day-mode' ? 'bg-indigo-100 text-indigo-600' : 'bg-indigo-900/20 text-indigo-400' }
       ]
     },
     {
@@ -50,12 +52,12 @@ const TemplateSelector = ({ onSelectTemplate }) => {
       name: 'Presentation Mode',
       description: 'Structured presentation followed by interactive content',
       formats: [
-        { name: 'Presentation', icon: '📊', color: 'bg-indigo-100 text-indigo-600' },
-        { name: 'Video', icon: '🎥', color: 'bg-red-100 text-red-600' },
-        { name: 'Explanation', icon: '🧾', color: 'bg-blue-100 text-blue-600' },
-        { name: 'Code', icon: '💻', color: 'bg-green-100 text-green-600' },
-        { name: 'Mind Map', icon: '🧠', color: 'bg-purple-100 text-purple-600' },
-        { name: 'Image', icon: '🖼️', color: 'bg-yellow-100 text-yellow-600' }
+        { name: 'Presentation', icon: '📊', color: theme === 'day-mode' ? 'bg-indigo-100 text-indigo-600' : 'bg-indigo-900/20 text-indigo-400' },
+        { name: 'Video', icon: '🎥', color: theme === 'day-mode' ? 'bg-red-100 text-red-600' : 'bg-red-900/20 text-red-400' },
+        { name: 'Explanation', icon: '🧾', color: theme === 'day-mode' ? 'bg-blue-100 text-blue-600' : 'bg-blue-900/20 text-blue-400' },
+        { name: 'Code', icon: '💻', color: theme === 'day-mode' ? 'bg-green-100 text-green-600' : 'bg-green-900/20 text-green-400' },
+        { name: 'Mind Map', icon: '🧠', color: theme === 'day-mode' ? 'bg-purple-100 text-purple-600' : 'bg-purple-900/20 text-purple-400' },
+        { name: 'Image', icon: '🖼️', color: theme === 'day-mode' ? 'bg-yellow-100 text-yellow-600' : 'bg-yellow-900/20 text-yellow-400' }
       ]
     },
     {
@@ -63,12 +65,12 @@ const TemplateSelector = ({ onSelectTemplate }) => {
       name: 'Mind Map Central',
       description: 'Start with mind mapping to organize knowledge',
       formats: [
-        { name: 'Mind Map', icon: '🧠', color: 'bg-purple-100 text-purple-600' },
-        { name: 'Video', icon: '🎥', color: 'bg-red-100 text-red-600' },
-        { name: 'Explanation', icon: '🧾', color: 'bg-blue-100 text-blue-600' },
-        { name: 'Code', icon: '💻', color: 'bg-green-100 text-green-600' },
-        { name: 'Presentation', icon: '📊', color: 'bg-indigo-100 text-indigo-600' },
-        { name: 'Image', icon: '🖼️', color: 'bg-yellow-100 text-yellow-600' }
+        { name: 'Mind Map', icon: '🧠', color: theme === 'day-mode' ? 'bg-purple-100 text-purple-600' : 'bg-purple-900/20 text-purple-400' },
+        { name: 'Video', icon: '🎥', color: theme === 'day-mode' ? 'bg-red-100 text-red-600' : 'bg-red-900/20 text-red-400' },
+        { name: 'Explanation', icon: '🧾', color: theme === 'day-mode' ? 'bg-blue-100 text-blue-600' : 'bg-blue-900/20 text-blue-400' },
+        { name: 'Code', icon: '💻', color: theme === 'day-mode' ? 'bg-green-100 text-green-600' : 'bg-green-900/20 text-green-400' },
+        { name: 'Presentation', icon: '📊', color: theme === 'day-mode' ? 'bg-indigo-100 text-indigo-600' : 'bg-indigo-900/20 text-indigo-400' },
+        { name: 'Image', icon: '🖼️', color: theme === 'day-mode' ? 'bg-yellow-100 text-yellow-600' : 'bg-yellow-900/20 text-yellow-400' }
       ]
     }
   ];
@@ -80,7 +82,9 @@ const TemplateSelector = ({ onSelectTemplate }) => {
   const handleUseTemplate = () => {
     if (selectedTemplate) {
       onSelectTemplate(selectedTemplate);
-      alert(`Template "${selectedTemplate.name}" selected!`);
+      // Navigate to lesson content view with the selected template
+      const lessonId = 'default-lesson'; // You can get this from context or props
+      window.location.href = `/lesson-content/${lessonId}?template=${selectedTemplate.id}`;
     }
   };
 
