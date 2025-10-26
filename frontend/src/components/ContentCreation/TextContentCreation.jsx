@@ -135,7 +135,9 @@ export default function TextContentCreation({ lesson, course, onComplete, onNext
       fontFamily: 'inherit',
       resize: 'vertical',
       outline: 'none',
-      transition: 'border-color 0.3s ease'
+      transition: 'border-color 0.3s ease',
+      color: theme.colors.text,
+      backgroundColor: theme.colors.surface
     },
     textareaFocus: {
       borderColor: theme.colors.primary
