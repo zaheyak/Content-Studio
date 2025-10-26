@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const GeminiService = require('../services/geminiService');
+const OpenAIService = require('../services/OpenAIService');
 
 // POST /api/ai/process-video - Process video to transcript
 router.post('/process-video', (req, res) => {
@@ -39,12 +39,12 @@ router.post('/generate-lesson', async (req, res) => {
       });
     }
 
-    const generatedContent = await GeminiService.generateLessonContent(transcript, options);
+    const generatedContent = await OpenAIService.generateLessonContent(transcript);
     
     const generatedLesson = {
       id: `lesson-${Date.now()}`,
       title: 'AI-Generated Lesson',
-      description: 'This lesson was generated using Gemini AI',
+      description: 'This lesson was generated using OpenAI',
       content: {
         text: generatedContent,
         summary: 'AI-generated educational content',
@@ -64,7 +64,7 @@ router.post('/generate-lesson', async (req, res) => {
     res.status(201).json({
       success: true,
       data: generatedLesson,
-      message: 'Lesson generated successfully with Gemini AI'
+      message: 'Lesson generated successfully with OpenAI'
     });
   } catch (error) {
     console.error('Error generating lesson:', error);
@@ -88,7 +88,7 @@ router.post('/generate-mindmap', async (req, res) => {
       });
     }
 
-    const mindmapData = await GeminiService.generateMindMap(content);
+    const mindmapData = await OpenAIService.generateText(`Create a mind map structure for this content: ${content}`);
     
     const mindmap = {
       id: `mindmap-${Date.now()}`,
@@ -102,7 +102,7 @@ router.post('/generate-mindmap', async (req, res) => {
     res.status(201).json({
       success: true,
       data: mindmap,
-      message: 'Mind map generated successfully with Gemini AI'
+      message: 'Mind map generated successfully with OpenAI'
     });
   } catch (error) {
     console.error('Error generating mind map:', error);
@@ -135,7 +135,7 @@ router.post('/translate', (req, res) => {
   });
 });
 
-// POST /api/ai/generate-text - Generate text content using Gemini
+// POST /api/ai/generate-text - Generate text content using OpenAI
 router.post('/generate-text', async (req, res) => {
   try {
     const { prompt, options } = req.body;
@@ -147,7 +147,7 @@ router.post('/generate-text', async (req, res) => {
       });
     }
 
-    const generatedText = await GeminiService.generateText(prompt);
+    const generatedText = await OpenAIService.generateText(prompt);
     
     res.status(201).json({
       success: true,
@@ -155,19 +155,19 @@ router.post('/generate-text', async (req, res) => {
         id: `text-${Date.now()}`,
         prompt,
         generatedText,
-        model: 'gemini-pro',
+        model: 'gpt-4o-mini',
         createdAt: new Date().toISOString()
       },
-      message: 'Text generated successfully with Gemini AI'
+      message: 'Text generated successfully with OpenAI'
     });
   } catch (error) {
     console.error('Error generating text:', error);
     
-    // Check if it's a Gemini API key issue
-    if (error.message.includes('GEMINI_API_KEY')) {
+    // Check if it's an OpenAI API key issue
+    if (error.message.includes('OPENAI_API_KEY')) {
       return res.status(500).json({
         success: false,
-        message: 'Gemini API key is not configured. Please set GEMINI_API_KEY environment variable.',
+        message: 'OpenAI API key is not configured. Please set OPENAI_API_KEY environment variable.',
         error: 'API_KEY_MISSING'
       });
     }
@@ -192,7 +192,7 @@ router.post('/quality-check', async (req, res) => {
       });
     }
 
-    const qualityAnalysis = await GeminiService.qualityCheck(content);
+    const qualityAnalysis = await OpenAIService.generateText(`Analyze the quality of this educational content: ${content}`);
     
     const qualityReport = {
       id: `quality-${Date.now()}`,
@@ -206,7 +206,7 @@ router.post('/quality-check', async (req, res) => {
     res.status(201).json({
       success: true,
       data: qualityReport,
-      message: 'Quality check completed with Gemini AI'
+      message: 'Quality check completed with OpenAI'
     });
   } catch (error) {
     console.error('Error in quality check:', error);

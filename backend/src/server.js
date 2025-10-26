@@ -10,18 +10,18 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-// ✅ בדיקה האם ה-Gemini API Key נטען
-console.log("Gemini key detected:", !!process.env.GEMINI_API_KEY);
-// DEBUG: Show Gemini SDK and model info
+// ✅ בדיקה האם ה-OpenAI API Key נטען
+console.log("OpenAI key detected:", !!process.env.OPENAI_API_KEY);
+// DEBUG: Show OpenAI SDK info
 try {
-  const pkg = require("@google/generative-ai/package.json");
-  console.log("📦 Gemini SDK version:", pkg.version);
+  const pkg = require("openai/package.json");
+  console.log("📦 OpenAI SDK version:", pkg.version);
 
-  const { GoogleGenerativeAI } = require("@google/generative-ai");
-  const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-  console.log("🤖 Gemini model test: Ready for", genAI ? "requests" : "NO API key");
+  const OpenAI = require("openai");
+  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  console.log("🤖 OpenAI model test: Ready for", openai ? "requests" : "NO API key");
 } catch (err) {
-  console.error("❌ Gemini SDK info error:", err.message);
+  console.error("❌ OpenAI SDK info error:", err.message);
 }
 
 // Middleware
