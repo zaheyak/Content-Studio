@@ -6,17 +6,17 @@ class GeminiService {
     this.model = 'gemini-1.5-pro';
     
     if (!this.apiKey) {
-      console.error('GEMINI_API_KEY is not set in environment variables');
-      throw new Error('GEMINI_API_KEY environment variable is required');
+      console.warn('GEMINI_API_KEY is not set in environment variables - AI features will be disabled');
+      this.genAI = null;
+    } else {
+      this.genAI = new GoogleGenerativeAI(this.apiKey);
     }
-    
-    this.genAI = new GoogleGenerativeAI(this.apiKey);
   }
 
   async generateText(prompt) {
     try {
-      if (!this.apiKey) {
-        throw new Error('GEMINI_API_KEY is not configured');
+      if (!this.apiKey || !this.genAI) {
+        return 'AI service is not configured. Please set GEMINI_API_KEY environment variable.';
       }
       
       const model = this.genAI.getGenerativeModel({ model: this.model });

@@ -6,8 +6,12 @@ const path = require('path');
 // Load environment variables
 dotenv.config();
 
+
+
 const app = express();
 const PORT = process.env.PORT || 3001;
+// ✅ בדיקה האם ה-Gemini API Key נטען
+console.log("Gemini key detected:", !!process.env.GEMINI_API_KEY);
 
 // Middleware
 app.use(cors());
@@ -95,6 +99,7 @@ app.use('*', (req, res) => {
     path: req.originalUrl 
   });
 });
+
 
 // Start server
 app.listen(PORT, () => {

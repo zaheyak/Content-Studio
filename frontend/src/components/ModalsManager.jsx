@@ -16,7 +16,9 @@ const ModalsManager = () => {
     handleContentComplete,
     openNewLessonModal,
     handleTemplateSelect,
-    closeTemplateSelector
+    closeTemplateSelector,
+    setSelectedLesson,
+    setShowContentCreation
   } = useApp()
 
   return (
@@ -27,7 +29,11 @@ const ModalsManager = () => {
           isOpen={showNewLessonModal}
           onClose={closeNewLessonModal}
           onNavigateToContent={(lesson) => {
-            openNewLessonModal(lesson.id, lesson.title);
+            // Close the lesson creation modal
+            closeNewLessonModal();
+            // Set the selected lesson and open content creation
+            setSelectedLesson(lesson);
+            setShowContentCreation(true);
           }}
           courseId={selectedCourse?.id}
           courseTitle={selectedCourse?.title}

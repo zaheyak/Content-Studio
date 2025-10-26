@@ -36,18 +36,18 @@ export default function TextContentCreation({ lesson, course, onComplete, onNext
       const data = await response.json();
       
       if (data.success) {
-        setGeneratedContent(data.data.content);
+        setGeneratedContent(data.data.generatedText);
         setIsCompleted(true);
       } else {
         console.error('AI generation failed:', data.error);
         // Fallback to mock content
-        setGeneratedContent(`[AI Generated Content - Real Gemini Integration]\n\n${aiPrompt}\n\nThis content was generated using the Gemini AI API. The response includes detailed explanations, examples, and structured information based on your prompt.`);
+        setGeneratedContent(`# AI Generated Content\n\n**Your Request:** ${aiPrompt}\n\n## Generated Content\n\nThis is a demonstration of AI-generated educational content. In production, this would be generated using the Gemini AI API.\n\n### Key Points:\n- Detailed explanations based on your prompt\n- Structured educational content\n- Examples and practical applications\n- Summary and key takeaways\n\n### Next Steps:\n1. Review the generated content\n2. Edit and customize as needed\n3. Add your own insights and examples\n4. Complete the lesson creation process\n\n*Note: To enable real AI generation, please configure the GEMINI_API_KEY environment variable.*`);
         setIsCompleted(true);
       }
     } catch (error) {
       console.error('AI generation error:', error);
       // Fallback to mock content
-      setGeneratedContent(`[AI Generated Content - Real Gemini Integration]\n\n${aiPrompt}\n\nThis content was generated using the Gemini AI API. The response includes detailed explanations, examples, and structured information based on your prompt.`);
+      setGeneratedContent(`# AI Generated Content\n\n**Your Request:** ${aiPrompt}\n\n## Generated Content\n\nThis is a demonstration of AI-generated educational content. In production, this would be generated using the Gemini AI API.\n\n### Key Points:\n- Detailed explanations based on your prompt\n- Structured educational content\n- Examples and practical applications\n- Summary and key takeaways\n\n### Next Steps:\n1. Review the generated content\n2. Edit and customize as needed\n3. Add your own insights and examples\n4. Complete the lesson creation process\n\n*Note: To enable real AI generation, please configure the GEMINI_API_KEY environment variable.*`);
       setIsCompleted(true);
     } finally {
       setIsGenerating(false);
@@ -104,7 +104,9 @@ export default function TextContentCreation({ lesson, course, onComplete, onNext
       alignItems: 'center',
       padding: '0.75rem 1rem',
       borderRadius: theme.borderRadius.medium,
-      border: `1px solid ${theme.colors.border}`,
+      borderWidth: '1px',
+      borderStyle: 'solid',
+      borderColor: theme.colors.border,
       backgroundColor: theme.colors.surface,
       color: theme.colors.text,
       cursor: 'pointer',
@@ -125,7 +127,9 @@ export default function TextContentCreation({ lesson, course, onComplete, onNext
       width: '100%',
       minHeight: '200px',
       padding: '0.75rem',
-      border: `1px solid ${theme.colors.border}`,
+      borderWidth: '1px',
+      borderStyle: 'solid',
+      borderColor: theme.colors.border,
       borderRadius: theme.borderRadius.medium,
       fontSize: '0.875rem',
       fontFamily: 'inherit',
@@ -162,7 +166,9 @@ export default function TextContentCreation({ lesson, course, onComplete, onNext
     },
     generatedContent: {
       backgroundColor: theme.colors.surface,
-      border: `1px solid ${theme.colors.border}`,
+      borderWidth: '1px',
+      borderStyle: 'solid',
+      borderColor: theme.colors.border,
       borderRadius: theme.borderRadius.medium,
       padding: '1rem',
       marginTop: '1rem',
