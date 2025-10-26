@@ -3,10 +3,22 @@ const OpenAI = require('openai');
 
 class OpenAIService {
   constructor() {
-    this.apiKey = process.env.OPENAI_API_KEY;
+    // Try multiple possible environment variable names
+    this.apiKey = process.env.OPENAI_API_KEY || 
+                  process.env.openai_api_key || 
+                  process.env.OPENAIKEY ||
+                  process.env.openai_key;
+    
+    console.log('🔍 Checking for OpenAI API key...');
+    console.log('OPENAI_API_KEY exists:', !!process.env.OPENAI_API_KEY);
+    console.log('openai_api_key exists:', !!process.env.openai_api_key);
+    console.log('OPENAIKEY exists:', !!process.env.OPENAIKEY);
+    console.log('openai_key exists:', !!process.env.openai_key);
+    console.log('Final API key found:', !!this.apiKey);
     
     if (!this.apiKey) {
-      console.warn('OPENAI_API_KEY is not set in environment variables - AI features will be disabled');
+      console.warn('❌ No OpenAI API key found in environment variables - AI features will be disabled');
+      console.warn('Available env vars:', Object.keys(process.env).filter(key => key.toLowerCase().includes('openai')));
       this.client = null;
     } else {
       this.client = new OpenAI({ 

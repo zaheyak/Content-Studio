@@ -12,14 +12,19 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 // ✅ בדיקה האם ה-OpenAI API Key נטען
 console.log("OpenAI key detected:", !!process.env.OPENAI_API_KEY);
+console.log("Environment variables with 'API' in name:", Object.keys(process.env).filter(key => key.includes('API')));
 // DEBUG: Show OpenAI SDK info
 try {
   const pkg = require("openai/package.json");
   console.log("📦 OpenAI SDK version:", pkg.version);
 
-  const OpenAI = require("openai");
-  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-  console.log("🤖 OpenAI model test: Ready for", openai ? "requests" : "NO API key");
+  if (process.env.OPENAI_API_KEY) {
+    const OpenAI = require("openai");
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    console.log("🤖 OpenAI model test: Ready for requests");
+  } else {
+    console.log("🤖 OpenAI model test: NO API key");
+  }
 } catch (err) {
   console.error("❌ OpenAI SDK info error:", err.message);
 }
