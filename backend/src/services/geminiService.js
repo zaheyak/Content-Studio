@@ -4,7 +4,7 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 class GeminiService {
   constructor() {
     this.apiKey = process.env.GEMINI_API_KEY;
-    this.model = "gemini-1.5-flash"; // ✅ עובד בוודאות בחינם
+    this.model = "models/gemini-1.5-flash"; // ✅ שימי לב ל־"models/"
 
     if (!this.apiKey) {
       console.warn("⚠️ GEMINI_API_KEY not set — AI features disabled.");
@@ -20,7 +20,7 @@ class GeminiService {
     }
 
     try {
-      // ✅ שימוש נכון במודל לפי API החדש
+      // ✅ תיקון: שימוש במבנה הנתיב החדש לפי v1
       const model = this.genAI.getGenerativeModel({ model: this.model });
       const result = await model.generateContent(prompt);
       const response = await result.response;
