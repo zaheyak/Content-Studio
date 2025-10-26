@@ -6,6 +6,11 @@ const TemplateSelector = ({ onSelectTemplate }) => {
   const { theme } = useApp();
   const [selectedTemplate, setSelectedTemplate] = useState(null);
 
+  // Default function if onSelectTemplate is not provided
+  const handleTemplateSelect = onSelectTemplate || (() => {
+    console.log('No onSelectTemplate provided, using default handler');
+  });
+
   // Mock templates with all lesson formats in different orders
   const templates = [
     {
@@ -81,7 +86,10 @@ const TemplateSelector = ({ onSelectTemplate }) => {
 
   const handleUseTemplate = () => {
     if (selectedTemplate) {
-      onSelectTemplate(selectedTemplate);
+      // Call the template select handler if provided
+      if (onSelectTemplate) {
+        onSelectTemplate(selectedTemplate);
+      }
       // Navigate to lesson content view with the selected template
       const lessonId = 'default-lesson'; // You can get this from context or props
       window.location.href = `/lesson-content/${lessonId}?template=${selectedTemplate.id}`;
