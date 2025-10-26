@@ -7,7 +7,7 @@ const TemplateSelector = ({ onSelectTemplate }) => {
   const [selectedTemplate, setSelectedTemplate] = useState(null);
 
   // Default function if onSelectTemplate is not provided
-  const handleTemplateSelect = onSelectTemplate || (() => {
+  const defaultTemplateHandler = onSelectTemplate || (() => {
     console.log('No onSelectTemplate provided, using default handler');
   });
 
