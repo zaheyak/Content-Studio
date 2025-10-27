@@ -39,12 +39,12 @@ export const AppProvider = ({ children }) => {
       setLoading(true)
       
       // Fetch courses from API
-      const coursesResponse = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/courses`)
+      const coursesResponse = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/courses`)
       const coursesData = await coursesResponse.json()
       setCourses(coursesData.data || [])
       
       // Fetch lessons from API
-      const lessonsResponse = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/lessons`)
+      const lessonsResponse = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/lessons`)
       const lessonsData = await lessonsResponse.json()
       setLessons(lessonsData.data || [])
       

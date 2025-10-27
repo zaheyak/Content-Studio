@@ -41,61 +41,86 @@ router.get('/', (req, res) => {
 router.get('/lesson/:lessonId', (req, res) => {
   const { lessonId } = req.params;
   
-  // Get lesson from JavaScript data structure
-  const lessonContent = lessonDataManager.getLesson(lessonId);
-  
-  if (lessonContent) {
-    console.log('Loaded lesson content from JS data:', lessonId);
-    return res.json({
+  try {
+    // First try to load from JSON file
+    const fs = require('fs');
+    const path = require('path');
+    const dataDir = path.join(__dirname, '../../data');
+    const lessonFile = path.join(dataDir, `lesson-${lessonId}.json`);
+    
+    if (fs.existsSync(lessonFile)) {
+      const lessonData = JSON.parse(fs.readFileSync(lessonFile, 'utf8'));
+      console.log('Loaded lesson content from JSON file:', lessonId);
+      return res.json({
+        success: true,
+        data: lessonData,
+        message: 'Lesson content loaded successfully from JSON file'
+      });
+    }
+    
+    // If no JSON file, try JavaScript data structure
+    const lessonContent = lessonDataManager.getLesson(lessonId);
+    
+    if (lessonContent) {
+      console.log('Loaded lesson content from JS data:', lessonId);
+      return res.json({
+        success: true,
+        data: lessonContent,
+        message: 'Lesson content retrieved successfully from JS data'
+      });
+    }
+    
+    // Return empty lesson if no content found
+    const emptyLessonContent = {
+      lessonId: lessonId,
+      lessonTitle: 'Untitled Lesson',
+      courseId: null,
+      courseTitle: null,
+      content: {
+        video: null,
+        text: null,
+        presentation: null,
+        mindmap: null,
+        code: null,
+        images: null
+      },
+      template: {
+        id: 'learning-flow',
+        name: 'Learning Flow',
+        description: 'Traditional learning progression from video to practice',
+        formats: [
+          { name: 'Video', icon: '🎥', order: 1 },
+          { name: 'Explanation', icon: '🧾', order: 2 },
+          { name: 'Code', icon: '💻', order: 3 },
+          { name: 'Mind Map', icon: '🧠', order: 4 },
+          { name: 'Image', icon: '🖼️', order: 5 },
+          { name: 'Presentation', icon: '📊', order: 6 }
+        ]
+      },
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      metadata: {
+        totalContent: 0,
+        completedContent: 0,
+        progress: 0,
+        estimatedTime: '0 minutes',
+        difficulty: 'beginner'
+      }
+    };
+
+    res.json({
       success: true,
-      data: lessonContent,
-      message: 'Lesson content retrieved successfully from JS data'
+      data: emptyLessonContent,
+      message: 'No lesson content found - returning empty lesson'
+    });
+  } catch (error) {
+    console.error('Error loading lesson content:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to load lesson content',
+      error: error.message
     });
   }
-  
-  // Return empty lesson if no content found
-  const emptyLessonContent = {
-    lessonId: lessonId,
-    lessonTitle: 'Untitled Lesson',
-    courseId: null,
-    courseTitle: null,
-    content: {
-      video: null,
-      text: null,
-      presentation: null,
-      mindmap: null,
-      code: null,
-      images: null
-    },
-    template: {
-      id: 'learning-flow',
-      name: 'Learning Flow',
-      description: 'Traditional learning progression from video to practice',
-      formats: [
-        { name: 'Video', icon: '🎥', order: 1 },
-        { name: 'Explanation', icon: '🧾', order: 2 },
-        { name: 'Code', icon: '💻', order: 3 },
-        { name: 'Mind Map', icon: '🧠', order: 4 },
-        { name: 'Image', icon: '🖼️', order: 5 },
-        { name: 'Presentation', icon: '📊', order: 6 }
-      ]
-    },
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    metadata: {
-      totalContent: 0,
-      completedContent: 0,
-      progress: 0,
-      estimatedTime: '0 minutes',
-      difficulty: 'beginner'
-    }
-  };
-
-  res.json({
-    success: true,
-    data: emptyLessonContent,
-    message: 'No lesson content found - returning empty lesson'
-  });
 });
 
 // POST /api/content/lesson/:lessonId - Save lesson content
@@ -161,13 +186,28 @@ router.post('/lesson/:lessonId', (req, res) => {
     // Update lesson in JavaScript data structure
     const updatedLesson = lessonDataManager.updateLesson(lessonId, lessonContent);
     
+    // Also save to JSON file for persistence
+    const fs = require('fs');
+    const path = require('path');
+    const dataDir = path.join(__dirname, '../../data');
+    const lessonFile = path.join(dataDir, `lesson-${lessonId}.json`);
+    
+    // Ensure data directory exists
+    if (!fs.existsSync(dataDir)) {
+      fs.mkdirSync(dataDir, { recursive: true });
+    }
+    
+    // Save lesson to JSON file
+    fs.writeFileSync(lessonFile, JSON.stringify(updatedLesson, null, 2));
+    console.log('Lesson content saved to JSON file:', lessonFile);
+    
     console.log('Lesson content saved to JS data structure:', lessonId);
     console.log('Created upload directories for lesson:', lessonId);
     
     res.json({
       success: true,
       data: updatedLesson,
-      message: 'Lesson content saved successfully to JS data structure'
+      message: 'Lesson content saved successfully to both JS data structure and JSON file'
     });
   } catch (error) {
     console.error('Error saving lesson content:', error);

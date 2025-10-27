@@ -33,7 +33,7 @@ function App() {
   const [showContentCreation, setShowContentCreation] = useState(false)
   const [selectedLesson, setSelectedLesson] = useState(null)
 
-  const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+  const API_BASE = import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'
 
   useEffect(() => {
     loadData()

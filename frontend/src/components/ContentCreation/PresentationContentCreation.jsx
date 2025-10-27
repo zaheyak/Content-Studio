@@ -35,7 +35,7 @@ export default function PresentationContentCreation({ lesson, course, onComplete
       formData.append('lessonId', lesson.id);
       formData.append('type', 'presentation');
       
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/upload/presentation`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/upload/presentation`, {
         method: 'POST',
         body: formData
       });

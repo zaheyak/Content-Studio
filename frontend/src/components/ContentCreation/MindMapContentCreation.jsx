@@ -35,7 +35,7 @@ export default function MindMapContentCreation({ lesson, course, onComplete, onN
       formData.append('lessonId', lesson.id);
       formData.append('type', 'mindmap');
       
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/upload/mindmap`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/upload/mindmap`, {
         method: 'POST',
         body: formData
       });
