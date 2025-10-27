@@ -271,26 +271,26 @@ const navigate = useNavigate();
       }
       
       // Handle YouTube videos
-      if (content.data?.videoId) {
+      if (content.videoId) {
         contentHTML += `<h4>YouTube Video:</h4>`;
         contentHTML += `
           <div style="margin: 1rem 0; padding: 1rem; border: 1px solid #e0e0e0; border-radius: 8px;">
-            <strong>Video ID:</strong> ${content.data.videoId}<br>
-            <strong>Title:</strong> ${content.data.title || 'YouTube Video'}<br>
-            <strong>Duration:</strong> ${content.data.duration || 'Unknown'}<br>
-            <strong>URL:</strong> <a href="${content.data.url}" target="_blank">${content.data.url}</a>
+            <strong>Video ID:</strong> ${content.videoId}<br>
+            <strong>Title:</strong> ${content.title || 'YouTube Video'}<br>
+            <strong>Duration:</strong> ${content.duration || 'Unknown'}<br>
+            <strong>URL:</strong> <a href="${content.url}" target="_blank">${content.url}</a>
           </div>
         `;
         
         // Add YouTube embed
-        if (content.data.embedUrl) {
+        if (content.embedUrl) {
           contentHTML += `
             <div style="margin: 1rem 0;">
               <h5>Video Preview:</h5>
               <iframe 
                 width="100%" 
                 height="315" 
-                src="${content.data.embedUrl}" 
+                src="${content.embedUrl}" 
                 title="YouTube video player" 
                 frameborder="0" 
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
@@ -303,13 +303,13 @@ const navigate = useNavigate();
       }
       
       // Handle AI generated content
-      if (content.data?.generated) {
+      if (content.generated) {
         contentHTML += `<h4>AI Generated Content:</h4>`;
         contentHTML += `
           <div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; white-space: pre-wrap;">
-            <strong>Prompt:</strong> ${content.data.generated.prompt || 'N/A'}<br>
-            <strong>Duration:</strong> ${content.data.generated.duration || 'N/A'}<br>
-            <strong>Status:</strong> ${content.data.generated.status || 'N/A'}
+            <strong>Prompt:</strong> ${content.generated.prompt || 'N/A'}<br>
+            <strong>Duration:</strong> ${content.generated.duration || 'N/A'}<br>
+            <strong>Status:</strong> ${content.generated.status || 'N/A'}
           </div>
         `;
       }
@@ -318,14 +318,24 @@ const navigate = useNavigate();
         contentHTML += `<h4>Transcription:</h4><div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; white-space: pre-wrap;">${content.transcription}</div>`;
       }
     } else if (formatId === 'text') {
-      if (content.data?.content) {
-        contentHTML += `<h4>Manual Content:</h4><div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; white-space: pre-wrap;">${content.data.content}</div>`;
+      if (content.content) {
+        contentHTML += `<h4>Manual Content:</h4><div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; white-space: pre-wrap;">${content.content}</div>`;
       }
-      if (content.data?.generated) {
-        contentHTML += `<h4>AI Generated Content:</h4><div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; white-space: pre-wrap;">${content.data.generated}</div>`;
+      if (content.generated) {
+        contentHTML += `<h4>AI Generated Content:</h4><div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; white-space: pre-wrap;">${content.generated}</div>`;
       }
     } else if (formatId === 'presentation') {
-      if (content.slides?.length > 0) {
+      if (content.file) {
+        contentHTML += `<h4>Uploaded Presentation:</h4>`;
+        contentHTML += `
+          <div style="margin: 1rem 0; padding: 1rem; border: 1px solid #e0e0e0; border-radius: 8px;">
+            <strong>File Name:</strong> ${content.file.name}<br>
+            <strong>Size:</strong> ${(content.file.size / 1024 / 1024).toFixed(2)} MB<br>
+            <strong>Path:</strong> ${content.file.path}<br>
+            <strong>URL:</strong> <a href="${content.presentation_url || content.file.path}" target="_blank">View/Download</a>
+          </div>
+        `;
+      } else if (content.slides?.length > 0) {
         contentHTML += `<h4>Slides (${content.slides.length}):</h4>`;
         content.slides.forEach((slide, index) => {
           contentHTML += `
@@ -336,9 +346,25 @@ const navigate = useNavigate();
             </div>
           `;
         });
+      } else {
+        contentHTML += `<div style="margin: 1rem 0; padding: 1rem; background: #f5f5f5; border-radius: 8px; text-align: center; color: #666;">
+          <p>לא הועלתה מצגת עדיין</p>
+        </div>`;
       }
     } else if (formatId === 'mindmap') {
-      if (content.nodes?.length > 0) {
+      if (content.file) {
+        contentHTML += `<h4>Uploaded Mind Map:</h4>`;
+        contentHTML += `
+          <div style="margin: 1rem 0; padding: 1rem; border: 1px solid #e0e0e0; border-radius: 8px;">
+            <strong>File Name:</strong> ${content.file.name}<br>
+            <strong>Size:</strong> ${(content.file.size / 1024 / 1024).toFixed(2)} MB<br>
+            <strong>Path:</strong> ${content.file.path}<br>
+            <div style="margin-top: 1rem;">
+              <img src="${content.mindmap_url || content.file.url}" alt="Mind Map" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            </div>
+          </div>
+        `;
+      } else if (content.nodes?.length > 0) {
         contentHTML += `<h4>Mind Map Nodes (${content.nodes.length}):</h4>`;
         content.nodes.forEach((node, index) => {
           contentHTML += `
@@ -347,12 +373,16 @@ const navigate = useNavigate();
             </div>
           `;
         });
-      }
-      if (content.connections?.length > 0) {
-        contentHTML += `<h4>Connections (${content.connections.length}):</h4>`;
-        content.connections.forEach((conn, index) => {
-          contentHTML += `<div style="margin: 0.25rem 0;">${index + 1}. ${conn.from} → ${conn.to}</div>`;
-        });
+        if (content.connections?.length > 0) {
+          contentHTML += `<h4>Connections (${content.connections.length}):</h4>`;
+          content.connections.forEach((conn, index) => {
+            contentHTML += `<div style="margin: 0.25rem 0;">${index + 1}. ${conn.from} → ${conn.to}</div>`;
+          });
+        }
+      } else {
+        contentHTML += `<div style="margin: 1rem 0; padding: 1rem; background: #f5f5f5; border-radius: 8px; text-align: center; color: #666;">
+          <p>לא הועלתה מפת חשיבה עדיין</p>
+        </div>`;
       }
     } else if (formatId === 'code') {
       if (content.code) {
@@ -481,7 +511,10 @@ const navigate = useNavigate();
 
   const handleChooseTemplate = () => {
     console.log('Opening template selector...');
-    navigate('/template-selector');
+    // First complete the content creation, then navigate to template selector
+    handleFinish();
+    // Navigate to template selector with lesson ID
+    navigate(`/template-selector?lessonId=${lesson.id}`);
   };
 
   const styles = {
@@ -748,6 +781,17 @@ const navigate = useNavigate();
   // Check if lesson already has content
   const hasExistingContent = completedCount > 0;
   const buttonText = hasExistingContent ? 'Edit Content' : 'Create Content';
+  
+  const handleEditContent = () => {
+    // If there's existing content, just stay in the modal to edit
+    // If no content, complete the creation process
+    if (hasExistingContent) {
+      // Stay in modal - user can edit individual formats
+      return;
+    } else {
+      handleFinish();
+    }
+  };
 
   return (
     <div style={styles.overlay}>
@@ -1044,7 +1088,7 @@ const navigate = useNavigate();
             <div></div>
             <div style={{ display: 'flex', gap: '12px' }}>
               <button
-                onClick={handleFinish}
+                onClick={handleEditContent}
                 disabled={completedCount === 0}
                 style={{
                   ...styles.button,
