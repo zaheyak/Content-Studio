@@ -215,6 +215,7 @@ const TemplateBasedLessonView = () => {
     console.log('Content found:', content);
     console.log('Full lesson content:', lessonContent);
     console.log('Lesson content structure:', lessonContent);
+    console.log('Content keys available:', Object.keys(lessonContent.content || {}));
     
     // Debug presentation content specifically
     if (formatKey === 'presentation') {
@@ -244,6 +245,7 @@ const TemplateBasedLessonView = () => {
       if (content.videoId) {
         // YouTube video
         displayContent = `YouTube Video: ${content.title || 'Video'}\nDuration: ${content.duration || 'Unknown'}\nVideo ID: ${content.videoId}\nURL: ${content.url || `https://www.youtube.com/watch?v=${content.videoId}`}`;
+        console.log('Video content found:', content);
       } else if (content.files && content.files.length > 0) {
         // Uploaded video
         displayContent = `Uploaded Video: ${content.files[0].name}\nSize: ${(content.files[0].size / 1024 / 1024).toFixed(2)} MB`;
@@ -640,9 +642,16 @@ const TemplateBasedLessonView = () => {
                       )}
                       
                       {/* Only show text content if it's a text format and no other content is displayed */}
-                      {(formatKey === 'text' || formatKey === 'explanation') && !content?.presentation_url && !content?.mindmap_url && !content?.files && !content?.code && (
+                      {(formatKey === 'text' || formatKey === 'explanation') && !content?.presentation_url && !content?.mindmap_url && !content?.files && !content?.code && !content?.videoId && (
                         <div className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
                           {content.content}
+                        </div>
+                      )}
+                      
+                      {/* Show display content for all formats */}
+                      {displayContent && (
+                        <div className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
+                          {displayContent}
                         </div>
                       )}
                     </div>
