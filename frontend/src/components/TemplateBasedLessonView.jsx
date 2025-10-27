@@ -91,7 +91,8 @@ const TemplateBasedLessonView = () => {
         
         // Load from backend API only
         console.log('Loading content from backend for lesson:', currentLessonId);
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/content/lesson/${currentLessonId}/full`);
+        const apiUrl = import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app';
+        const response = await fetch(`${apiUrl}/api/content/lesson/${currentLessonId}/full`);
         
         if (response.ok) {
         const data = await response.json();
@@ -214,6 +215,16 @@ const TemplateBasedLessonView = () => {
     console.log('Content found:', content);
     console.log('Full lesson content:', lessonContent);
     console.log('Lesson content structure:', lessonContent);
+    
+    // Debug presentation content specifically
+    if (formatKey === 'presentation') {
+      console.log('Presentation content debug:', {
+        hasContent: !!content,
+        presentation_url: content?.presentation_url,
+        file: content?.file,
+        filePath: content?.file?.path
+      });
+    }
     
     if (!content) {
       return { 
@@ -485,6 +496,9 @@ const TemplateBasedLessonView = () => {
                                 </div>
                                 <div className="text-sm text-blue-600 dark:text-blue-300">
                                   {content.file?.size ? `${(content.file.size / 1024 / 1024).toFixed(2)} MB` : 'Presentation file'}
+                                </div>
+                                <div className="text-xs text-gray-500 mt-1">
+                                  URL: {content.presentation_url || content.file?.path}
                                 </div>
                               </div>
                             <a

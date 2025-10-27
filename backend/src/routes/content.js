@@ -53,7 +53,7 @@ router.get('/lesson/:lessonId', (req, res) => {
       console.log('Loaded lesson content from JSON file:', lessonId);
       
       // Add base URL for file access and fix file paths
-      const baseUrl = process.env.API_URL || 'http://localhost:3001';
+      const baseUrl = process.env.API_URL || 'https://content-studio-production-76b6.up.railway.app';
       
       // Fix file paths to include full URL
       const fixFilePaths = (content) => {
@@ -333,7 +333,7 @@ router.get('/lesson/:lessonId/full', (req, res) => {
     }
     
     // Add comprehensive metadata and fix file paths
-    const baseUrl = process.env.API_URL || 'http://localhost:3001';
+    const baseUrl = process.env.API_URL || 'https://content-studio-production-76b6.up.railway.app';
     const contentCount = Object.keys(lessonData.content || {}).filter(key => lessonData.content[key] !== null).length;
     
     // Fix file paths to include full URL
