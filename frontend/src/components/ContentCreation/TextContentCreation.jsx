@@ -22,7 +22,7 @@ export default function TextContentCreation({ lesson, course, onComplete, onNext
     setIsGenerating(true);
     
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/ai/generate-text`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-backend-production.up.railway.app'}/api/ai/generate-text`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -34,8 +34,10 @@ export default function TextContentCreation({ lesson, course, onComplete, onNext
       });
       
       const data = await response.json();
+      console.log('AI API Response:', data);
       
       if (data.success) {
+        console.log('Generated text:', data.data.generatedText);
         setGeneratedContent(data.data.generatedText);
         setIsCompleted(true);
       } else {
