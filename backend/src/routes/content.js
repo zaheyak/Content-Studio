@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { lessonDataManager } = require('../data/lessonsData');
+const fs = require('fs');
+const path = require('path');
 
 // GET /api/content - Get content by type or lesson
 router.get('/', (req, res) => {
@@ -43,8 +45,6 @@ router.get('/lesson/:lessonId', (req, res) => {
   
   try {
     // First try to load from JSON file
-    const fs = require('fs');
-    const path = require('path');
     const dataDir = path.join(__dirname, '../../data');
     const lessonFile = path.join(dataDir, `lesson-${lessonId}.json`);
     
@@ -130,8 +130,6 @@ router.post('/lesson/:lessonId', (req, res) => {
   
   try {
     // Create upload directories for this lesson if they don't exist
-    const fs = require('fs');
-    const path = require('path');
     const uploadsDir = path.join(__dirname, '../../uploads');
     
     const lessonDir = path.join(uploadsDir, 'lessons', lessonId);
@@ -187,8 +185,6 @@ router.post('/lesson/:lessonId', (req, res) => {
     const updatedLesson = lessonDataManager.updateLesson(lessonId, lessonContent);
     
     // Also save to JSON file for persistence
-    const fs = require('fs');
-    const path = require('path');
     const dataDir = path.join(__dirname, '../../data');
     const lessonFile = path.join(dataDir, `lesson-${lessonId}.json`);
     
