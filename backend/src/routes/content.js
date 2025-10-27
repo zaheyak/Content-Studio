@@ -51,6 +51,47 @@ router.get('/lesson/:lessonId', (req, res) => {
     if (fs.existsSync(lessonFile)) {
       const lessonData = JSON.parse(fs.readFileSync(lessonFile, 'utf8'));
       console.log('Loaded lesson content from JSON file:', lessonId);
+      
+      // Add base URL for file access and fix file paths
+      const baseUrl = process.env.API_URL || 'http://localhost:3001';
+      
+      // Fix file paths to include full URL
+      const fixFilePaths = (content) => {
+        if (!content) return content;
+        
+        // Fix presentation files
+        if (content.presentation_url && !content.presentation_url.startsWith('http')) {
+          content.presentation_url = `${baseUrl}${content.presentation_url}`;
+        }
+        if (content.file?.path && !content.file.path.startsWith('http')) {
+          content.file.path = `${baseUrl}${content.file.path}`;
+        }
+        
+        // Fix mindmap files
+        if (content.mindmap_url && !content.mindmap_url.startsWith('http')) {
+          content.mindmap_url = `${baseUrl}${content.mindmap_url}`;
+        }
+        
+        // Fix video files
+        if (content.files && Array.isArray(content.files)) {
+          content.files = content.files.map(file => ({
+            ...file,
+            path: file.path && !file.path.startsWith('http') ? `${baseUrl}${file.path}` : file.path
+          }));
+        }
+        
+        return content;
+      };
+      
+      // Fix all content file paths
+      const fixedContent = {};
+      Object.keys(lessonData.content || {}).forEach(key => {
+        fixedContent[key] = fixFilePaths(lessonData.content[key]);
+      });
+      
+      lessonData.content = fixedContent;
+      lessonData.baseUrl = baseUrl;
+      
       return res.json({
         success: true,
         data: lessonData,
@@ -264,6 +305,105 @@ router.post('/generate', (req, res) => {
     data: generatedContent,
     message: 'Content generated successfully'
   });
+});
+
+// GET /api/content/lesson/:lessonId/full - Get complete lesson data with all content
+router.get('/lesson/:lessonId/full', (req, res) => {
+  const { lessonId } = req.params;
+  
+  try {
+    // Load lesson content
+    const dataDir = path.join(__dirname, '../../data');
+    const lessonFile = path.join(dataDir, `lesson-${lessonId}.json`);
+    
+    let lessonData = null;
+    
+    if (fs.existsSync(lessonFile)) {
+      lessonData = JSON.parse(fs.readFileSync(lessonFile, 'utf8'));
+    } else {
+      // Try JavaScript data structure
+      lessonData = lessonDataManager.getLesson(lessonId);
+    }
+    
+    if (!lessonData) {
+      return res.status(404).json({
+        success: false,
+        message: 'Lesson not found'
+      });
+    }
+    
+    // Add comprehensive metadata and fix file paths
+    const baseUrl = process.env.API_URL || 'http://localhost:3001';
+    const contentCount = Object.keys(lessonData.content || {}).filter(key => lessonData.content[key] !== null).length;
+    
+    // Fix file paths to include full URL
+    const fixFilePaths = (content) => {
+      if (!content) return content;
+      
+      // Fix presentation files
+      if (content.presentation_url && !content.presentation_url.startsWith('http')) {
+        content.presentation_url = `${baseUrl}${content.presentation_url}`;
+      }
+      if (content.file?.path && !content.file.path.startsWith('http')) {
+        content.file.path = `${baseUrl}${content.file.path}`;
+      }
+      
+      // Fix mindmap files
+      if (content.mindmap_url && !content.mindmap_url.startsWith('http')) {
+        content.mindmap_url = `${baseUrl}${content.mindmap_url}`;
+      }
+      
+      // Fix video files
+      if (content.files && Array.isArray(content.files)) {
+        content.files = content.files.map(file => ({
+          ...file,
+          path: file.path && !file.path.startsWith('http') ? `${baseUrl}${file.path}` : file.path
+        }));
+      }
+      
+      return content;
+    };
+    
+    // Fix all content file paths
+    const fixedContent = {};
+    Object.keys(lessonData.content || {}).forEach(key => {
+      fixedContent[key] = fixFilePaths(lessonData.content[key]);
+    });
+    
+    const fullLessonData = {
+      ...lessonData,
+      content: fixedContent,
+      baseUrl,
+      metadata: {
+        ...lessonData.metadata,
+        totalContent: contentCount,
+        completedContent: contentCount,
+        progress: contentCount > 0 ? 100 : 0,
+        lastUpdated: lessonData.updatedAt || new Date().toISOString(),
+        hasVideo: !!(lessonData.content?.video),
+        hasText: !!(lessonData.content?.text),
+        hasPresentation: !!(lessonData.content?.presentation),
+        hasMindmap: !!(lessonData.content?.mindmap),
+        hasCode: !!(lessonData.content?.code),
+        hasImages: !!(lessonData.content?.images)
+      }
+    };
+    
+    console.log('Loaded full lesson data for:', lessonId);
+    res.json({
+      success: true,
+      data: fullLessonData,
+      message: 'Complete lesson data loaded successfully'
+    });
+    
+  } catch (error) {
+    console.error('Error loading full lesson data:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to load lesson data',
+      error: error.message
+    });
+  }
 });
 
 // GET /api/content/:id - Get specific content

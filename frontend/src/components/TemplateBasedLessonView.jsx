@@ -91,7 +91,7 @@ const TemplateBasedLessonView = () => {
         
         // Load from backend API only
         console.log('Loading content from backend for lesson:', currentLessonId);
-        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/content/lesson/${currentLessonId}`);
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/content/lesson/${currentLessonId}/full`);
         
         if (response.ok) {
         const data = await response.json();
@@ -212,6 +212,7 @@ const TemplateBasedLessonView = () => {
     
     console.log(`Getting content for format: ${formatName} (key: ${formatKey})`);
     console.log('Content found:', content);
+    console.log('Full lesson content:', lessonContent);
     console.log('Lesson content structure:', lessonContent);
     
     if (!content) {
@@ -396,7 +397,7 @@ const TemplateBasedLessonView = () => {
                     
                     {/* Content Display */}
                     <div className="prose prose-lg dark:prose-invert max-w-none">
-                      {formatKey === 'video' && content.rawContent?.videoId && (
+                      {formatKey === 'video' && content?.videoId && (
                         <div className="mb-4">
                           <h4 className="text-lg font-semibold mb-2">YouTube Video:</h4>
                           <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-4">
@@ -406,17 +407,17 @@ const TemplateBasedLessonView = () => {
                               </div>
                               <div className="flex-1">
                                 <div className="font-medium text-red-900 dark:text-red-100">
-                                  {content.rawContent.title || 'YouTube Video'}
+                                  {content.title || 'YouTube Video'}
                                 </div>
                                 <div className="text-sm text-red-600 dark:text-red-300">
-                                  Duration: {content.rawContent.duration || 'Unknown'} | Video ID: {content.rawContent.videoId}
+                                  Duration: {content.duration || 'Unknown'} | Video ID: {content.videoId}
                                 </div>
                               </div>
                             </div>
                             <iframe
                               width="100%"
                               height="315"
-                              src={content.rawContent.embedUrl || `https://www.youtube.com/embed/${content.rawContent.videoId}`}
+                              src={content.embedUrl || `https://www.youtube.com/embed/${content.videoId}`}
                               title="YouTube video player"
                               frameBorder="0"
                               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -425,7 +426,7 @@ const TemplateBasedLessonView = () => {
                             ></iframe>
                             <div className="mt-3 flex gap-2">
                               <a
-                                href={content.rawContent.url || `https://www.youtube.com/watch?v=${content.rawContent.videoId}`}
+                                href={content.url || `https://www.youtube.com/watch?v=${content.videoId}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors"
@@ -434,7 +435,7 @@ const TemplateBasedLessonView = () => {
                               </a>
                               <button
                                 onClick={() => {
-                                  const url = content.rawContent.url || `https://www.youtube.com/watch?v=${content.rawContent.videoId}`;
+                                  const url = content.url || `https://www.youtube.com/watch?v=${content.videoId}`;
                                   navigator.clipboard.writeText(url);
                                   alert('Video URL copied to clipboard!');
                                 }}
@@ -447,7 +448,7 @@ const TemplateBasedLessonView = () => {
                         </div>
                       )}
                       
-                      {formatKey === 'video' && content.rawContent?.files && content.rawContent.files.length > 0 && (
+                      {formatKey === 'video' && content?.files && content.files.length > 0 && (
                         <div className="mb-4">
                           <h4 className="text-lg font-semibold mb-2">Uploaded Video:</h4>
                           <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
@@ -458,19 +459,19 @@ const TemplateBasedLessonView = () => {
                               className="rounded-lg shadow-lg"
                             >
                               <source
-                                src={`${import.meta.env.VITE_API_URL}/api/upload/lessons/${lessonContent.lessonId}/videos/${content.rawContent.files[0].filename || content.rawContent.files[0].name || content.rawContent.files[0].path?.split('/').pop()}`}
-                                type={content.rawContent.files[0].type || 'video/mp4'}
+                                src={content.files[0].path}
+                                type={content.files[0].type || 'video/mp4'}
                               />
                               Your browser does not support the video tag.
                             </video>
                             <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                              {content.rawContent.files[0].name} ({(content.rawContent.files[0].size / 1024 / 1024).toFixed(2)} MB)
+                              {content.files[0].name} ({(content.files[0].size / 1024 / 1024).toFixed(2)} MB)
                             </div>
                           </div>
                         </div>
                       )}
                       
-                      {formatKey === 'presentation' && (content.rawContent?.presentation_url || content.rawContent?.file) && (
+                      {formatKey === 'presentation' && (content?.presentation_url || content?.file) && (
                         <div className="mb-4">
                           <h4 className="text-lg font-semibold mb-2">Presentation File:</h4>
                           <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
@@ -480,14 +481,14 @@ const TemplateBasedLessonView = () => {
                               </div>
                               <div className="flex-1">
                                 <div className="font-medium text-blue-900 dark:text-blue-100">
-                                  {content.rawContent.file?.name || 'Presentation'}
+                                  {content.file?.name || 'Presentation'}
                                 </div>
                                 <div className="text-sm text-blue-600 dark:text-blue-300">
-                                  {content.rawContent.file?.size ? `${(content.rawContent.file.size / 1024 / 1024).toFixed(2)} MB` : 'Presentation file'}
+                                  {content.file?.size ? `${(content.file.size / 1024 / 1024).toFixed(2)} MB` : 'Presentation file'}
                                 </div>
                               </div>
                             <a
-                              href={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/upload/lessons/${lessonContent.lessonId}/presentations/${content.rawContent.file?.filename || content.rawContent.file?.name || content.rawContent.presentation_url?.split('/').pop()}`}
+                              href={content.presentation_url || content.file?.path}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
@@ -499,7 +500,7 @@ const TemplateBasedLessonView = () => {
                         </div>
                       )}
                       
-                      {formatKey === 'mindmap' && (content.rawContent?.mindmap_url || content.rawContent?.file) && (
+                      {formatKey === 'mindmap' && (content?.mindmap_url || content?.file) && (
                         <div className="mb-4">
                           <h4 className="text-lg font-semibold mb-2">Mind Map Image:</h4>
                           <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
@@ -509,15 +510,15 @@ const TemplateBasedLessonView = () => {
                               </div>
                               <div className="flex-1">
                                 <div className="font-medium text-green-900 dark:text-green-100">
-                                  {content.rawContent.file?.name || 'Mind Map'}
+                                  {content.file?.name || 'Mind Map'}
                                 </div>
                                 <div className="text-sm text-green-600 dark:text-green-300">
-                                  {content.rawContent.file?.size ? `${(content.rawContent.file.size / 1024 / 1024).toFixed(2)} MB` : 'Mind map image'}
+                                  {content.file?.size ? `${(content.file.size / 1024 / 1024).toFixed(2)} MB` : 'Mind map image'}
                                 </div>
                               </div>
                             </div>
                         <img
-                          src={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/upload/lessons/${lessonContent.lessonId}/mindmaps/${content.rawContent.file?.filename || content.rawContent.file?.name || content.rawContent.mindmap_url?.split('/').pop()}`}
+                          src={content.mindmap_url || content.file?.path}
                           alt="Mind Map"
                           className="w-full max-w-2xl mx-auto rounded-lg shadow-lg"
                           style={{ maxHeight: '400px', objectFit: 'contain' }}
@@ -527,38 +528,38 @@ const TemplateBasedLessonView = () => {
                       )}
                       
                       {/* Text Content */}
-                      {(formatKey === 'text' || formatKey === 'explanation') && content.rawContent && (
+                      {(formatKey === 'text' || formatKey === 'explanation') && content && (
                         <div className="mb-4">
                           <h4 className="text-lg font-semibold mb-2">Text Content:</h4>
                           <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                             <div className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
-                              {content.rawContent.generated || content.rawContent.content || 'No text content available'}
+                              {content.generated || content.content || 'No text content available'}
                             </div>
                           </div>
                         </div>
                       )}
                       
                       {/* Code Content */}
-                      {formatKey === 'code' && content.rawContent?.code && (
+                      {formatKey === 'code' && content?.code && (
                         <div className="mb-4">
                           <h4 className="text-lg font-semibold mb-2">Code Content:</h4>
                           <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
                             <pre className="text-green-400 text-sm">
-                              <code>{content.rawContent.code}</code>
+                              <code>{content.code}</code>
                             </pre>
                           </div>
                         </div>
                       )}
                       
                       {/* Images Content */}
-                      {formatKey === 'images' && content.rawContent?.files && content.rawContent.files.length > 0 && (
+                      {formatKey === 'images' && content?.files && content.files.length > 0 && (
                         <div className="mb-4">
                           <h4 className="text-lg font-semibold mb-2">Images:</h4>
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {content.rawContent.files.map((file, index) => (
+                            {content.files.map((file, index) => (
                               <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                         <img
-                          src={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/upload/lessons/${lessonContent.lessonId}/images/${file.filename || file.name || file.path?.split('/').pop()}`}
+                          src={file.path}
                           alt={file.name}
                           className="w-full h-48 object-cover rounded-lg mb-2"
                         />
