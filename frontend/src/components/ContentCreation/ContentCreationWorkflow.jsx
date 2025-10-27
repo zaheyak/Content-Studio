@@ -349,6 +349,12 @@ const navigate = useNavigate();
     console.log('Viewing format:', formatId);
     console.log('Content structure:', content);
     
+    // Check if content exists
+    if (!content) {
+      alert(`No content available for ${formatId}. Please add content first.`);
+      return;
+    }
+    
     // Create a view-only modal for the content
     const viewModal = document.createElement('div');
     viewModal.style.cssText = `
@@ -385,6 +391,29 @@ const navigate = useNavigate();
     };
     
     let contentHTML = `<h3>${formatNames[formatId] || 'Content'}</h3>`;
+    
+    // Check if content has any meaningful data
+    const hasContent = content && (
+      (content.files && content.files.length > 0) ||
+      content.videoId ||
+      content.generated ||
+      content.content ||
+      content.code ||
+      content.presentation_url ||
+      content.mindmap_url ||
+      content.file
+    );
+    
+    if (!hasContent) {
+      contentHTML += `
+        <div style="text-align: center; padding: 2rem; color: #666;">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">📝</div>
+          <h4>No Content Available</h4>
+          <p>This ${formatId} format doesn't have any content yet.</p>
+          <p>Please add content first before viewing.</p>
+        </div>
+      `;
+    } else {
     
     if (formatId === 'video') {
       // Handle uploaded files
@@ -597,7 +626,8 @@ const navigate = useNavigate();
       }
     }
     
-    modalContent.innerHTML = contentHTML + `
+    // Add close button
+    contentHTML += `
       <div style="margin-top: 2rem; text-align: right;">
         <button onclick="this.closest('.view-modal').remove()" style="
           background: #667eea;
@@ -610,6 +640,8 @@ const navigate = useNavigate();
         ">Close</button>
       </div>
     `;
+    
+    modalContent.innerHTML = contentHTML;
     
     viewModal.className = 'view-modal';
     viewModal.appendChild(modalContent);
