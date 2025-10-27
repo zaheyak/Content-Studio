@@ -47,38 +47,33 @@ const upload = multer({
     
     console.log('File filter - URL type:', type, 'File:', file.originalname);
     
+    // Allow all file types for now - we'll filter by MIME type
     if (type === 'presentation') {
       // Allow presentation files
-      const allowedTypes = ['.pptx', '.pdf', '.ppt'];
-      const ext = path.extname(file.originalname).toLowerCase();
-      if (allowedTypes.includes(ext)) {
+      if (file.mimetype === 'application/vnd.openxmlformats-officedocument.presentationml.presentation' ||
+          file.mimetype === 'application/pdf' ||
+          file.mimetype === 'application/vnd.ms-powerpoint') {
         cb(null, true);
       } else {
         cb(new Error('Invalid file type for presentation. Allowed: .pptx, .pdf, .ppt'));
       }
     } else if (type === 'mindmap') {
       // Allow image files
-      const allowedTypes = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
-      const ext = path.extname(file.originalname).toLowerCase();
-      if (allowedTypes.includes(ext)) {
+      if (file.mimetype.startsWith('image/')) {
         cb(null, true);
       } else {
         cb(new Error('Invalid file type for mindmap. Allowed: .png, .jpg, .jpeg, .gif, .webp'));
       }
     } else if (type === 'images') {
       // Allow image files
-      const allowedTypes = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
-      const ext = path.extname(file.originalname).toLowerCase();
-      if (allowedTypes.includes(ext)) {
+      if (file.mimetype.startsWith('image/')) {
         cb(null, true);
       } else {
         cb(new Error('Invalid file type for images. Allowed: .png, .jpg, .jpeg, .gif, .webp'));
       }
     } else if (type === 'videos') {
       // Allow video files
-      const allowedTypes = ['.mp4', '.avi', '.mov', '.wmv', '.flv', '.webm'];
-      const ext = path.extname(file.originalname).toLowerCase();
-      if (allowedTypes.includes(ext)) {
+      if (file.mimetype.startsWith('video/')) {
         cb(null, true);
       } else {
         cb(new Error('Invalid file type for videos. Allowed: .mp4, .avi, .mov, .wmv, .flv, .webm'));

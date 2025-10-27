@@ -265,6 +265,12 @@ const navigate = useNavigate();
         }
       }
       
+      console.log('Sending content to backend:', {
+        lessonId: lesson.id,
+        lessonTitle: lesson.title,
+        content: processedContent
+      });
+
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/content/lesson/${lesson.id}`, {
         method: 'POST',
         headers: {
@@ -299,8 +305,8 @@ const navigate = useNavigate();
         console.log('Content saved to backend successfully:', result);
         setSavedContent(result.data);
         setShowSuccessMessage(true);
-        // Hide success message after 3 seconds
-        setTimeout(() => setShowSuccessMessage(false), 3000);
+        // Hide success message after 5 seconds
+        setTimeout(() => setShowSuccessMessage(false), 5000);
       } else {
         console.error('Failed to save content to backend:', await response.text());
       }
@@ -953,21 +959,74 @@ const navigate = useNavigate();
         </div>
 
         <div style={styles.content}>
-          {/* Success Message */}
+          {/* Success Message Popup */}
           {showSuccessMessage && (
             <div style={{
-              backgroundColor: '#10b981',
-              color: 'white',
-              padding: '1rem',
-              borderRadius: '8px',
-              marginBottom: '1rem',
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: 'rgba(0, 0, 0, 0.5)',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.5rem',
-              animation: 'slideDown 0.3s ease-out'
+              justifyContent: 'center',
+              zIndex: 1000
             }}>
-              <span style={{ fontSize: '1.2rem' }}>✅</span>
-              <span style={{ fontWeight: '600' }}>Content saved successfully to backend!</span>
+              <div style={{
+                backgroundColor: 'white',
+                borderRadius: '16px',
+                padding: '2rem',
+                maxWidth: '400px',
+                margin: '1rem',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+                textAlign: 'center',
+                animation: 'slideDown 0.3s ease-out'
+              }}>
+                <div style={{
+                  width: '64px',
+                  height: '64px',
+                  backgroundColor: '#10b981',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  margin: '0 auto 1rem'
+                }}>
+                  <span style={{ fontSize: '2rem' }}>✅</span>
+                </div>
+                <h3 style={{
+                  fontSize: '1.5rem',
+                  fontWeight: 'bold',
+                  color: '#1f2937',
+                  marginBottom: '0.5rem'
+                }}>
+                  נשמר בהצלחה!
+                </h3>
+                <p style={{
+                  color: '#6b7280',
+                  marginBottom: '1.5rem'
+                }}>
+                  כל התוכן נשמר בהצלחה במערכת
+                </p>
+                <button
+                  onClick={() => setShowSuccessMessage(false)}
+                  style={{
+                    backgroundColor: '#10b981',
+                    color: 'white',
+                    padding: '0.75rem 1.5rem',
+                    borderRadius: '8px',
+                    border: 'none',
+                    fontWeight: '600',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s'
+                  }}
+                  onMouseOver={(e) => e.target.style.backgroundColor = '#059669'}
+                  onMouseOut={(e) => e.target.style.backgroundColor = '#10b981'}
+                >
+                  סגור
+                </button>
+              </div>
             </div>
           )}
           

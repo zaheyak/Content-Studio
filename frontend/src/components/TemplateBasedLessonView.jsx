@@ -194,7 +194,20 @@ const TemplateBasedLessonView = () => {
   }
 
   const getContentForFormat = (formatName) => {
-    const formatKey = formatName.toLowerCase().replace(' ', '');
+    // Map template format names to content keys
+    const formatMapping = {
+      'video': 'video',
+      'explanation': 'text',
+      'text': 'text',
+      'code': 'code',
+      'mind map': 'mindmap',
+      'mindmap': 'mindmap',
+      'image': 'images',
+      'images': 'images',
+      'presentation': 'presentation'
+    };
+    
+    const formatKey = formatMapping[formatName.toLowerCase()] || formatName.toLowerCase().replace(' ', '');
     const content = lessonContent.content[formatKey];
     
     console.log(`Getting content for format: ${formatName} (key: ${formatKey})`);
