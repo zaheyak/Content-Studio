@@ -42,12 +42,16 @@ const ModalsManager = () => {
 
       {/* Content Creation Workflow Modal */}
       {showContentCreation && selectedLesson && (
-        <ContentCreationWorkflow
-          lesson={selectedLesson}
-          course={selectedCourse}
-          onClose={closeContentCreation}
-          onComplete={handleContentComplete}
-        />
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+            <ContentCreationWorkflow
+              lesson={selectedLesson}
+              course={selectedCourse}
+              onClose={closeContentCreation}
+              onComplete={handleContentComplete}
+            />
+          </div>
+        </div>
       )}
 
       {/* Template Selector Modal */}
