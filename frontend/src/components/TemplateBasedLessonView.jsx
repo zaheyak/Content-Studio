@@ -1,13 +1,79 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useApp } from '../context/AppContext';
 
 const TemplateBasedLessonView = () => {
   const { selectedTemplate, selectedLesson, selectedCourse } = useApp();
   const { lessonId } = useParams();
+  const [searchParams] = useSearchParams();
   const [lessonContent, setLessonContent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [template, setTemplate] = useState(null);
+
+  // Load template from URL parameters
+  useEffect(() => {
+    const templateId = searchParams.get('template');
+    console.log('Template ID from URL:', templateId);
+    
+    if (templateId) {
+      // Define available templates
+      const templates = [
+        {
+          id: 'learning-flow',
+          name: 'Learning Flow',
+          description: 'Traditional learning progression from video to practice',
+          formats: [
+            { name: 'Video', icon: '🎥', order: 1 },
+            { name: 'Explanation', icon: '🧾', order: 2 },
+            { name: 'Code', icon: '💻', order: 3 },
+            { name: 'Mind Map', icon: '🧠', order: 4 },
+            { name: 'Image', icon: '🖼️', order: 5 },
+            { name: 'Presentation', icon: '📊', order: 6 }
+          ]
+        },
+        {
+          id: 'project-based',
+          name: 'Project-Based Learning',
+          description: 'Hands-on learning through real-world projects',
+          formats: [
+            { name: 'Project Brief', icon: '📋', order: 1 },
+            { name: 'Research', icon: '🔍', order: 2 },
+            { name: 'Implementation', icon: '⚙️', order: 3 },
+            { name: 'Testing', icon: '🧪', order: 4 },
+            { name: 'Documentation', icon: '📝', order: 5 }
+          ]
+        },
+        {
+          id: 'microlearning',
+          name: 'Microlearning',
+          description: 'Bite-sized learning modules for quick consumption',
+          formats: [
+            { name: 'Quick Video', icon: '⏱️', order: 1 },
+            { name: 'Key Points', icon: '💡', order: 2 },
+            { name: 'Quiz', icon: '❓', order: 3 },
+            { name: 'Summary', icon: '📄', order: 4 }
+          ]
+        }
+      ];
+      
+      const selectedTemplate = templates.find(t => t.id === templateId);
+      if (selectedTemplate) {
+        console.log('Found template:', selectedTemplate);
+        setTemplate(selectedTemplate);
+      } else {
+        console.error('Template not found:', templateId);
+        setError('Template not found');
+      }
+    } else if (selectedTemplate) {
+      // Use template from context if no URL parameter
+      console.log('Using template from context:', selectedTemplate);
+      setTemplate(selectedTemplate);
+    } else {
+      console.error('No template provided');
+      setError('No template selected');
+    }
+  }, [searchParams, selectedTemplate]);
 
   useEffect(() => {
     const loadLessonContent = () => {
@@ -88,7 +154,7 @@ const TemplateBasedLessonView = () => {
     );
   }
 
-  if (!selectedTemplate || !selectedLesson || !lessonContent) {
+  if (!template || !lessonContent) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
         <div className="text-center">
@@ -97,6 +163,10 @@ const TemplateBasedLessonView = () => {
           </div>
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">No Template Selected</h2>
           <p className="text-gray-600 dark:text-gray-300">Please select a template to view the lesson content.</p>
+          <div className="mt-4 text-sm text-gray-500">
+            <p>Template: {template ? template.name : 'None'}</p>
+            <p>Lesson Content: {lessonContent ? 'Loaded' : 'None'}</p>
+          </div>
         </div>
       </div>
     );
@@ -196,7 +266,7 @@ const TemplateBasedLessonView = () => {
             {lessonContent.lesson.title}
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Following the <strong>{lessonContent.template.name}</strong> template structure
+            Following the <strong>{template.name}</strong> template structure
           </p>
           <p className="text-base text-gray-500 dark:text-gray-400 mt-2">
             {lessonContent.lesson.description}
@@ -214,11 +284,11 @@ const TemplateBasedLessonView = () => {
         <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-700/50 p-6 mb-8 shadow-xl">
           <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
             <span className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"></span>
-            Template Structure: {lessonContent.template.name}
+            Template Structure: {template.name}
           </h3>
-          <p className="text-gray-600 dark:text-gray-300 mb-4">{lessonContent.template.description}</p>
+          <p className="text-gray-600 dark:text-gray-300 mb-4">{template.description}</p>
           <div className="flex items-center gap-2 overflow-x-auto pb-2">
-            {lessonContent.template.formats.map((format, index) => (
+            {template.formats.map((format, index) => (
               <div key={index} className="flex items-center flex-shrink-0">
                 <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg">
                   {format.order}
@@ -237,7 +307,7 @@ const TemplateBasedLessonView = () => {
 
         {/* Lesson Content Organized by Template */}
         <div className="space-y-8">
-          {lessonContent.template.formats.map((format, index) => {
+          {template.formats.map((format, index) => {
             const content = getContentForFormat(format.name);
             return (
               <div
