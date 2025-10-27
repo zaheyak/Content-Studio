@@ -94,10 +94,10 @@ const TemplateBasedLessonView = () => {
         const response = await fetch(`${import.meta.env.VITE_API_URL}/api/content/lesson/${currentLessonId}`);
         
         if (response.ok) {
-          const data = await response.json();
-          if (data.success) {
+        const data = await response.json();
+        if (data.success) {
             console.log('Loaded content from backend:', data.data);
-            setLessonContent(data.data);
+          setLessonContent(data.data);
             
             // If template is included in the content, use it
             if (data.data.template) {

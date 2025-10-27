@@ -161,6 +161,14 @@ export const AppProvider = ({ children }) => {
     closeTemplateSelector
   }
 
+  // Debug logging
+  console.log('AppContext state:', {
+    showContentCreation,
+    selectedLesson,
+    courses: courses.length,
+    lessons: lessons.length
+  })
+
   return (
     <AppContext.Provider value={value}>
       {children}

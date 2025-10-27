@@ -275,10 +275,10 @@ const navigate = useNavigate();
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          lessonId: lesson.id,
-          lessonTitle: lesson.title,
-          courseId: course?.id,
-          courseTitle: course?.title,
+      lessonId: lesson.id,
+      lessonTitle: lesson.title,
+      courseId: course?.id,
+      courseTitle: course?.title,
           content: processedContent,
           template: {
             id: 'learning-flow',
@@ -320,20 +320,20 @@ const navigate = useNavigate();
         const result = await response.json();
         const lessonContent = result.data;
         setSavedContent(lessonContent);
-        
-        // Restore content data and completed formats
-        const restoredContentData = {};
-        const restoredCompletedFormats = new Set();
-        
+      
+      // Restore content data and completed formats
+      const restoredContentData = {};
+      const restoredCompletedFormats = new Set();
+      
         Object.keys(lessonContent.content || {}).forEach(formatId => {
           if (lessonContent.content[formatId]) {
             restoredContentData[formatId] = lessonContent.content[formatId];
-            restoredCompletedFormats.add(formatId);
-          }
-        });
-        
-        setContentData(restoredContentData);
-        setCompletedFormats(restoredCompletedFormats);
+          restoredCompletedFormats.add(formatId);
+        }
+      });
+      
+      setContentData(restoredContentData);
+      setCompletedFormats(restoredCompletedFormats);
       }
     } catch (error) {
       console.error('Error loading content from backend:', error);
@@ -408,7 +408,7 @@ const navigate = useNavigate();
         </div>
       `;
     } else {
-      if (formatId === 'video') {
+    if (formatId === 'video') {
       // Handle uploaded files
       if (content.files?.length > 0) {
         contentHTML += `<h4>Uploaded Videos:</h4>`;
@@ -526,11 +526,11 @@ const navigate = useNavigate();
             </div>
           `;
         });
-        if (content.connections?.length > 0) {
-          contentHTML += `<h4>Connections (${content.connections.length}):</h4>`;
-          content.connections.forEach((conn, index) => {
-            contentHTML += `<div style="margin: 0.25rem 0;">${index + 1}. ${conn.from} → ${conn.to}</div>`;
-          });
+      if (content.connections?.length > 0) {
+        contentHTML += `<h4>Connections (${content.connections.length}):</h4>`;
+        content.connections.forEach((conn, index) => {
+          contentHTML += `<div style="margin: 0.25rem 0;">${index + 1}. ${conn.from} → ${conn.to}</div>`;
+        });
         }
       } else {
         contentHTML += `<div style="margin: 1rem 0; padding: 1rem; background: #f5f5f5; border-radius: 8px; text-align: center; color: #666;">
@@ -958,8 +958,8 @@ const navigate = useNavigate();
           }
         `}
       </style>
-      <div style={styles.overlay}>
-        <div style={styles.modal}>
+    <div style={styles.overlay}>
+      <div style={styles.modal}>
         <div style={styles.header}>
           <h3 style={styles.title}>
             Content Creation: {lesson?.title}
@@ -1385,8 +1385,8 @@ const navigate = useNavigate();
             </div>
           </div>
         )}
-        </div>
       </div>
+    </div>
     </>
   );
 }
