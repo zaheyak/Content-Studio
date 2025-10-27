@@ -60,6 +60,24 @@ const upload = multer({
       } else {
         cb(new Error('Invalid file type for mindmap. Allowed: .png, .jpg, .jpeg, .gif, .webp'));
       }
+    } else if (type === 'images') {
+      // Allow image files
+      const allowedTypes = ['.png', '.jpg', '.jpeg', '.gif', '.webp'];
+      const ext = path.extname(file.originalname).toLowerCase();
+      if (allowedTypes.includes(ext)) {
+        cb(null, true);
+      } else {
+        cb(new Error('Invalid file type for images. Allowed: .png, .jpg, .jpeg, .gif, .webp'));
+      }
+    } else if (type === 'videos') {
+      // Allow video files
+      const allowedTypes = ['.mp4', '.avi', '.mov', '.wmv', '.flv', '.webm'];
+      const ext = path.extname(file.originalname).toLowerCase();
+      if (allowedTypes.includes(ext)) {
+        cb(null, true);
+      } else {
+        cb(new Error('Invalid file type for videos. Allowed: .mp4, .avi, .mov, .wmv, .flv, .webm'));
+      }
     } else {
       cb(new Error('Invalid upload type'));
     }
@@ -154,6 +172,94 @@ router.post('/mindmap', upload.single('file'), (req, res) => {
   }
 });
 
+// Upload images endpoint
+router.post('/images', upload.single('file'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'No file uploaded'
+      });
+    }
+
+    const lessonId = req.body.lessonId;
+    const filePath = `/uploads/lessons/${lessonId}/images/${req.file.filename}`;
+    const fullPath = path.join(uploadsDir, 'lessons', lessonId, 'images', req.file.filename);
+
+    console.log('Image uploaded:', {
+      originalName: req.file.originalname,
+      filename: req.file.filename,
+      size: req.file.size,
+      path: filePath,
+      lessonId: lessonId
+    });
+
+    res.json({
+      success: true,
+      data: {
+        originalName: req.file.originalname,
+        filename: req.file.filename,
+        size: req.file.size,
+        path: filePath,
+        url: `${req.protocol}://${req.get('host')}${filePath}`,
+        type: 'image'
+      },
+      message: 'Image uploaded successfully'
+    });
+  } catch (error) {
+    console.error('Image upload error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to upload image',
+      error: error.message
+    });
+  }
+});
+
+// Upload videos endpoint
+router.post('/videos', upload.single('file'), (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'No file uploaded'
+      });
+    }
+
+    const lessonId = req.body.lessonId;
+    const filePath = `/uploads/lessons/${lessonId}/videos/${req.file.filename}`;
+    const fullPath = path.join(uploadsDir, 'lessons', lessonId, 'videos', req.file.filename);
+
+    console.log('Video uploaded:', {
+      originalName: req.file.originalname,
+      filename: req.file.filename,
+      size: req.file.size,
+      path: filePath,
+      lessonId: lessonId
+    });
+
+    res.json({
+      success: true,
+      data: {
+        originalName: req.file.originalname,
+        filename: req.file.filename,
+        size: req.file.size,
+        path: filePath,
+        url: `${req.protocol}://${req.get('host')}${filePath}`,
+        type: 'video'
+      },
+      message: 'Video uploaded successfully'
+    });
+  } catch (error) {
+    console.error('Video upload error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to upload video',
+      error: error.message
+    });
+  }
+});
+
 // Serve uploaded files
 router.get('/lessons/:lessonId/:type/:filename', (req, res) => {
   try {
@@ -178,6 +284,8 @@ router.get('/lessons/:lessonId/:type/:filename', (req, res) => {
       contentType = 'application/pdf';
     } else if (['.png', '.jpg', '.jpeg', '.gif', '.webp'].includes(ext)) {
       contentType = `image/${ext.slice(1)}`;
+    } else if (['.mp4', '.avi', '.mov', '.wmv', '.flv', '.webm'].includes(ext)) {
+      contentType = `video/${ext.slice(1)}`;
     }
     
     res.setHeader('Content-Type', contentType);

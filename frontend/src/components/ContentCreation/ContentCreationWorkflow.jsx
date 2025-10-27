@@ -39,7 +39,7 @@ export default function ContentCreationWorkflow({ lesson, course, onClose, onCom
 const navigate = useNavigate();
   // Load saved content when component mounts
   useEffect(() => {
-    loadContentFromStorage();
+    loadContentFromBackend();
   }, [lesson.id]);
 
   const contentFormats = [
@@ -97,117 +97,126 @@ const navigate = useNavigate();
     setCurrentFormat(formatId);
   };
 
-  const handleContentComplete = (formatId, content) => {
+  const handleContentComplete = async (formatId, content) => {
     console.log('Content completed for format:', formatId, content);
     const updatedContentData = { ...contentData, [formatId]: content };
     setContentData(updatedContentData);
     setCompletedFormats(prev => new Set([...prev, formatId]));
     
-    // Save content to localStorage with mock JSON structure
-    saveContentToStorage(updatedContentData);
-    
-    // Also save to backend
-    saveContentToBackend(updatedContentData);
+    // Save directly to backend only (no localStorage)
+    await saveContentToBackend(updatedContentData);
     
     setCurrentFormat(null);
   };
 
-  const saveContentToStorage = (content) => {
-    const mockContentStructure = {
-      lessonId: lesson.id,
-      lessonTitle: lesson.title,
-      courseId: course?.id,
-      courseTitle: course?.title,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      template: {
-        id: 'learning-flow',
-        name: 'Learning Flow',
-        description: 'Traditional learning progression from video to practice',
-        formats: [
-          { name: 'Video', icon: '🎥', order: 1 },
-          { name: 'Explanation', icon: '🧾', order: 2 },
-          { name: 'Code', icon: '💻', order: 3 },
-          { name: 'Mind Map', icon: '🧠', order: 4 },
-          { name: 'Image', icon: '🖼️', order: 5 },
-          { name: 'Presentation', icon: '📊', order: 6 }
-        ]
-      },
-      content: {
-        video: content.video ? {
-          type: 'video',
-          method: content.video.method,
-          files: content.video.data?.file ? [{
-            name: content.video.data.file.name,
-            size: content.video.data.file.size,
-            type: content.video.data.file.type,
-            path: `/content/${lesson.id}/videos/${content.video.data.file.name}`,
-            url: URL.createObjectURL(content.video.data.file)
-          }] : [],
-          transcription: content.video.data?.transcription || '',
-          generated: content.video.data?.generated || null,
-          // YouTube video data
-          videoId: content.video.data?.videoId || null,
-          url: content.video.data?.url || null,
-          embedUrl: content.video.data?.embedUrl || null,
-          title: content.video.data?.title || null,
-          duration: content.video.data?.duration || null
-        } : null,
-        text: content.text ? {
-          type: 'text',
-          method: content.text.method,
-          content: content.text.data?.content || '',
-          generated: content.text.data?.generated || '',
-          path: `/content/${lesson.id}/text/lesson-content.txt`
-        } : null,
-        presentation: content.presentation ? {
-          type: 'presentation',
-          method: content.presentation.method,
-          file: content.presentation.data?.file || null,
-          presentation_url: content.presentation.data?.presentation_url || content.presentation.data?.file?.path || null,
-          path: content.presentation.data?.presentation_url || content.presentation.data?.file?.path || `/content/${lesson.id}/presentations/`
-        } : null,
-        mindmap: content.mindmap ? {
-          type: 'mindmap',
-          method: content.mindmap.method,
-          file: content.mindmap.data?.file || null,
-          mindmap_url: content.mindmap.data?.mindmap_url || content.mindmap.data?.file?.path || null,
-          path: content.mindmap.data?.mindmap_url || content.mindmap.data?.file?.path || `/content/${lesson.id}/mindmaps/`
-        } : null,
-        code: content.code ? {
-          type: 'code',
-          method: content.code.method,
-          code: content.code.data?.code || content.code.data?.generated || '',
-          language: content.code.data?.language || 'javascript',
-          path: `/content/${lesson.id}/code/lesson-code.js`
-        } : null,
-        images: content.images ? {
-          type: 'images',
-          method: content.images.method,
-          files: content.images.data?.files || [],
-          generated: content.images.data?.generated || [],
-          count: content.images.data?.count || 0,
-          path: `/content/${lesson.id}/images/`
-        } : null
-      },
-      folders: {
-        videos: `/content/${lesson.id}/videos/`,
-        text: `/content/${lesson.id}/text/`,
-        presentations: `/content/${lesson.id}/presentations/`,
-        mindmaps: `/content/${lesson.id}/mindmaps/`,
-        code: `/content/${lesson.id}/code/`,
-        images: `/content/${lesson.id}/images/`
-      }
-    };
-    
-    console.log('Saving to localStorage:', mockContentStructure);
-    localStorage.setItem(`content_${lesson.id}`, JSON.stringify(mockContentStructure));
-    setSavedContent(mockContentStructure);
+  // Helper function to upload files to backend
+  const uploadFileToBackend = async (file, type, lessonId) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('lessonId', lessonId);
+    formData.append('type', type);
+
+    const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-backend-production.up.railway.app'}/api/upload/${type}`, {
+      method: 'POST',
+      body: formData
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      return result.data;
+    } else {
+      throw new Error(`Failed to upload ${type}: ${await response.text()}`);
+    }
   };
 
   const saveContentToBackend = async (content) => {
     try {
       console.log('Saving content to backend for lesson:', lesson.id);
+      
+      // Process content and upload files if needed
+      const processedContent = {};
+      
+      for (const [formatId, formatContent] of Object.entries(content)) {
+        if (!formatContent) {
+          processedContent[formatId] = null;
+          continue;
+        }
+
+        if (formatId === 'presentation' && formatContent.data?.file) {
+          // Upload presentation file
+          const uploadResult = await uploadFileToBackend(formatContent.data.file, 'presentation', lesson.id);
+          processedContent[formatId] = {
+            type: 'presentation',
+            method: formatContent.method,
+            file: {
+              name: uploadResult.originalName,
+              size: uploadResult.size,
+              path: uploadResult.path
+            },
+            presentation_url: uploadResult.path
+          };
+        } else if (formatId === 'mindmap' && formatContent.data?.file) {
+          // Upload mindmap file
+          const uploadResult = await uploadFileToBackend(formatContent.data.file, 'mindmap', lesson.id);
+          processedContent[formatId] = {
+            type: 'mindmap',
+            method: formatContent.method,
+            file: {
+              name: uploadResult.originalName,
+              size: uploadResult.size,
+              path: uploadResult.path
+            },
+            mindmap_url: uploadResult.path
+          };
+        } else if (formatId === 'images' && formatContent.data?.files) {
+          // Upload image files
+          const uploadedFiles = [];
+          for (const file of formatContent.data.files) {
+            const uploadResult = await uploadFileToBackend(file, 'images', lesson.id);
+            uploadedFiles.push({
+              name: uploadResult.originalName,
+              size: uploadResult.size,
+              path: uploadResult.path
+            });
+          }
+          processedContent[formatId] = {
+            type: 'images',
+            method: formatContent.method,
+            files: uploadedFiles,
+            count: uploadedFiles.length
+          };
+        } else if (formatId === 'video' && formatContent.data?.file) {
+          // Upload video file
+          const uploadResult = await uploadFileToBackend(formatContent.data.file, 'videos', lesson.id);
+          processedContent[formatId] = {
+            type: 'video',
+            method: formatContent.method,
+            files: [{
+              name: uploadResult.originalName,
+              size: uploadResult.size,
+              path: uploadResult.path
+            }],
+            transcription: formatContent.data?.transcription || '',
+            generated: formatContent.data?.generated || null,
+            // YouTube video data
+            videoId: formatContent.data?.videoId || null,
+            url: formatContent.data?.url || null,
+            embedUrl: formatContent.data?.embedUrl || null,
+            title: formatContent.data?.title || null,
+            duration: formatContent.data?.duration || null
+          };
+        } else {
+          // For text, code, and other non-file content, save directly
+          processedContent[formatId] = {
+            type: formatId,
+            method: formatContent.method,
+            content: formatContent.data?.content || '',
+            generated: formatContent.data?.generated || '',
+            code: formatContent.data?.code || '',
+            language: formatContent.data?.language || 'javascript'
+          };
+        }
+      }
       
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-backend-production.up.railway.app'}/api/content/lesson/${lesson.id}`, {
         method: 'POST',
@@ -219,7 +228,7 @@ const navigate = useNavigate();
           lessonTitle: lesson.title,
           courseId: course?.id,
           courseTitle: course?.title,
-          content: content,
+          content: processedContent,
           template: {
             id: 'learning-flow',
             name: 'Learning Flow',
@@ -241,6 +250,7 @@ const navigate = useNavigate();
       if (response.ok) {
         const result = await response.json();
         console.log('Content saved to backend successfully:', result);
+        setSavedContent(result.data);
       } else {
         console.error('Failed to save content to backend:', await response.text());
       }
@@ -249,25 +259,30 @@ const navigate = useNavigate();
     }
   };
 
-  const loadContentFromStorage = () => {
-    const saved = localStorage.getItem(`content_${lesson.id}`);
-    if (saved) {
-      const parsedContent = JSON.parse(saved);
-      setSavedContent(parsedContent);
-      
-      // Restore content data and completed formats
-      const restoredContentData = {};
-      const restoredCompletedFormats = new Set();
-      
-      Object.keys(parsedContent.content).forEach(formatId => {
-        if (parsedContent.content[formatId]) {
-          restoredContentData[formatId] = parsedContent.content[formatId];
-          restoredCompletedFormats.add(formatId);
-        }
-      });
-      
-      setContentData(restoredContentData);
-      setCompletedFormats(restoredCompletedFormats);
+  const loadContentFromBackend = async () => {
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-backend-production.up.railway.app'}/api/content/lesson/${lesson.id}`);
+      if (response.ok) {
+        const result = await response.json();
+        const lessonContent = result.data;
+        setSavedContent(lessonContent);
+        
+        // Restore content data and completed formats
+        const restoredContentData = {};
+        const restoredCompletedFormats = new Set();
+        
+        Object.keys(lessonContent.content || {}).forEach(formatId => {
+          if (lessonContent.content[formatId]) {
+            restoredContentData[formatId] = lessonContent.content[formatId];
+            restoredCompletedFormats.add(formatId);
+          }
+        });
+        
+        setContentData(restoredContentData);
+        setCompletedFormats(restoredCompletedFormats);
+      }
+    } catch (error) {
+      console.error('Error loading content from backend:', error);
     }
   };
 
