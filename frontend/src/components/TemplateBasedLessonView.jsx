@@ -309,6 +309,7 @@ const TemplateBasedLessonView = () => {
         <div className="space-y-8">
           {template.formats.map((format, index) => {
             const content = getContentForFormat(format.name);
+            const formatKey = format.name.toLowerCase().replace(' ', '');
             return (
               <div
                 key={index}
