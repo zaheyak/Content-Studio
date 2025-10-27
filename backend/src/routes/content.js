@@ -40,8 +40,21 @@ router.get('/', (req, res) => {
 router.get('/lesson/:lessonId', (req, res) => {
   const { lessonId } = req.params;
   
-  // Mock comprehensive lesson content data
-  const lessonContent = {
+  // Try to load from mock data first
+  const { loadLessonContent } = require('../../mock-data/loader');
+  const lessonContent = loadLessonContent(lessonId);
+  
+  if (lessonContent) {
+    console.log('Loaded lesson content from mock data:', lessonId);
+    return res.json({
+      success: true,
+      data: lessonContent,
+      message: 'Lesson content retrieved successfully from mock data'
+    });
+  }
+  
+  // Fallback to default mock data
+  const defaultLessonContent = {
     lessonId: lessonId,
     lesson: {
       id: lessonId,
@@ -139,9 +152,70 @@ router.get('/lesson/:lessonId', (req, res) => {
 
   res.json({
     success: true,
-    data: lessonContent,
-    message: 'Lesson content retrieved successfully'
+    data: defaultLessonContent,
+    message: 'Lesson content retrieved successfully (default)'
   });
+});
+
+// POST /api/content/lesson/:lessonId - Save lesson content
+router.post('/lesson/:lessonId', (req, res) => {
+  const { lessonId } = req.params;
+  const contentData = req.body;
+  
+  try {
+    const fs = require('fs');
+    const path = require('path');
+    
+    // Create content structure
+    const lessonContent = {
+      lessonId: lessonId,
+      lessonTitle: contentData.lessonTitle || 'Untitled Lesson',
+      courseId: contentData.courseId || null,
+      courseTitle: contentData.courseTitle || null,
+      content: contentData.content || {},
+      template: contentData.template || {
+        id: 'learning-flow',
+        name: 'Learning Flow',
+        description: 'Traditional learning progression from video to practice',
+        formats: [
+          { name: 'Video', icon: '🎥', order: 1 },
+          { name: 'Explanation', icon: '🧾', order: 2 },
+          { name: 'Code', icon: '💻', order: 3 },
+          { name: 'Mind Map', icon: '🧠', order: 4 },
+          { name: 'Image', icon: '🖼️', order: 5 },
+          { name: 'Presentation', icon: '📊', order: 6 }
+        ]
+      },
+      createdAt: contentData.createdAt || new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      metadata: {
+        totalContent: Object.keys(contentData.content || {}).length,
+        completedContent: Object.values(contentData.content || {}).filter(c => c !== null).length,
+        progress: Math.round((Object.values(contentData.content || {}).filter(c => c !== null).length / 6) * 100),
+        estimatedTime: '45 minutes',
+        difficulty: 'beginner'
+      }
+    };
+    
+    // Save to JSON file
+    const contentPath = path.join(__dirname, '../../mock-data', `lesson-${lessonId}-content.json`);
+    fs.writeFileSync(contentPath, JSON.stringify(lessonContent, null, 2));
+    
+    console.log('Lesson content saved to:', contentPath);
+    
+    res.json({
+      success: true,
+      data: lessonContent,
+      message: 'Lesson content saved successfully'
+    });
+  } catch (error) {
+    console.error('Error saving lesson content:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to save lesson content',
+      error: error.message
+    });
+  }
 });
 
 // POST /api/content/upload - Upload content (manual upload)

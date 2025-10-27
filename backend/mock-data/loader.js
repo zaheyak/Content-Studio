@@ -87,6 +87,19 @@ class MockDataLoader {
 
   // Load lesson content from standalone lesson files
   loadLessonContent(lessonId) {
+    // First try to load from dynamically created files
+    const dynamicFile = `lesson-${lessonId}-content.json`;
+    try {
+      const content = this.loadMockData(dynamicFile);
+      if (content && content.lessonId === lessonId) {
+        console.log('Loaded lesson content from dynamic file:', dynamicFile);
+        return content;
+      }
+    } catch (error) {
+      console.log(`Dynamic file ${dynamicFile} not found, trying static files...`);
+    }
+    
+    // Fallback to static files
     const contentFiles = [
       'standalone-lesson-1-content.json',
       'standalone-lesson-2-content.json', 
@@ -97,6 +110,7 @@ class MockDataLoader {
       try {
         const content = this.loadMockData(file);
         if (content && content.lessonId === lessonId) {
+          console.log('Loaded lesson content from static file:', file);
           return content;
         }
       } catch (error) {

@@ -98,12 +98,16 @@ const navigate = useNavigate();
   };
 
   const handleContentComplete = (formatId, content) => {
+    console.log('Content completed for format:', formatId, content);
     const updatedContentData = { ...contentData, [formatId]: content };
     setContentData(updatedContentData);
     setCompletedFormats(prev => new Set([...prev, formatId]));
     
     // Save content to localStorage with mock JSON structure
     saveContentToStorage(updatedContentData);
+    
+    // Also save to backend
+    saveContentToBackend(updatedContentData);
     
     setCurrentFormat(null);
   };
@@ -196,8 +200,53 @@ const navigate = useNavigate();
       }
     };
     
+    console.log('Saving to localStorage:', mockContentStructure);
     localStorage.setItem(`content_${lesson.id}`, JSON.stringify(mockContentStructure));
     setSavedContent(mockContentStructure);
+  };
+
+  const saveContentToBackend = async (content) => {
+    try {
+      console.log('Saving content to backend for lesson:', lesson.id);
+      
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-backend-production.up.railway.app'}/api/content/lesson/${lesson.id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          lessonId: lesson.id,
+          lessonTitle: lesson.title,
+          courseId: course?.id,
+          courseTitle: course?.title,
+          content: content,
+          template: {
+            id: 'learning-flow',
+            name: 'Learning Flow',
+            description: 'Traditional learning progression from video to practice',
+            formats: [
+              { name: 'Video', icon: '🎥', order: 1 },
+              { name: 'Explanation', icon: '🧾', order: 2 },
+              { name: 'Code', icon: '💻', order: 3 },
+              { name: 'Mind Map', icon: '🧠', order: 4 },
+              { name: 'Image', icon: '🖼️', order: 5 },
+              { name: 'Presentation', icon: '📊', order: 6 }
+            ]
+          },
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        })
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Content saved to backend successfully:', result);
+      } else {
+        console.error('Failed to save content to backend:', await response.text());
+      }
+    } catch (error) {
+      console.error('Error saving content to backend:', error);
+    }
   };
 
   const loadContentFromStorage = () => {
