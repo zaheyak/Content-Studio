@@ -144,41 +144,69 @@ const navigate = useNavigate();
         }
 
         if (formatId === 'presentation' && formatContent.data?.file) {
-          // Upload presentation file
-          const uploadResult = await uploadFileToBackend(formatContent.data.file, 'presentation', lesson.id);
-          processedContent[formatId] = {
-            type: 'presentation',
-            method: formatContent.method,
-            file: {
-              name: uploadResult.originalName,
-              size: uploadResult.size,
-              path: uploadResult.path
-            },
-            presentation_url: uploadResult.path
-          };
+          // Check if file is already uploaded (has path property)
+          if (formatContent.data.file.path && formatContent.data.file.path.startsWith('/uploads/')) {
+            // File already uploaded, use existing data
+            processedContent[formatId] = {
+              type: 'presentation',
+              method: formatContent.method,
+              file: formatContent.data.file,
+              presentation_url: formatContent.data.presentation_url || formatContent.data.file.path
+            };
+          } else {
+            // Upload presentation file
+            const uploadResult = await uploadFileToBackend(formatContent.data.file, 'presentation', lesson.id);
+            processedContent[formatId] = {
+              type: 'presentation',
+              method: formatContent.method,
+              file: {
+                name: uploadResult.originalName,
+                size: uploadResult.size,
+                path: uploadResult.path
+              },
+              presentation_url: uploadResult.path
+            };
+          }
         } else if (formatId === 'mindmap' && formatContent.data?.file) {
-          // Upload mindmap file
-          const uploadResult = await uploadFileToBackend(formatContent.data.file, 'mindmap', lesson.id);
-          processedContent[formatId] = {
-            type: 'mindmap',
-            method: formatContent.method,
-            file: {
-              name: uploadResult.originalName,
-              size: uploadResult.size,
-              path: uploadResult.path
-            },
-            mindmap_url: uploadResult.path
-          };
+          // Check if file is already uploaded (has path property)
+          if (formatContent.data.file.path && formatContent.data.file.path.startsWith('/uploads/')) {
+            // File already uploaded, use existing data
+            processedContent[formatId] = {
+              type: 'mindmap',
+              method: formatContent.method,
+              file: formatContent.data.file,
+              mindmap_url: formatContent.data.mindmap_url || formatContent.data.file.path
+            };
+          } else {
+            // Upload mindmap file
+            const uploadResult = await uploadFileToBackend(formatContent.data.file, 'mindmap', lesson.id);
+            processedContent[formatId] = {
+              type: 'mindmap',
+              method: formatContent.method,
+              file: {
+                name: uploadResult.originalName,
+                size: uploadResult.size,
+                path: uploadResult.path
+              },
+              mindmap_url: uploadResult.path
+            };
+          }
         } else if (formatId === 'images' && formatContent.data?.files) {
-          // Upload image files
+          // Check if files are already uploaded
           const uploadedFiles = [];
           for (const file of formatContent.data.files) {
-            const uploadResult = await uploadFileToBackend(file, 'images', lesson.id);
-            uploadedFiles.push({
-              name: uploadResult.originalName,
-              size: uploadResult.size,
-              path: uploadResult.path
-            });
+            if (file.path && file.path.startsWith('/uploads/')) {
+              // File already uploaded, use existing data
+              uploadedFiles.push(file);
+            } else {
+              // Upload image file
+              const uploadResult = await uploadFileToBackend(file, 'images', lesson.id);
+              uploadedFiles.push({
+                name: uploadResult.originalName,
+                size: uploadResult.size,
+                path: uploadResult.path
+              });
+            }
           }
           processedContent[formatId] = {
             type: 'images',
@@ -187,25 +215,43 @@ const navigate = useNavigate();
             count: uploadedFiles.length
           };
         } else if (formatId === 'video' && formatContent.data?.file) {
-          // Upload video file
-          const uploadResult = await uploadFileToBackend(formatContent.data.file, 'videos', lesson.id);
-          processedContent[formatId] = {
-            type: 'video',
-            method: formatContent.method,
-            files: [{
-              name: uploadResult.originalName,
-              size: uploadResult.size,
-              path: uploadResult.path
-            }],
-            transcription: formatContent.data?.transcription || '',
-            generated: formatContent.data?.generated || null,
-            // YouTube video data
-            videoId: formatContent.data?.videoId || null,
-            url: formatContent.data?.url || null,
-            embedUrl: formatContent.data?.embedUrl || null,
-            title: formatContent.data?.title || null,
-            duration: formatContent.data?.duration || null
-          };
+          // Check if file is already uploaded (has path property)
+          if (formatContent.data.file.path && formatContent.data.file.path.startsWith('/uploads/')) {
+            // File already uploaded, use existing data
+            processedContent[formatId] = {
+              type: 'video',
+              method: formatContent.method,
+              files: [formatContent.data.file],
+              transcription: formatContent.data?.transcription || '',
+              generated: formatContent.data?.generated || null,
+              // YouTube video data
+              videoId: formatContent.data?.videoId || null,
+              url: formatContent.data?.url || null,
+              embedUrl: formatContent.data?.embedUrl || null,
+              title: formatContent.data?.title || null,
+              duration: formatContent.data?.duration || null
+            };
+          } else {
+            // Upload video file
+            const uploadResult = await uploadFileToBackend(formatContent.data.file, 'videos', lesson.id);
+            processedContent[formatId] = {
+              type: 'video',
+              method: formatContent.method,
+              files: [{
+                name: uploadResult.originalName,
+                size: uploadResult.size,
+                path: uploadResult.path
+              }],
+              transcription: formatContent.data?.transcription || '',
+              generated: formatContent.data?.generated || null,
+              // YouTube video data
+              videoId: formatContent.data?.videoId || null,
+              url: formatContent.data?.url || null,
+              embedUrl: formatContent.data?.embedUrl || null,
+              title: formatContent.data?.title || null,
+              duration: formatContent.data?.duration || null
+            };
+          }
         } else {
           // For text, code, and other non-file content, save directly
           processedContent[formatId] = {

@@ -41,7 +41,11 @@ const upload = multer({
     fileSize: 50 * 1024 * 1024 // 50MB limit
   },
   fileFilter: (req, file, cb) => {
-    const type = req.body.type;
+    // Get type from URL path since we're using /api/upload/{type}
+    const urlParts = req.originalUrl.split('/');
+    const type = urlParts[urlParts.length - 1];
+    
+    console.log('File filter - URL type:', type, 'File:', file.originalname);
     
     if (type === 'presentation') {
       // Allow presentation files
@@ -80,7 +84,8 @@ const upload = multer({
         cb(new Error('Invalid file type for videos. Allowed: .mp4, .avi, .mov, .wmv, .flv, .webm'));
       }
     } else {
-      cb(new Error('Invalid upload type'));
+      console.log('Invalid upload type:', type);
+      cb(new Error('Invalid upload type: ' + type));
     }
   }
 });
