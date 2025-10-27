@@ -100,7 +100,9 @@ export const AppProvider = ({ children }) => {
     closeContentCreation()
     console.log('Navigating to template selector...')
     // Navigate to template selector page after content creation is complete
-    window.location.href = '/template-selector'
+    // Pass the selected lesson ID as a query parameter
+    const lessonId = selectedLesson?.id || 'default-lesson';
+    window.location.href = `/template-selector?lessonId=${lessonId}`;
   }
 
   const openNewLessonModal = (courseId = null, courseTitle = null) => {

@@ -1,10 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
+import { useSearchParams } from 'react-router-dom';
 
 const TemplateSelector = ({ onSelectTemplate }) => {
   console.log('TemplateSelector component loaded');
-  const { theme } = useApp();
+  const { theme, selectedLesson } = useApp();
   const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [searchParams] = useSearchParams();
+  const [lessonId, setLessonId] = useState(null);
+  
+  console.log('Selected lesson in TemplateSelector:', selectedLesson);
+  
+  useEffect(() => {
+    const urlLessonId = searchParams.get('lessonId');
+    console.log('Lesson ID from URL:', urlLessonId);
+    setLessonId(urlLessonId);
+  }, [searchParams]);
 
   // Default function if onSelectTemplate is not provided
   const defaultTemplateHandler = onSelectTemplate || (() => {
@@ -86,15 +97,24 @@ const TemplateSelector = ({ onSelectTemplate }) => {
 
   const handleUseTemplate = () => {
     if (selectedTemplate) {
+      console.log('Use template clicked!');
+      console.log('Selected template:', selectedTemplate);
+      console.log('Lesson ID from URL:', lessonId);
+      console.log('Selected lesson from context:', selectedLesson);
+      
       // Call the template select handler if provided
       if (onSelectTemplate) {
         onSelectTemplate(selectedTemplate);
       }
+      
+      // Get lesson ID from URL, context, or use a default
+      const currentLessonId = lessonId || selectedLesson?.id || 'default-lesson';
+      console.log('Navigating to lesson content with lessonId:', currentLessonId, 'and template:', selectedTemplate.id);
+      
       // Navigate to lesson content view with the selected template
-      // Get lesson ID from context or use a default
-      const lessonId = selectedLesson?.id || 'default-lesson';
-      console.log('Navigating to lesson content with lessonId:', lessonId, 'and template:', selectedTemplate.id);
-      window.location.href = `/lesson-content/${lessonId}?template=${selectedTemplate.id}`;
+      window.location.href = `/lesson-content/${currentLessonId}?template=${selectedTemplate.id}`;
+    } else {
+      console.log('No template selected!');
     }
   };
 
