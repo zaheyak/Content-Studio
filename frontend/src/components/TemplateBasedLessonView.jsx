@@ -91,7 +91,7 @@ const TemplateBasedLessonView = () => {
         
         // Load from backend API only
         console.log('Loading content from backend for lesson:', currentLessonId);
-        const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-backend-production.up.railway.app'}/api/content/lesson/${currentLessonId}`);
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/content/lesson/${currentLessonId}`);
         
         if (response.ok) {
           const data = await response.json();
@@ -410,7 +410,7 @@ const TemplateBasedLessonView = () => {
                               className="rounded-lg shadow-lg"
                             >
                               <source
-                                src={`${import.meta.env.VITE_API_URL || 'https://content-studio-backend-production.up.railway.app'}${content.rawContent.files[0].path}`}
+                                src={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}${content.rawContent.files[0].path}`}
                                 type={content.rawContent.files[0].type || 'video/mp4'}
                               />
                               Your browser does not support the video tag.
@@ -439,7 +439,7 @@ const TemplateBasedLessonView = () => {
                                 </div>
                               </div>
                               <a
-                                href={`${import.meta.env.VITE_API_URL || 'https://content-studio-backend-production.up.railway.app'}${content.rawContent.presentation_url || content.rawContent.file?.path}`}
+                                href={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}${content.rawContent.presentation_url || content.rawContent.file?.path}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
@@ -469,7 +469,7 @@ const TemplateBasedLessonView = () => {
                               </div>
                             </div>
                             <img
-                              src={`${import.meta.env.VITE_API_URL || 'https://content-studio-backend-production.up.railway.app'}${content.rawContent.mindmap_url || content.rawContent.file?.path}`}
+                              src={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}${content.rawContent.mindmap_url || content.rawContent.file?.path}`}
                               alt="Mind Map"
                               className="w-full max-w-2xl mx-auto rounded-lg shadow-lg"
                               style={{ maxHeight: '400px', objectFit: 'contain' }}
@@ -510,7 +510,7 @@ const TemplateBasedLessonView = () => {
                             {content.rawContent.files.map((file, index) => (
                               <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                                 <img
-                                  src={`${import.meta.env.VITE_API_URL || 'https://content-studio-backend-production.up.railway.app'}${file.path || file.url}`}
+                                  src={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}${file.path || file.url}`}
                                   alt={file.name}
                                   className="w-full h-48 object-cover rounded-lg mb-2"
                                 />

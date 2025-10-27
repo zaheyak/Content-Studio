@@ -59,9 +59,9 @@ export default function ImageContentCreation({ lesson, course, onComplete, onNex
     // Simulate AI image generation
     setTimeout(() => {
       const mockImages = [
-        { id: 1, url: 'https://via.placeholder.com/400x300/667eea/ffffff?text=Generated+Image+1', title: 'Generated Image 1' },
-        { id: 2, url: 'https://via.placeholder.com/400x300/764ba2/ffffff?text=Generated+Image+2', title: 'Generated Image 2' },
-        { id: 3, url: 'https://via.placeholder.com/400x300/4CAF50/ffffff?text=Generated+Image+3', title: 'Generated Image 3' }
+        { id: 1, url: 'https://picsum.photos/400/300?random=1', title: 'Generated Image 1' },
+        { id: 2, url: 'https://picsum.photos/400/300?random=2', title: 'Generated Image 2' },
+        { id: 3, url: 'https://picsum.photos/400/300?random=3', title: 'Generated Image 3' }
       ];
       setGeneratedImages(mockImages);
       setIsGenerating(false);

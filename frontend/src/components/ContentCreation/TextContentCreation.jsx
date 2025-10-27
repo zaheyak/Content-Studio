@@ -22,7 +22,7 @@ export default function TextContentCreation({ lesson, course, onComplete, onNext
     setIsGenerating(true);
     
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-backend-production.up.railway.app'}/api/ai/generate-text`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/ai/generate-text`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

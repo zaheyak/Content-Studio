@@ -117,7 +117,7 @@ const navigate = useNavigate();
     formData.append('lessonId', lessonId);
     formData.append('type', type);
 
-    const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-backend-production.up.railway.app'}/api/upload/${type}`, {
+    const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/upload/${type}`, {
       method: 'POST',
       body: formData
     });
@@ -265,7 +265,7 @@ const navigate = useNavigate();
         }
       }
       
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-backend-production.up.railway.app'}/api/content/lesson/${lesson.id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/content/lesson/${lesson.id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -311,7 +311,7 @@ const navigate = useNavigate();
 
   const loadContentFromBackend = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-backend-production.up.railway.app'}/api/content/lesson/${lesson.id}`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/content/lesson/${lesson.id}`);
       if (response.ok) {
         const result = await response.json();
         const lessonContent = result.data;
@@ -459,7 +459,7 @@ const navigate = useNavigate();
             <strong>File Name:</strong> ${content.file.name}<br>
             <strong>Size:</strong> ${(content.file.size / 1024 / 1024).toFixed(2)} MB<br>
             <strong>Path:</strong> ${content.file.path}<br>
-            <strong>URL:</strong> <a href="${import.meta.env.VITE_API_URL || 'https://content-studio-backend-production.up.railway.app'}${content.presentation_url || content.file.path}" target="_blank">View/Download</a>
+            <strong>URL:</strong> <a href="${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}${content.presentation_url || content.file.path}" target="_blank">View/Download</a>
           </div>
         `;
       } else if (content.slides?.length > 0) {
@@ -487,7 +487,7 @@ const navigate = useNavigate();
             <strong>Size:</strong> ${(content.file.size / 1024 / 1024).toFixed(2)} MB<br>
             <strong>Path:</strong> ${content.file.path}<br>
             <div style="margin-top: 1rem;">
-              <img src="${import.meta.env.VITE_API_URL || 'https://content-studio-backend-production.up.railway.app'}${content.mindmap_url || content.file.path}" alt="Mind Map" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+              <img src="${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}${content.mindmap_url || content.file.path}" alt="Mind Map" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
             </div>
           </div>
         `;
@@ -523,7 +523,7 @@ const navigate = useNavigate();
           const fileName = file.name || 'Unknown file';
           const fileSize = file.size ? (file.size / 1024 / 1024).toFixed(2) : 'Unknown';
           const filePath = file.path || 'No path available';
-          const imageUrl = file.url || `${import.meta.env.VITE_API_URL || 'https://content-studio-backend-production.up.railway.app'}${filePath}`;
+          const imageUrl = file.url || `${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}${filePath}`;
           contentHTML += `
             <div style="margin: 1rem 0; padding: 1rem; border: 1px solid #e0e0e0; border-radius: 8px;">
               <div style="display: flex; gap: 1rem; align-items: flex-start;">
