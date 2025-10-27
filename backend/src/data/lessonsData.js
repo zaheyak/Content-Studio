@@ -244,14 +244,23 @@ const lessonDataManager = {
   // Update lesson content
   updateLesson(lessonId, updates) {
     if (lessonsData[lessonId]) {
+      // Update existing lesson
       lessonsData[lessonId] = {
         ...lessonsData[lessonId],
         ...updates,
         updatedAt: new Date().toISOString()
       };
       return lessonsData[lessonId];
+    } else {
+      // Create new lesson if it doesn't exist
+      lessonsData[lessonId] = {
+        ...updates,
+        lessonId,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      return lessonsData[lessonId];
     }
-    return null;
   },
 
   // Update specific content format for a lesson

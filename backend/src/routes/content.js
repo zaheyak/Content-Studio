@@ -104,6 +104,29 @@ router.post('/lesson/:lessonId', (req, res) => {
   const contentData = req.body;
   
   try {
+    // Create upload directories for this lesson if they don't exist
+    const fs = require('fs');
+    const path = require('path');
+    const uploadsDir = path.join(__dirname, '../../uploads');
+    
+    const lessonDir = path.join(uploadsDir, 'lessons', lessonId);
+    const contentTypes = ['presentations', 'mindmaps', 'images', 'videos', 'texts', 'codes'];
+    
+    // Create lesson directory and subdirectories
+    if (!fs.existsSync(lessonDir)) {
+      fs.mkdirSync(lessonDir, { recursive: true });
+      console.log('Created lesson directory:', lessonDir);
+    }
+    
+    // Create subdirectories for each content type
+    contentTypes.forEach(type => {
+      const typeDir = path.join(lessonDir, type);
+      if (!fs.existsSync(typeDir)) {
+        fs.mkdirSync(typeDir, { recursive: true });
+        console.log('Created content type directory:', typeDir);
+      }
+    });
+    
     // Create or update lesson in JavaScript data structure
     const lessonContent = {
       lessonId: lessonId,
@@ -139,6 +162,7 @@ router.post('/lesson/:lessonId', (req, res) => {
     const updatedLesson = lessonDataManager.updateLesson(lessonId, lessonContent);
     
     console.log('Lesson content saved to JS data structure:', lessonId);
+    console.log('Created upload directories for lesson:', lessonId);
     
     res.json({
       success: true,
