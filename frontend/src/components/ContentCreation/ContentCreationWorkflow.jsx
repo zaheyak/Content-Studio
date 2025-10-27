@@ -90,22 +90,23 @@ export default function ContentCreationWorkflow({ lesson, course, onClose, onCom
 
   const loadContentFromBackend = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/content/${lesson.id}`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/content/lesson/${lesson.id}/full`);
       if (response.ok) {
         const data = await response.json();
-        setContentData(data);
-        // Mark formats as completed if they have content
-        const completed = new Set();
-        Object.keys(data).forEach(key => {
-          if (data[key] && data[key] !== null) {
-            completed.add(key);
-          }
-        });
-        setCompletedFormats(completed);
+        if (data.success && data.data) {
+          setContentData(data.data.content || {});
+          // Mark formats as completed if they have content
+          const completed = new Set();
+          Object.keys(data.data.content || {}).forEach(key => {
+            if (data.data.content[key] && data.data.content[key] !== null) {
+              completed.add(key);
+            }
+          });
+          setCompletedFormats(completed);
+        }
+      } catch (error) {
+        console.error('Error loading content:', error);
       }
-    } catch (error) {
-      console.error('Error loading content:', error);
-    }
   };
 
   const saveContentToBackend = async (content) => {

@@ -262,40 +262,53 @@ router.post('/mindmap', upload.single('file'), (req, res) => {
 });
 
 // Upload images endpoint
-router.post('/images', upload.single('file'), (req, res) => {
+router.post('/images', upload.array('files', 10), (req, res) => {
   try {
-    if (!req.file) {
+    if (!req.files || req.files.length === 0) {
       return res.status(400).json({
         success: false,
-        message: 'No file uploaded'
+        message: 'No files uploaded'
       });
     }
 
     const lessonId = req.query.lessonId || req.body.lessonId;
-    const filePath = `/uploads/lessons/${lessonId}/images/${req.file.filename}`;
-    const fullPath = path.join(uploadsDir, 'lessons', lessonId, 'images', req.file.filename);
+    const uploadedFiles = [];
 
-    console.log('Image uploaded:', {
-      originalName: req.file.originalname,
-      filename: req.file.filename,
-      size: req.file.size,
-      path: filePath,
-      lessonId: lessonId
+    // Process each uploaded file
+    req.files.forEach(file => {
+      const filePath = `/uploads/lessons/${lessonId}/images/${file.filename}`;
+      
+      console.log('Image uploaded:', {
+        originalName: file.originalname,
+        filename: file.filename,
+        size: file.size,
+        path: filePath,
+        lessonId: lessonId
+      });
+
+      uploadedFiles.push({
+        name: file.originalname,
+        filename: file.filename,
+        size: file.size,
+        type: file.mimetype,
+        path: filePath,
+        url: `${req.protocol}://${req.get('host')}${filePath}`
+      });
     });
 
     // Get existing images or create new array
     const existingLesson = lessonDataManager.getLesson(lessonId);
     const existingImages = existingLesson?.content?.images?.files || [];
     
-    // Add new image to existing images
-    const newImage = {
-      name: req.file.originalname,
-      size: req.file.size,
-      type: req.file.mimetype,
-      path: filePath
-    };
+    // Add new images to existing images
+    const newImages = uploadedFiles.map(file => ({
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      path: file.path
+    }));
     
-    const updatedImages = [...existingImages, newImage];
+    const updatedImages = [...existingImages, ...newImages];
     
     // Update lesson data structure with images info
     const imagesContent = {
@@ -309,15 +322,8 @@ router.post('/images', upload.single('file'), (req, res) => {
 
     res.json({
       success: true,
-      data: {
-        originalName: req.file.originalname,
-        filename: req.file.filename,
-        size: req.file.size,
-        path: filePath,
-        url: `${req.protocol}://${req.get('host')}${filePath}`,
-        type: 'image'
-      },
-      message: 'Image uploaded successfully'
+      data: uploadedFiles,
+      message: `${uploadedFiles.length} image(s) uploaded successfully`
     });
   } catch (error) {
     console.error('Image upload error:', error);
