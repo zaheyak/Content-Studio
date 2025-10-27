@@ -94,14 +94,17 @@ export default function ContentCreationWorkflow({ lesson, course, onClose, onCom
       if (response.ok) {
         const data = await response.json();
         if (data.success && data.data) {
+          console.log('Content loaded from backend:', data.data.content);
           setContentData(data.data.content || {});
           // Mark formats as completed if they have content
           const completed = new Set();
           Object.keys(data.data.content || {}).forEach(key => {
             if (data.data.content[key] && data.data.content[key] !== null) {
               completed.add(key);
+              console.log(`Format ${key} has content:`, data.data.content[key]);
             }
           });
+          console.log('Completed formats:', Array.from(completed));
           setCompletedFormats(completed);
         }
       } catch (error) {
@@ -919,17 +922,42 @@ export default function ContentCreationWorkflow({ lesson, course, onClose, onCom
                             {format.id === 'text' && (
                               <div>
                                 {generatedContent.content && (
-                                  <div>📝 Manual content ({generatedContent.content.length} chars)</div>     
+                                  <div>
+                                    <div>📝 Manual content ({generatedContent.content.length} chars)</div>
+                                    <div style={{fontSize: '0.75rem', color: '#666', marginTop: '0.25rem'}}>
+                                      {generatedContent.content.substring(0, 100)}...
+                                    </div>
+                                  </div>
                                 )}
                                 {generatedContent.generated && (
-                                  <div>🤖 AI-generated text</div>
+                                  <div>
+                                    <div>🤖 AI-generated text</div>
+                                    <div style={{fontSize: '0.75rem', color: '#666', marginTop: '0.25rem'}}>
+                                      {generatedContent.generated.substring(0, 100)}...
+                                    </div>
+                                  </div>
                                 )}
                               </div>
                             )}
                             {format.id === 'presentation' && (
                               <div>
                                 {generatedContent.file ? (
-                                  <div>📊 {generatedContent.file.name} uploaded</div>
+                                  <div>
+                                    <div>📊 {generatedContent.file.name}</div>
+                                    <div style={{fontSize: '0.75rem', color: '#666'}}>
+                                      {(generatedContent.file.size / 1024 / 1024).toFixed(2)} MB
+                                    </div>
+                                    <div style={{fontSize: '0.75rem', color: '#666'}}>
+                                      Ready to view/download
+                                    </div>
+                                  </div>
+                                ) : generatedContent.presentation_url ? (
+                                  <div>
+                                    <div>📊 Presentation available</div>
+                                    <div style={{fontSize: '0.75rem', color: '#666'}}>
+                                      Click to view
+                                    </div>
+                                  </div>
                                 ) : (
                                   <div>📊 No presentation uploaded yet</div>
                                 )}
@@ -938,7 +966,22 @@ export default function ContentCreationWorkflow({ lesson, course, onClose, onCom
                             {format.id === 'mindmap' && (
                               <div>
                                 {generatedContent.file ? (
-                                  <div>🧠 {generatedContent.file.name} uploaded</div>
+                                  <div>
+                                    <div>🧠 {generatedContent.file.name}</div>
+                                    <div style={{fontSize: '0.75rem', color: '#666'}}>
+                                      {(generatedContent.file.size / 1024 / 1024).toFixed(2)} MB
+                                    </div>
+                                    <div style={{fontSize: '0.75rem', color: '#666'}}>
+                                      Ready to view
+                                    </div>
+                                  </div>
+                                ) : generatedContent.mindmap_url ? (
+                                  <div>
+                                    <div>🧠 Mind map available</div>
+                                    <div style={{fontSize: '0.75rem', color: '#666'}}>
+                                      Click to view
+                                    </div>
+                                  </div>
                                 ) : (
                                   <div>🧠 No mind map uploaded yet</div>
                                 )}
@@ -946,12 +989,24 @@ export default function ContentCreationWorkflow({ lesson, course, onClose, onCom
                             )}
                             {format.id === 'code' && (
                               <div>
-                                💻 {generatedContent.code?.length || 0} characters of code
+                                <div>💻 {generatedContent.code?.length || 0} characters of code</div>
+                                {generatedContent.code && (
+                                  <div style={{fontSize: '0.75rem', color: '#666', marginTop: '0.25rem'}}>
+                                    {generatedContent.language || 'Unknown language'}
+                                  </div>
+                                )}
                               </div>
                             )}
                             {format.id === 'images' && (
                               <div>
-                                🖼️ {generatedContent.files?.length || generatedContent.generated?.length || 0} image(s)
+                                <div>🖼️ {generatedContent.files?.length || generatedContent.generated?.length || 0} image(s)</div>
+                                {generatedContent.files?.length > 0 && (
+                                  <div style={{fontSize: '0.75rem', color: '#666', marginTop: '0.25rem'}}>
+                                    {generatedContent.files.map((file, index) => (
+                                      <div key={index}>{file.name}</div>
+                                    ))}
+                                  </div>
+                                )}
                               </div>
                             )}
                           </div>
