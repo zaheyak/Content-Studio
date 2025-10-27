@@ -1001,13 +1001,13 @@ const navigate = useNavigate();
                   color: '#1f2937',
                   marginBottom: '0.5rem'
                 }}>
-                  נשמר בהצלחה!
+                  Content Saved Successfully!
                 </h3>
                 <p style={{
                   color: '#6b7280',
                   marginBottom: '1.5rem'
                 }}>
-                  כל התוכן נשמר בהצלחה במערכת
+                  All content has been saved to the system
                 </p>
                 <button
                   onClick={() => setShowSuccessMessage(false)}
@@ -1024,7 +1024,7 @@ const navigate = useNavigate();
                   onMouseOver={(e) => e.target.style.backgroundColor = '#059669'}
                   onMouseOut={(e) => e.target.style.backgroundColor = '#10b981'}
                 >
-                  סגור
+                  Close
                 </button>
               </div>
             </div>
