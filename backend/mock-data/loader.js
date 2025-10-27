@@ -85,6 +85,28 @@ class MockDataLoader {
     };
   }
 
+  // Load lesson content from standalone lesson files
+  loadLessonContent(lessonId) {
+    const contentFiles = [
+      'standalone-lesson-1-content.json',
+      'standalone-lesson-2-content.json', 
+      'standalone-lesson-3-content.json'
+    ];
+    
+    for (const file of contentFiles) {
+      try {
+        const content = this.loadMockData(file);
+        if (content && content.lessonId === lessonId) {
+          return content;
+        }
+      } catch (error) {
+        console.error(`Error loading lesson content from ${file}:`, error.message);
+      }
+    }
+    
+    return null;
+  }
+
   // Get content statistics
   getContentStats() {
     const allData = this.loadAllMockData();
@@ -111,5 +133,6 @@ module.exports = {
   getContentByType: (contentType) => mockDataLoader.getContentByType(contentType),
   generateMockLesson: (lessonId, title, courseId, courseTitle) => 
     mockDataLoader.generateMockLesson(lessonId, title, courseId, courseTitle),
+  loadLessonContent: (lessonId) => mockDataLoader.loadLessonContent(lessonId),
   getContentStats: () => mockDataLoader.getContentStats()
 };

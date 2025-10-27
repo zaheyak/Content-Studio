@@ -47,6 +47,30 @@
       "description": "fbg",
       "created_at": "2025-10-26T06:40:16.423Z",
       "updated_at": "2025-10-26T06:40:16.423Z"
+    },
+    {
+      "id": "standalone-1",
+      "title": "Complete Web Development Guide",
+      "description": "A comprehensive guide covering HTML, CSS, JavaScript, and modern frameworks",
+      "courseId": null,
+      "created_at": "2024-01-20T10:00:00Z",
+      "updated_at": "2024-01-20T10:00:00Z"
+    },
+    {
+      "id": "standalone-2", 
+      "title": "Introduction to Machine Learning",
+      "description": "Basic concepts and applications of machine learning algorithms",
+      "courseId": null,
+      "created_at": "2024-01-21T14:30:00Z",
+      "updated_at": "2024-01-21T14:30:00Z"
+    },
+    {
+      "id": "standalone-3",
+      "title": "Digital Marketing Fundamentals",
+      "description": "Learn the basics of digital marketing strategies and tools",
+      "courseId": null,
+      "created_at": "2024-01-22T09:15:00Z",
+      "updated_at": "2024-01-22T09:15:00Z"
     }
   ]
 }
