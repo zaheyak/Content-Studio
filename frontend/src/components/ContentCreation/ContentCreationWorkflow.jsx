@@ -107,9 +107,10 @@ export default function ContentCreationWorkflow({ lesson, course, onClose, onCom
           console.log('Completed formats:', Array.from(completed));
           setCompletedFormats(completed);
         }
-      } catch (error) {
-        console.error('Error loading content:', error);
       }
+    } catch (error) {
+      console.error('Error loading content:', error);
+    }
   };
 
   const saveContentToBackend = async (content) => {
