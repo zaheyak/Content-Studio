@@ -230,7 +230,7 @@ const TemplateBasedLessonView = () => {
     if (formatKey === 'video') {
       if (content.videoId) {
         // YouTube video
-        displayContent = `YouTube Video: ${content.title || 'Video'}\nDuration: ${content.duration || 'Unknown'}\nVideo ID: ${content.videoId}`;
+        displayContent = `YouTube Video: ${content.title || 'Video'}\nDuration: ${content.duration || 'Unknown'}\nVideo ID: ${content.videoId}\nURL: ${content.url || `https://www.youtube.com/watch?v=${content.videoId}`}`;
       } else if (content.files && content.files.length > 0) {
         // Uploaded video
         displayContent = `Uploaded Video: ${content.files[0].name}\nSize: ${(content.files[0].size / 1024 / 1024).toFixed(2)} MB`;
@@ -398,17 +398,52 @@ const TemplateBasedLessonView = () => {
                     <div className="prose prose-lg dark:prose-invert max-w-none">
                       {formatKey === 'video' && content.rawContent?.videoId && (
                         <div className="mb-4">
-                          <h4 className="text-lg font-semibold mb-2">Video Preview:</h4>
-                          <iframe
-                            width="100%"
-                            height="315"
-                            src={content.rawContent.embedUrl}
-                            title="YouTube video player"
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                            className="rounded-lg shadow-lg"
-                          ></iframe>
+                          <h4 className="text-lg font-semibold mb-2">YouTube Video:</h4>
+                          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-4">
+                            <div className="flex items-center gap-3 mb-3">
+                              <div className="w-12 h-12 bg-red-100 dark:bg-red-800 rounded-lg flex items-center justify-center">
+                                <span className="text-2xl">🎥</span>
+                              </div>
+                              <div className="flex-1">
+                                <div className="font-medium text-red-900 dark:text-red-100">
+                                  {content.rawContent.title || 'YouTube Video'}
+                                </div>
+                                <div className="text-sm text-red-600 dark:text-red-300">
+                                  Duration: {content.rawContent.duration || 'Unknown'} | Video ID: {content.rawContent.videoId}
+                                </div>
+                              </div>
+                            </div>
+                            <iframe
+                              width="100%"
+                              height="315"
+                              src={content.rawContent.embedUrl || `https://www.youtube.com/embed/${content.rawContent.videoId}`}
+                              title="YouTube video player"
+                              frameBorder="0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                              className="rounded-lg shadow-lg"
+                            ></iframe>
+                            <div className="mt-3 flex gap-2">
+                              <a
+                                href={content.rawContent.url || `https://www.youtube.com/watch?v=${content.rawContent.videoId}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors"
+                              >
+                                Watch on YouTube
+                              </a>
+                              <button
+                                onClick={() => {
+                                  const url = content.rawContent.url || `https://www.youtube.com/watch?v=${content.rawContent.videoId}`;
+                                  navigator.clipboard.writeText(url);
+                                  alert('Video URL copied to clipboard!');
+                                }}
+                                className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg text-sm font-medium transition-colors"
+                              >
+                                Copy URL
+                              </button>
+                            </div>
+                          </div>
                         </div>
                       )}
                       
