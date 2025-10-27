@@ -116,6 +116,19 @@ const navigate = useNavigate();
       courseTitle: course?.title,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
+      template: {
+        id: 'learning-flow',
+        name: 'Learning Flow',
+        description: 'Traditional learning progression from video to practice',
+        formats: [
+          { name: 'Video', icon: '🎥', order: 1 },
+          { name: 'Explanation', icon: '🧾', order: 2 },
+          { name: 'Code', icon: '💻', order: 3 },
+          { name: 'Mind Map', icon: '🧠', order: 4 },
+          { name: 'Image', icon: '🖼️', order: 5 },
+          { name: 'Presentation', icon: '📊', order: 6 }
+        ]
+      },
       content: {
         video: content.video ? {
           type: 'video',

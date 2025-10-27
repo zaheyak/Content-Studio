@@ -98,6 +98,13 @@ const TemplateBasedLessonView = () => {
           const parsedContent = JSON.parse(savedContent);
           console.log('Loaded content from localStorage:', parsedContent);
           setLessonContent(parsedContent);
+          
+          // If template is included in the saved content, use it
+          if (parsedContent.template) {
+            console.log('Using template from saved content:', parsedContent.template);
+            setTemplate(parsedContent.template);
+          }
+          
           setLoading(false);
           return;
         }
@@ -360,7 +367,7 @@ const TemplateBasedLessonView = () => {
           </h3>
           <p className="text-gray-600 dark:text-gray-300 mb-4">{template.description}</p>
           <div className="flex items-center gap-2 overflow-x-auto pb-2">
-            {template.formats.map((format, index) => (
+            {template?.formats?.map((format, index) => (
               <div key={index} className="flex items-center flex-shrink-0">
                 <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-full flex items-center justify-center text-sm font-bold shadow-lg">
                   {format.order}
@@ -379,7 +386,16 @@ const TemplateBasedLessonView = () => {
 
         {/* Lesson Content Organized by Template */}
         <div className="space-y-8">
-          {template.formats.map((format, index) => {
+          {!template?.formats ? (
+            <div className="text-center py-8">
+              <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-2xl">⚠️</span>
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">Template Not Found</h3>
+              <p className="text-gray-600 dark:text-gray-300">No template structure available for this lesson.</p>
+            </div>
+          ) : (
+            template.formats.map((format, index) => {
             const content = getContentForFormat(format.name);
             const formatKey = format.name.toLowerCase().replace(' ', '');
             return (
@@ -498,7 +514,8 @@ const TemplateBasedLessonView = () => {
                 </div>
               </div>
             );
-          })}
+          })
+          )}
         </div>
 
         {/* Footer Actions */}
