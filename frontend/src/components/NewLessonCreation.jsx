@@ -23,7 +23,7 @@ export default function NewLessonCreation({ isOpen, onClose, onNavigateToContent
       const lessonData = {
         title: formData.title,
         description: formData.description,
-        courseId: courseId || '',
+        courseId: courseId || null,
         learningOutcomes: formData.learningOutcomes
       };
 

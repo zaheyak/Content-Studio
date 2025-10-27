@@ -35,7 +35,11 @@ const Lessons = ({ lessons, hasLessonContent, onOpenContentCreation, onNewLesson
           WebkitBackgroundClip: 'text', 
           WebkitTextFillColor: 'transparent',
           backgroundClip: 'text'
-        }}>All Lessons</h2>
+        }}>Standalone Lessons</h2>
+        <p className={`text-sm mb-6 ${theme === 'day-mode' ? 'text-gray-600' : 'text-gray-400'}`}>
+          These are lessons that don't belong to any specific course. 
+          Course lessons are displayed within their respective courses.
+        </p>
       {lessons.length === 0 ? (
             <div className="text-center py-12">
               <div className={`w-16 h-16 bg-gradient-to-br rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg ${theme === 'day-mode' ? 'from-emerald-100 to-emerald-200' : 'from-emerald-900/20 to-emerald-800/20'}`}>
@@ -46,8 +50,11 @@ const Lessons = ({ lessons, hasLessonContent, onOpenContentCreation, onNewLesson
                 WebkitBackgroundClip: 'text', 
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text'
-              }}>No lessons yet</h3>
-              <p className={`mb-6 ${theme === 'day-mode' ? 'text-gray-600' : 'text-white'}`}>Create your first lesson to get started with EDUCORE AI.</p>
+              }}>No standalone lessons yet</h3>
+              <p className={`mb-6 ${theme === 'day-mode' ? 'text-gray-600' : 'text-white'}`}>
+                Create your first standalone lesson or add lessons to courses. 
+                Course lessons are displayed within their respective courses.
+              </p>
               <button
                 onClick={onNewLesson}
                 className={`px-8 py-4 rounded-xl hover:shadow-xl hover:-translate-y-1 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-semibold text-lg ${theme === 'day-mode' ? 'bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white' : 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg'}`}
