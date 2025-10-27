@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { lessonDataManager } = require('../data/lessonsData');
 
 // GET /api/content - Get content by type or lesson
 router.get('/', (req, res) => {
@@ -40,16 +41,15 @@ router.get('/', (req, res) => {
 router.get('/lesson/:lessonId', (req, res) => {
   const { lessonId } = req.params;
   
-  // Try to load from mock data first
-  const { loadLessonContent } = require('../../mock-data/loader');
-  const lessonContent = loadLessonContent(lessonId);
+  // Get lesson from JavaScript data structure
+  const lessonContent = lessonDataManager.getLesson(lessonId);
   
   if (lessonContent) {
-    console.log('Loaded lesson content from mock data:', lessonId);
+    console.log('Loaded lesson content from JS data:', lessonId);
     return res.json({
       success: true,
       data: lessonContent,
-      message: 'Lesson content retrieved successfully from mock data'
+      message: 'Lesson content retrieved successfully from JS data'
     });
   }
   
@@ -104,10 +104,7 @@ router.post('/lesson/:lessonId', (req, res) => {
   const contentData = req.body;
   
   try {
-    const fs = require('fs');
-    const path = require('path');
-    
-    // Create content structure
+    // Create or update lesson in JavaScript data structure
     const lessonContent = {
       lessonId: lessonId,
       lessonTitle: contentData.lessonTitle || 'Untitled Lesson',
@@ -138,16 +135,15 @@ router.post('/lesson/:lessonId', (req, res) => {
       }
     };
     
-    // Save to JSON file
-    const contentPath = path.join(__dirname, '../../mock-data', `lesson-${lessonId}-content.json`);
-    fs.writeFileSync(contentPath, JSON.stringify(lessonContent, null, 2));
+    // Update lesson in JavaScript data structure
+    const updatedLesson = lessonDataManager.updateLesson(lessonId, lessonContent);
     
-    console.log('Lesson content saved to:', contentPath);
+    console.log('Lesson content saved to JS data structure:', lessonId);
     
     res.json({
       success: true,
-      data: lessonContent,
-      message: 'Lesson content saved successfully'
+      data: updatedLesson,
+      message: 'Lesson content saved successfully to JS data structure'
     });
   } catch (error) {
     console.error('Error saving lesson content:', error);

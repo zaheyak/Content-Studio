@@ -114,11 +114,8 @@ function App() {
   }
 
   const hasLessonContent = (lessonId) => {
-    const saved = localStorage.getItem(`content_${lessonId}`)
-    if (saved) {
-      const parsedContent = JSON.parse(saved)
-      return Object.values(parsedContent.content).some(content => content !== null)
-    }
+    // Content is now managed by backend, not localStorage
+    // This function can be used for UI state management if needed
     return false
   }
 

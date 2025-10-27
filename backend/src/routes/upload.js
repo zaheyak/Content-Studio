@@ -3,6 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const router = express.Router();
+const { lessonDataManager } = require('../data/lessonsData');
 
 // Ensure uploads directory exists
 const uploadsDir = path.join(__dirname, '../../uploads');
@@ -106,6 +107,21 @@ router.post('/presentation', upload.single('file'), (req, res) => {
       lessonId: lessonId
     });
 
+    // Update lesson data structure with presentation info
+    const presentationContent = {
+      type: 'presentation',
+      method: 'upload',
+      file: {
+        name: req.file.originalname,
+        size: req.file.size,
+        type: req.file.mimetype,
+        path: filePath
+      },
+      presentation_url: filePath
+    };
+
+    lessonDataManager.updateLessonContent(lessonId, 'presentation', presentationContent);
+
     res.json({
       success: true,
       data: {
@@ -149,6 +165,21 @@ router.post('/mindmap', upload.single('file'), (req, res) => {
       path: filePath,
       lessonId: lessonId
     });
+
+    // Update lesson data structure with mindmap info
+    const mindmapContent = {
+      type: 'mindmap',
+      method: 'upload',
+      file: {
+        name: req.file.originalname,
+        size: req.file.size,
+        type: req.file.mimetype,
+        path: filePath
+      },
+      mindmap_url: filePath
+    };
+
+    lessonDataManager.updateLessonContent(lessonId, 'mindmap', mindmapContent);
 
     res.json({
       success: true,
@@ -194,6 +225,30 @@ router.post('/images', upload.single('file'), (req, res) => {
       lessonId: lessonId
     });
 
+    // Get existing images or create new array
+    const existingLesson = lessonDataManager.getLesson(lessonId);
+    const existingImages = existingLesson?.content?.images?.files || [];
+    
+    // Add new image to existing images
+    const newImage = {
+      name: req.file.originalname,
+      size: req.file.size,
+      type: req.file.mimetype,
+      path: filePath
+    };
+    
+    const updatedImages = [...existingImages, newImage];
+    
+    // Update lesson data structure with images info
+    const imagesContent = {
+      type: 'images',
+      method: 'upload',
+      files: updatedImages,
+      count: updatedImages.length
+    };
+
+    lessonDataManager.updateLessonContent(lessonId, 'images', imagesContent);
+
     res.json({
       success: true,
       data: {
@@ -237,6 +292,29 @@ router.post('/videos', upload.single('file'), (req, res) => {
       path: filePath,
       lessonId: lessonId
     });
+
+    // Get existing videos or create new array
+    const existingLesson = lessonDataManager.getLesson(lessonId);
+    const existingVideos = existingLesson?.content?.video?.files || [];
+    
+    // Add new video to existing videos
+    const newVideo = {
+      name: req.file.originalname,
+      size: req.file.size,
+      type: req.file.mimetype,
+      path: filePath
+    };
+    
+    const updatedVideos = [...existingVideos, newVideo];
+    
+    // Update lesson data structure with video info
+    const videoContent = {
+      type: 'video',
+      method: 'upload',
+      files: updatedVideos
+    };
+
+    lessonDataManager.updateLessonContent(lessonId, 'video', videoContent);
 
     res.json({
       success: true,
