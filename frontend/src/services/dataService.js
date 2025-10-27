@@ -1,5 +1,5 @@
 // Data service for API calls
-const API_BASE_URL = `${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api`
+const API_BASE_URL = `${import.meta.env.VITE_API_URL}/api`
 
 export const dataService = {
   // Course management

@@ -15,7 +15,7 @@ const Header = () => {
           <div className="flex items-center space-x-4">
              <div className="flex-shrink-0 h-20 w-auto relative">
                <img
-                 src={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/logo/${theme === 'day-mode' ? 'light' : 'dark'}`}
+                 src={`${import.meta.env.VITE_API_URL}/api/logo/${theme === 'day-mode' ? 'light' : 'dark'}`}
                  alt="EDUCORE AI Logo"
                  className="h-full w-auto object-contain transition-all duration-300 "
                />

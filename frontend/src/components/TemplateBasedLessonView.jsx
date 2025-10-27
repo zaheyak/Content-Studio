@@ -91,7 +91,7 @@ const TemplateBasedLessonView = () => {
         
         // Load from backend API only
         console.log('Loading content from backend for lesson:', currentLessonId);
-        const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/content/lesson/${currentLessonId}`);
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/content/lesson/${currentLessonId}`);
         
         if (response.ok) {
           const data = await response.json();
@@ -458,7 +458,7 @@ const TemplateBasedLessonView = () => {
                               className="rounded-lg shadow-lg"
                             >
                               <source
-                                src={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/upload/lessons/${lessonContent.lessonId}/videos/${content.rawContent.files[0].filename || content.rawContent.files[0].name || content.rawContent.files[0].path?.split('/').pop()}`}
+                                src={`${import.meta.env.VITE_API_URL}/api/upload/lessons/${lessonContent.lessonId}/videos/${content.rawContent.files[0].filename || content.rawContent.files[0].name || content.rawContent.files[0].path?.split('/').pop()}`}
                                 type={content.rawContent.files[0].type || 'video/mp4'}
                               />
                               Your browser does not support the video tag.

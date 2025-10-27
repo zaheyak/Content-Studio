@@ -193,7 +193,7 @@ export default function InteractiveMindMap({
     setIsGenerating(true);
     
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/v1/ai/generate-mindmap`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/v1/ai/generate-mindmap`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

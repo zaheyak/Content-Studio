@@ -33,7 +33,7 @@ export default function VideoContentCreation({ lesson, course, onComplete, onNex
         const formData = new FormData();
         formData.append('file', file);
 
-        const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/upload/videos?lessonId=${lesson.id}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/upload/videos?lessonId=${lesson.id}`, {
           method: 'POST',
           body: formData
         });
