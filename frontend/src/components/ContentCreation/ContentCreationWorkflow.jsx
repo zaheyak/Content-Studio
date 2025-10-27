@@ -349,12 +349,6 @@ const navigate = useNavigate();
     console.log('Viewing format:', formatId);
     console.log('Content structure:', content);
     
-    // Check if content exists
-    if (!content) {
-      alert(`No content available for ${formatId}. Please add content first.`);
-      return;
-    }
-    
     // Create a view-only modal for the content
     const viewModal = document.createElement('div');
     viewModal.style.cssText = `
@@ -414,8 +408,7 @@ const navigate = useNavigate();
         </div>
       `;
     } else {
-    
-    if (formatId === 'video') {
+      if (formatId === 'video') {
       // Handle uploaded files
       if (content.files?.length > 0) {
         contentHTML += `<h4>Uploaded Videos:</h4>`;
@@ -624,6 +617,7 @@ const navigate = useNavigate();
           <p>Upload images or generate them with AI to see them here.</p>
         </div>`;
       }
+    }
     }
     
     // Add close button
