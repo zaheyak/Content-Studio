@@ -279,6 +279,7 @@ const TemplateBasedLessonView = () => {
         displayContent = content.content;
       } else {
         displayContent = "Text content available";
+        hasContent = false;
       }
     } else if (formatKey === 'presentation') {
       if (content.presentation_url || content.file) {
@@ -311,6 +312,7 @@ const TemplateBasedLessonView = () => {
         displayContent = `Code (${content.language || 'Unknown language'}):\n\n${content.code}`;
       } else {
         displayContent = "Code content available";
+        hasContent = false;
       }
     } else if (formatKey === 'images') {
       if (content.files && content.files.length > 0) {
@@ -320,6 +322,7 @@ const TemplateBasedLessonView = () => {
         });
       } else {
         displayContent = "Image content available";
+        hasContent = false;
       }
     } else {
       displayContent = content.content || `Content for ${formatName}`;
@@ -458,7 +461,7 @@ const TemplateBasedLessonView = () => {
                                 </div>
                               </div>
                               <a
-                                href={content.rawContent.presentation_url || content.rawContent.file?.path}
+                                href={`${import.meta.env.VITE_API_URL || 'https://content-studio-backend-production.up.railway.app'}${content.rawContent.presentation_url || content.rawContent.file?.path}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
@@ -488,11 +491,56 @@ const TemplateBasedLessonView = () => {
                               </div>
                             </div>
                             <img
-                              src={content.rawContent.mindmap_url || content.rawContent.file?.url}
+                              src={`${import.meta.env.VITE_API_URL || 'https://content-studio-backend-production.up.railway.app'}${content.rawContent.mindmap_url || content.rawContent.file?.path}`}
                               alt="Mind Map"
                               className="w-full max-w-2xl mx-auto rounded-lg shadow-lg"
                               style={{ maxHeight: '400px', objectFit: 'contain' }}
                             />
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Text Content */}
+                      {formatKey === 'text' && content.rawContent && (
+                        <div className="mb-4">
+                          <h4 className="text-lg font-semibold mb-2">Text Content:</h4>
+                          <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                            <div className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
+                              {content.rawContent.generated || content.rawContent.content || 'No text content available'}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Code Content */}
+                      {formatKey === 'code' && content.rawContent?.code && (
+                        <div className="mb-4">
+                          <h4 className="text-lg font-semibold mb-2">Code Content:</h4>
+                          <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
+                            <pre className="text-green-400 text-sm">
+                              <code>{content.rawContent.code}</code>
+                            </pre>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {/* Images Content */}
+                      {formatKey === 'images' && content.rawContent?.files && content.rawContent.files.length > 0 && (
+                        <div className="mb-4">
+                          <h4 className="text-lg font-semibold mb-2">Images:</h4>
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {content.rawContent.files.map((file, index) => (
+                              <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                                <img
+                                  src={`${import.meta.env.VITE_API_URL || 'https://content-studio-backend-production.up.railway.app'}${file.path || file.url}`}
+                                  alt={file.name}
+                                  className="w-full h-48 object-cover rounded-lg mb-2"
+                                />
+                                <div className="text-sm text-gray-600 dark:text-gray-400">
+                                  {file.name}
+                                </div>
+                              </div>
+                            ))}
                           </div>
                         </div>
                       )}

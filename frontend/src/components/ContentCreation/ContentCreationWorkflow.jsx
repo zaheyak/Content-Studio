@@ -164,15 +164,15 @@ const navigate = useNavigate();
           type: 'presentation',
           method: content.presentation.method,
           file: content.presentation.data?.file || null,
-          presentation_url: content.presentation.data?.presentation_url || null,
-          path: content.presentation.data?.presentation_url || `/content/${lesson.id}/presentations/`
+          presentation_url: content.presentation.data?.presentation_url || content.presentation.data?.file?.path || null,
+          path: content.presentation.data?.presentation_url || content.presentation.data?.file?.path || `/content/${lesson.id}/presentations/`
         } : null,
         mindmap: content.mindmap ? {
           type: 'mindmap',
           method: content.mindmap.method,
           file: content.mindmap.data?.file || null,
-          mindmap_url: content.mindmap.data?.mindmap_url || null,
-          path: content.mindmap.data?.mindmap_url || `/content/${lesson.id}/mindmaps/`
+          mindmap_url: content.mindmap.data?.mindmap_url || content.mindmap.data?.file?.path || null,
+          path: content.mindmap.data?.mindmap_url || content.mindmap.data?.file?.path || `/content/${lesson.id}/mindmaps/`
         } : null,
         code: content.code ? {
           type: 'code',
