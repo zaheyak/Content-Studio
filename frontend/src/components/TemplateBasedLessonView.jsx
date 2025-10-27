@@ -311,6 +311,11 @@ const TemplateBasedLessonView = () => {
       displayContent = content.content || `Content for ${formatName}`;
     }
     
+    // Ensure displayContent is always defined
+    if (!displayContent) {
+      displayContent = `Content for ${formatName}`;
+    }
+    
     return {
       title: content.title || content.type || formatName,
       content: displayContent,
