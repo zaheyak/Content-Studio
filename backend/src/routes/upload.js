@@ -212,7 +212,7 @@ router.post('/mindmap', upload.single('file'), (req, res) => {
       });
     }
 
-    const lessonId = req.body.lessonId;
+    const lessonId = req.query.lessonId || req.body.lessonId;
     const filePath = `/uploads/lessons/${lessonId}/mindmaps/${req.file.filename}`;
     const fullPath = path.join(uploadsDir, 'lessons', lessonId, 'mindmaps', req.file.filename);
 
@@ -271,7 +271,7 @@ router.post('/images', upload.single('file'), (req, res) => {
       });
     }
 
-    const lessonId = req.body.lessonId;
+    const lessonId = req.query.lessonId || req.body.lessonId;
     const filePath = `/uploads/lessons/${lessonId}/images/${req.file.filename}`;
     const fullPath = path.join(uploadsDir, 'lessons', lessonId, 'images', req.file.filename);
 
@@ -339,7 +339,7 @@ router.post('/videos', upload.single('file'), (req, res) => {
       });
     }
 
-    const lessonId = req.body.lessonId;
+    const lessonId = req.query.lessonId || req.body.lessonId;
     const filePath = `/uploads/lessons/${lessonId}/videos/${req.file.filename}`;
     const fullPath = path.join(uploadsDir, 'lessons', lessonId, 'videos', req.file.filename);
 

@@ -423,7 +423,7 @@ const TemplateBasedLessonView = () => {
                               className="rounded-lg shadow-lg"
                             >
                               <source
-                                src={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/upload/lessons/${lessonContent.lessonId}/videos/${content.rawContent.files[0].name || content.rawContent.files[0].path?.split('/').pop()}`}
+                                src={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/upload/lessons/${lessonContent.lessonId}/videos/${content.rawContent.files[0].filename || content.rawContent.files[0].name || content.rawContent.files[0].path?.split('/').pop()}`}
                                 type={content.rawContent.files[0].type || 'video/mp4'}
                               />
                               Your browser does not support the video tag.
@@ -451,14 +451,14 @@ const TemplateBasedLessonView = () => {
                                   {content.rawContent.file?.size ? `${(content.rawContent.file.size / 1024 / 1024).toFixed(2)} MB` : 'Presentation file'}
                                 </div>
                               </div>
-                              <a
-                                href={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/upload/lessons/${lessonContent.lessonId}/presentations/${content.rawContent.file?.name || content.rawContent.presentation_url?.split('/').pop()}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
-                              >
-                                View/Download
-                              </a>
+                            <a
+                              href={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/upload/lessons/${lessonContent.lessonId}/presentations/${content.rawContent.file?.filename || content.rawContent.file?.name || content.rawContent.presentation_url?.split('/').pop()}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+                            >
+                              View/Download
+                            </a>
                             </div>
                           </div>
                         </div>
@@ -481,12 +481,12 @@ const TemplateBasedLessonView = () => {
                                 </div>
                               </div>
                             </div>
-                            <img
-                              src={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/upload/lessons/${lessonContent.lessonId}/mindmaps/${content.rawContent.file?.name || content.rawContent.mindmap_url?.split('/').pop()}`}
-                              alt="Mind Map"
-                              className="w-full max-w-2xl mx-auto rounded-lg shadow-lg"
-                              style={{ maxHeight: '400px', objectFit: 'contain' }}
-                            />
+                        <img
+                          src={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/upload/lessons/${lessonContent.lessonId}/mindmaps/${content.rawContent.file?.filename || content.rawContent.file?.name || content.rawContent.mindmap_url?.split('/').pop()}`}
+                          alt="Mind Map"
+                          className="w-full max-w-2xl mx-auto rounded-lg shadow-lg"
+                          style={{ maxHeight: '400px', objectFit: 'contain' }}
+                        />
                           </div>
                         </div>
                       )}
@@ -522,11 +522,11 @@ const TemplateBasedLessonView = () => {
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {content.rawContent.files.map((file, index) => (
                               <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                                <img
-                                  src={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/upload/lessons/${lessonContent.lessonId}/images/${file.name || file.path?.split('/').pop()}`}
-                                  alt={file.name}
-                                  className="w-full h-48 object-cover rounded-lg mb-2"
-                                />
+                        <img
+                          src={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/upload/lessons/${lessonContent.lessonId}/images/${file.filename || file.name || file.path?.split('/').pop()}`}
+                          alt={file.name}
+                          className="w-full h-48 object-cover rounded-lg mb-2"
+                        />
                                 <div className="text-sm text-gray-600 dark:text-gray-400">
                                   {file.name}
                                 </div>
