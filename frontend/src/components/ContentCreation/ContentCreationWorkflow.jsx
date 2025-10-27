@@ -36,6 +36,7 @@ export default function ContentCreationWorkflow({ lesson, course, onClose, onCom
     images: null
   });
   const [savedContent, setSavedContent] = useState(null);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 const navigate = useNavigate();
   // Load saved content when component mounts
   useEffect(() => {
@@ -251,6 +252,9 @@ const navigate = useNavigate();
         const result = await response.json();
         console.log('Content saved to backend successfully:', result);
         setSavedContent(result.data);
+        setShowSuccessMessage(true);
+        // Hide success message after 3 seconds
+        setTimeout(() => setShowSuccessMessage(false), 3000);
       } else {
         console.error('Failed to save content to backend:', await response.text());
       }
@@ -857,22 +861,31 @@ const navigate = useNavigate();
   
   // Check if lesson already has content
   const hasExistingContent = completedCount > 0;
-  const buttonText = hasExistingContent ? 'Edit Content' : 'Create Content';
+  const buttonText = hasExistingContent ? 'Save Content' : 'Create Content';
   
-  const handleEditContent = () => {
-    // If there's existing content, just stay in the modal to edit
-    // If no content, complete the creation process
-    if (hasExistingContent) {
-      // Stay in modal - user can edit individual formats
-      return;
-    } else {
-      handleFinish();
-    }
+  const handleSaveContent = async () => {
+    // Save all current content to backend
+    await saveContentToBackend(contentData);
   };
 
   return (
-    <div style={styles.overlay}>
-      <div style={styles.modal}>
+    <>
+      <style>
+        {`
+          @keyframes slideDown {
+            from {
+              opacity: 0;
+              transform: translateY(-20px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+        `}
+      </style>
+      <div style={styles.overlay}>
+        <div style={styles.modal}>
         <div style={styles.header}>
           <h3 style={styles.title}>
             Content Creation: {lesson?.title}
@@ -894,6 +907,24 @@ const navigate = useNavigate();
         </div>
 
         <div style={styles.content}>
+          {/* Success Message */}
+          {showSuccessMessage && (
+            <div style={{
+              backgroundColor: '#10b981',
+              color: 'white',
+              padding: '1rem',
+              borderRadius: '8px',
+              marginBottom: '1rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              animation: 'slideDown 0.3s ease-out'
+            }}>
+              <span style={{ fontSize: '1.2rem' }}>✅</span>
+              <span style={{ fontWeight: '600' }}>Content saved successfully to backend!</span>
+            </div>
+          )}
+          
           {!currentFormat ? (
             <>
               {/* Progress Section */}
@@ -1165,7 +1196,7 @@ const navigate = useNavigate();
             <div></div>
             <div style={{ display: 'flex', gap: '12px' }}>
               <button
-                onClick={handleEditContent}
+                onClick={handleSaveContent}
                 disabled={completedCount === 0}
                 style={{
                   ...styles.button,
@@ -1229,5 +1260,6 @@ const navigate = useNavigate();
         )}
       </div>
     </div>
+    </>
   );
 }
