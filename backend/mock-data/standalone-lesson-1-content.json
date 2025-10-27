@@ -30,125 +30,34 @@
     },
     "presentation": {
       "type": "presentation",
-      "method": "ai",
-      "slides": [
-        {
-          "id": "slide-1",
-          "title": "Web Development Overview",
-          "content": "Introduction to web development technologies and their roles in creating modern web applications.",
-          "notes": "Start with the big picture before diving into specific technologies."
-        },
-        {
-          "id": "slide-2", 
-          "title": "HTML Fundamentals",
-          "content": "Learn the structure and semantic elements of HTML5 for building accessible web pages.",
-          "notes": "Emphasize semantic HTML and accessibility best practices."
-        },
-        {
-          "id": "slide-3",
-          "title": "CSS Styling",
-          "content": "Master CSS for styling, layouts, and responsive design using modern techniques.",
-          "notes": "Cover CSS Grid, Flexbox, and responsive design principles."
-        },
-        {
-          "id": "slide-4",
-          "title": "JavaScript Programming",
-          "content": "Add interactivity and dynamic functionality to your web applications with JavaScript.",
-          "notes": "Focus on ES6+ features and DOM manipulation."
-        },
-        {
-          "id": "slide-5",
-          "title": "Modern Frameworks",
-          "content": "Explore popular frameworks like React, Vue.js, and Angular for efficient development.",
-          "notes": "Compare and contrast different framework approaches."
-        }
-      ],
-      "path": "/content/standalone-1/presentations/web-dev-guide.pptx"
+      "method": "upload",
+      "file": {
+        "name": "web-development-guide.pptx",
+        "size": 5242880,
+        "type": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+        "path": "/uploads/lessons/standalone-1/presentations/web-development-guide_1705747200000.pptx",
+        "url": "http://localhost:3001/uploads/lessons/standalone-1/presentations/web-development-guide_1705747200000.pptx"
+      },
+      "presentation_url": "/uploads/lessons/standalone-1/presentations/web-development-guide_1705747200000.pptx",
+      "path": "/uploads/lessons/standalone-1/presentations/web-development-guide_1705747200000.pptx"
     },
     "mindmap": {
       "type": "mindmap",
-      "method": "ai",
-      "nodes": [
-        {
-          "id": "root",
-          "label": "Web Development",
-          "x": 400,
-          "y": 200,
-          "color": "#3B82F6"
-        },
-        {
-          "id": "frontend",
-          "label": "Frontend",
-          "x": 200,
-          "y": 100,
-          "color": "#10B981"
-        },
-        {
-          "id": "backend",
-          "label": "Backend", 
-          "x": 600,
-          "y": 100,
-          "color": "#F59E0B"
-        },
-        {
-          "id": "html",
-          "label": "HTML",
-          "x": 100,
-          "y": 50,
-          "color": "#EF4444"
-        },
-        {
-          "id": "css",
-          "label": "CSS",
-          "x": 200,
-          "y": 50,
-          "color": "#8B5CF6"
-        },
-        {
-          "id": "js",
-          "label": "JavaScript",
-          "x": 300,
-          "y": 50,
-          "color": "#F59E0B"
-        },
-        {
-          "id": "react",
-          "label": "React",
-          "x": 100,
-          "y": 150,
-          "color": "#06B6D4"
-        },
-        {
-          "id": "nodejs",
-          "label": "Node.js",
-          "x": 500,
-          "y": 50,
-          "color": "#10B981"
-        },
-        {
-          "id": "database",
-          "label": "Database",
-          "x": 700,
-          "y": 50,
-          "color": "#F97316"
-        }
-      ],
-      "connections": [
-        {"from": "root", "to": "frontend"},
-        {"from": "root", "to": "backend"},
-        {"from": "frontend", "to": "html"},
-        {"from": "frontend", "to": "css"},
-        {"from": "frontend", "to": "js"},
-        {"from": "frontend", "to": "react"},
-        {"from": "backend", "to": "nodejs"},
-        {"from": "backend", "to": "database"}
-      ],
-      "path": "/content/standalone-1/mindmaps/web-dev-mindmap.json"
+      "method": "upload",
+      "file": {
+        "name": "web-development-mindmap.png",
+        "size": 1048576,
+        "type": "image/png",
+        "path": "/uploads/lessons/standalone-1/mindmaps/web-development-mindmap_1705747200000.png",
+        "url": "http://localhost:3001/uploads/lessons/standalone-1/mindmaps/web-development-mindmap_1705747200000.png"
+      },
+      "mindmap_url": "/uploads/lessons/standalone-1/mindmaps/web-development-mindmap_1705747200000.png",
+      "path": "/uploads/lessons/standalone-1/mindmaps/web-development-mindmap_1705747200000.png"
     },
     "code": {
       "type": "code",
       "method": "ai",
-      "code": "// Complete Web Development Example\n\n// HTML Structure\nconst htmlTemplate = `\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Web Development Guide</title>\n    <link rel=\"stylesheet\" href=\"styles.css\">\n</head>\n<body>\n    <header>\n        <h1>Web Development Guide</h1>\n        <nav>\n            <ul>\n                <li><a href=\"#html\">HTML</a></li>\n                <li><a href=\"#css\">CSS</a></li>\n                <li><a href=\"#js\">JavaScript</a></li>\n            </ul>\n        </nav>\n    </header>\n    <main>\n        <section id=\"html\">\n            <h2>HTML Fundamentals</h2>\n            <p>Learn the structure and semantic elements of HTML5.</p>\n        </section>\n        <section id=\"css\">\n            <h2>CSS Styling</h2>\n            <p>Master CSS for styling and responsive design.</p>\n        </section>\n        <section id=\"js\">\n            <h2>JavaScript Programming</h2>\n            <p>Add interactivity with JavaScript.</p>\n        </section>\n    </main>\n    <footer>\n        <p>&copy; 2024 Web Development Guide</p>\n    </footer>\n    <script src=\"script.js\"></script>\n</body>\n</html>\n`;\n\n// CSS Styles\nconst cssStyles = `\n/* Reset and Base Styles */\n* {\n    margin: 0;\n    padding: 0;\n    box-sizing: border-box;\n}\n\nbody {\n    font-family: 'Arial', sans-serif;\n    line-height: 1.6;\n    color: #333;\n    background-color: #f4f4f4;\n}\n\n/* Header Styles */\nheader {\n    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n    color: white;\n    padding: 2rem 0;\n    text-align: center;\n}\n\nheader h1 {\n    font-size: 2.5rem;\n    margin-bottom: 1rem;\n}\n\nnav ul {\n    list-style: none;\n    display: flex;\n    justify-content: center;\n    gap: 2rem;\n}\n\nnav a {\n    color: white;\n    text-decoration: none;\n    padding: 0.5rem 1rem;\n    border-radius: 5px;\n    transition: background-color 0.3s;\n}\n\nnav a:hover {\n    background-color: rgba(255, 255, 255, 0.2);\n}\n\n/* Main Content */\nmain {\n    max-width: 1200px;\n    margin: 0 auto;\n    padding: 2rem;\n}\n\nsection {\n    background: white;\n    margin: 2rem 0;\n    padding: 2rem;\n    border-radius: 10px;\n    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);\n}\n\nsection h2 {\n    color: #667eea;\n    margin-bottom: 1rem;\n    font-size: 1.8rem;\n}\n\n/* Footer */\nfooter {\n    background: #333;\n    color: white;\n    text-align: center;\n    padding: 1rem 0;\n    margin-top: 2rem;\n}\n\n/* Responsive Design */\n@media (max-width: 768px) {\n    header h1 {\n        font-size: 2rem;\n    }\n    \n    nav ul {\n        flex-direction: column;\n        gap: 1rem;\n    }\n    \n    main {\n        padding: 1rem;\n    }\n}\n`;\n\n// JavaScript Functionality\nconst javascriptCode = `\n// DOM Content Loaded Event\ndocument.addEventListener('DOMContentLoaded', function() {\n    console.log('Web Development Guide loaded!');\n    \n    // Smooth scrolling for navigation links\n    const navLinks = document.querySelectorAll('nav a[href^=\"#\"]');\n    \n    navLinks.forEach(link => {\n        link.addEventListener('click', function(e) {\n            e.preventDefault();\n            \n            const targetId = this.getAttribute('href').substring(1);\n            const targetElement = document.getElementById(targetId);\n            \n            if (targetElement) {\n                targetElement.scrollIntoView({\n                    behavior: 'smooth',\n                    block: 'start'\n                });\n            }\n        });\n    });\n    \n    // Add interactive features\n    const sections = document.querySelectorAll('section');\n    \n    sections.forEach(section => {\n        section.addEventListener('mouseenter', function() {\n            this.style.transform = 'translateY(-5px)';\n            this.style.transition = 'transform 0.3s ease';\n        });\n        \n        section.addEventListener('mouseleave', function() {\n            this.style.transform = 'translateY(0)';\n        });\n    });\n    \n    // Dynamic content loading\n    loadDynamicContent();\n});\n\n// Function to load dynamic content\nfunction loadDynamicContent() {\n    const sections = document.querySelectorAll('section');\n    \n    sections.forEach(section => {\n        const h2 = section.querySelector('h2');\n        if (h2) {\n            const sectionId = section.getAttribute('id');\n            const content = getSectionContent(sectionId);\n            \n            if (content) {\n                section.innerHTML = `\n                    <h2>${h2.textContent}</h2>\n                    <p>${content.description}</p>\n                    <div class=\"content-details\">\n                        ${content.details.map(detail => `<p>• ${detail}</p>`).join('')}\n                    </div>\n                `;\n            }\n        }\n    });\n}\n\n// Content data for different sections\nfunction getSectionContent(sectionId) {\n    const contentData = {\n        'html': {\n            description: 'HTML (HyperText Markup Language) is the standard markup language for creating web pages.',\n            details: [\n                'Semantic HTML5 elements for better structure',\n                'Accessibility features with ARIA attributes',\n                'Form elements and validation',\n                'Media elements for images and videos'\n            ]\n        },\n        'css': {\n            description: 'CSS (Cascading Style Sheets) is used to style and layout web pages.',\n            details: [\n                'Flexbox and Grid for modern layouts',\n                'Responsive design with media queries',\n                'CSS animations and transitions',\n                'CSS custom properties (variables)'\n            ]\n        },\n        'js': {\n            description: 'JavaScript is a programming language that adds interactivity to web pages.',\n            details: [\n                'ES6+ features and modern syntax',\n                'DOM manipulation and event handling',\n                'Asynchronous programming with Promises',\n                'Module system and bundling'\n            ]\n        }\n    };\n    \n    return contentData[sectionId] || null;\n}\n\n// Export for module systems\nif (typeof module !== 'undefined' && module.exports) {\n    module.exports = {\n        htmlTemplate,\n        cssStyles,\n        javascriptCode\n    };\n}\n`;\n\n// Export the complete example\nexport { htmlTemplate, cssStyles, javascriptCode };",
+      "code": "// Complete Web Development Example\n\n// HTML Structure\nconst htmlTemplate = `\n<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Web Development Guide</title>\n    <link rel=\"stylesheet\" href=\"styles.css\">\n</head>\n<body>\n    <header>\n        <h1>Web Development Guide</h1>\n        <nav>\n            <ul>\n                <li><a href=\"#html\">HTML</a></li>\n                <li><a href=\"#css\">CSS</a></li>\n                <li><a href=\"#js\">JavaScript</a></li>\n            </ul>\n        </nav>\n    </header>\n    <main>\n        <section id=\"html\">\n            <h2>HTML Fundamentals</h2>\n            <p>Learn the structure and semantic elements of HTML5.</p>\n        </section>\n        <section id=\"css\">\n            <h2>CSS Styling</h2>\n            <p>Master CSS for styling and responsive design.</p>\n        </section>\n        <section id=\"js\">\n            <h2>JavaScript Programming</h2>\n            <p>Add interactivity with JavaScript.</p>\n        </section>\n    </main>\n    <footer>\n        <p>&copy; 2024 Web Development Guide</p>\n    </footer>\n    <script src=\"script.js\"></script>\n</body>\n</html>\n`;\n\n// CSS Styles\nconst cssStyles = `\n/* Modern CSS with Grid and Flexbox */\n* {\n    margin: 0;\n    padding: 0;\n    box-sizing: border-box;\n}\n\nbody {\n    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;\n    line-height: 1.6;\n    color: #333;\n    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n    min-height: 100vh;\n}\n\nheader {\n    background: rgba(255, 255, 255, 0.1);\n    backdrop-filter: blur(10px);\n    padding: 1rem 0;\n    text-align: center;\n}\n\nnav ul {\n    display: flex;\n    justify-content: center;\n    list-style: none;\n    gap: 2rem;\n    margin-top: 1rem;\n}\n\nnav a {\n    color: white;\n    text-decoration: none;\n    padding: 0.5rem 1rem;\n    border-radius: 25px;\n    transition: all 0.3s ease;\n}\n\nnav a:hover {\n    background: rgba(255, 255, 255, 0.2);\n    transform: translateY(-2px);\n}\n\nmain {\n    display: grid;\n    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));\n    gap: 2rem;\n    padding: 2rem;\n    max-width: 1200px;\n    margin: 0 auto;\n}\n\nsection {\n    background: white;\n    padding: 2rem;\n    border-radius: 15px;\n    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);\n    transition: transform 0.3s ease;\n}\n\nsection:hover {\n    transform: translateY(-5px);\n}\n\nh2 {\n    color: #667eea;\n    margin-bottom: 1rem;\n    font-size: 1.5rem;\n}\n\nfooter {\n    text-align: center;\n    padding: 2rem;\n    color: white;\n    background: rgba(0, 0, 0, 0.1);\n}\n\n/* Responsive Design */\n@media (max-width: 768px) {\n    main {\n        grid-template-columns: 1fr;\n        padding: 1rem;\n    }\n    \n    nav ul {\n        flex-direction: column;\n        gap: 1rem;\n    }\n}\n`;\n\n// JavaScript Functionality\nconst jsCode = `\n// Modern JavaScript with ES6+ features\nclass WebDevGuide {\n    constructor() {\n        this.currentSection = 'html';\n        this.init();\n    }\n    \n    init() {\n        this.setupEventListeners();\n        this.highlightCurrentSection();\n        this.addSmoothScrolling();\n    }\n    \n    setupEventListeners() {\n        // Navigation click handlers\n        document.querySelectorAll('nav a').forEach(link => {\n            link.addEventListener('click', (e) => {\n                e.preventDefault();\n                const targetId = e.target.getAttribute('href').substring(1);\n                this.navigateToSection(targetId);\n            });\n        });\n        \n        // Section hover effects\n        document.querySelectorAll('section').forEach(section => {\n            section.addEventListener('mouseenter', () => {\n                section.style.transform = 'translateY(-10px) scale(1.02)';\n            });\n            \n            section.addEventListener('mouseleave', () => {\n                section.style.transform = 'translateY(0) scale(1)';\n            });\n        });\n    }\n    \n    navigateToSection(sectionId) {\n        const section = document.getElementById(sectionId);\n        if (section) {\n            section.scrollIntoView({ \n                behavior: 'smooth',\n                block: 'start'\n            });\n            this.currentSection = sectionId;\n            this.highlightCurrentSection();\n        }\n    }\n    \n    highlightCurrentSection() {\n        // Remove active class from all nav links\n        document.querySelectorAll('nav a').forEach(link => {\n            link.classList.remove('active');\n        });\n        \n        // Add active class to current section link\n        const activeLink = document.querySelector(`nav a[href=\"#${this.currentSection}\"]`);\n        if (activeLink) {\n            activeLink.classList.add('active');\n        }\n    }\n    \n    addSmoothScrolling() {\n        // Add smooth scrolling to all internal links\n        document.querySelectorAll('a[href^=\"#\"]').forEach(anchor => {\n            anchor.addEventListener('click', (e) => {\n                e.preventDefault();\n                const target = document.querySelector(anchor.getAttribute('href'));\n                if (target) {\n                    target.scrollIntoView({\n                        behavior: 'smooth',\n                        block: 'start'\n                    });\n                }\n            });\n        });\n    }\n}\n\n// Initialize the application when DOM is loaded\ndocument.addEventListener('DOMContentLoaded', () => {\n    new WebDevGuide();\n    \n    // Add some interactive features\n    console.log('🚀 Web Development Guide loaded successfully!');\n    \n    // Add typing effect to main heading\n    const heading = document.querySelector('h1');\n    if (heading) {\n        const text = heading.textContent;\n        heading.textContent = '';\n        let i = 0;\n        \n        const typeWriter = () => {\n            if (i < text.length) {\n                heading.textContent += text.charAt(i);\n                i++;\n                setTimeout(typeWriter, 100);\n            }\n        };\n        \n        setTimeout(typeWriter, 500);\n    }\n});\n`;\n\n// Export the code templates\nmodule.exports = {\n    html: htmlTemplate,\n    css: cssStyles,\n    javascript: jsCode\n};\n",
       "language": "javascript",
       "path": "/content/standalone-1/code/web-dev-example.js"
     },
@@ -158,23 +67,53 @@
       "files": [
         {
           "name": "web-dev-architecture.png",
-          "size": 2048576,
+          "description": "Web development architecture diagram showing frontend, backend, and database layers",
+          "size": 2048000,
           "type": "image/png",
           "path": "/content/standalone-1/images/web-dev-architecture.png",
-          "url": "blob:http://localhost:3000/87654321-4321-4321-4321-210987654321",
-          "description": "Web development architecture diagram showing frontend, backend, and database layers"
+          "url": "blob:http://localhost:3000/architecture-diagram"
         },
         {
-          "name": "html-css-js-flow.png", 
+          "name": "html-css-js-flow.png",
+          "description": "Flow diagram showing how HTML, CSS, and JavaScript work together",
           "size": 1536000,
           "type": "image/png",
           "path": "/content/standalone-1/images/html-css-js-flow.png",
-          "url": "blob:http://localhost:3000/11111111-2222-3333-4444-555555555555",
-          "description": "Flow diagram showing how HTML, CSS, and JavaScript work together"
+          "url": "blob:http://localhost:3000/html-css-js-flow"
+        },
+        {
+          "name": "responsive-design-example.png",
+          "description": "Example of responsive design showing mobile, tablet, and desktop layouts",
+          "size": 1280000,
+          "type": "image/png",
+          "path": "/content/standalone-1/images/responsive-design-example.png",
+          "url": "blob:http://localhost:3000/responsive-design"
         }
       ],
-      "generated": null,
+      "generated": [
+        {
+          "prompt": "Create a modern web development architecture diagram",
+          "description": "Visual representation of web development components and their relationships",
+          "url": "blob:http://localhost:3000/generated-architecture"
+        }
+      ],
+      "count": 3,
       "path": "/content/standalone-1/images/"
     }
+  },
+  "folders": {
+    "videos": "/content/standalone-1/videos/",
+    "text": "/content/standalone-1/text/",
+    "presentations": "/uploads/lessons/standalone-1/presentations/",
+    "mindmaps": "/uploads/lessons/standalone-1/mindmaps/",
+    "code": "/content/standalone-1/code/",
+    "images": "/content/standalone-1/images/"
+  },
+  "metadata": {
+    "totalContent": 6,
+    "completedContent": 6,
+    "progress": 100,
+    "estimatedTime": "45 minutes",
+    "difficulty": "intermediate"
   }
 }

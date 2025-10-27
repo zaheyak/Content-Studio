@@ -146,16 +146,16 @@ const navigate = useNavigate();
         presentation: content.presentation ? {
           type: 'presentation',
           method: content.presentation.method,
-          slides: content.presentation.data?.slides || [],
-          slideCount: content.presentation.data?.slideCount || 0,
-          path: `/content/${lesson.id}/presentations/slides.json`
+          file: content.presentation.data?.file || null,
+          presentation_url: content.presentation.data?.presentation_url || null,
+          path: content.presentation.data?.presentation_url || `/content/${lesson.id}/presentations/`
         } : null,
         mindmap: content.mindmap ? {
           type: 'mindmap',
           method: content.mindmap.method,
-          nodes: content.mindmap.data?.generated?.nodes || [],
-          connections: content.mindmap.data?.generated?.connections || [],
-          path: `/content/${lesson.id}/mindmaps/mindmap.json`
+          file: content.mindmap.data?.file || null,
+          mindmap_url: content.mindmap.data?.mindmap_url || null,
+          path: content.mindmap.data?.mindmap_url || `/content/${lesson.id}/mindmaps/`
         } : null,
         code: content.code ? {
           type: 'code',
@@ -860,12 +860,20 @@ const navigate = useNavigate();
                             )}
                             {format.id === 'presentation' && (
                               <div>
-                                📊 {generatedContent.slides?.length || 0} slides generated
+                                {generatedContent.file ? (
+                                  <div>📊 {generatedContent.file.name} uploaded</div>
+                                ) : (
+                                  <div>📊 No presentation uploaded yet</div>
+                                )}
                               </div>
                             )}
                             {format.id === 'mindmap' && (
                               <div>
-                                🗺️ {generatedContent.nodes?.length || 0} nodes, {generatedContent.connections?.length || 0} connections
+                                {generatedContent.file ? (
+                                  <div>🧠 {generatedContent.file.name} uploaded</div>
+                                ) : (
+                                  <div>🧠 No mind map uploaded yet</div>
+                                )}
                               </div>
                             )}
                             {format.id === 'code' && (

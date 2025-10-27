@@ -274,22 +274,30 @@ const TemplateBasedLessonView = () => {
         displayContent = "Text content available";
       }
     } else if (formatKey === 'presentation') {
-      if (content.slides && content.slides.length > 0) {
+      if (content.presentation_url || content.file) {
+        const file = content.file || { name: 'Presentation', path: content.presentation_url };
+        displayContent = `Uploaded Presentation: ${file.name}\nPath: ${file.path || content.presentation_url}`;
+      } else if (content.slides && content.slides.length > 0) {
         displayContent = `Presentation with ${content.slides.length} slides:\n\n`;
         content.slides.forEach((slide, index) => {
           displayContent += `Slide ${index + 1}: ${slide.title}\n${slide.content}\n\n`;
         });
       } else {
-        displayContent = "Presentation content available";
+        displayContent = "לא הועלתה מצגת עדיין";
+        hasContent = false;
       }
     } else if (formatKey === 'mindmap') {
-      if (content.nodes && content.nodes.length > 0) {
+      if (content.mindmap_url || content.file) {
+        const file = content.file || { name: 'Mind Map', path: content.mindmap_url };
+        displayContent = `Uploaded Mind Map: ${file.name}\nPath: ${file.path || content.mindmap_url}`;
+      } else if (content.nodes && content.nodes.length > 0) {
         displayContent = `Mind Map with ${content.nodes.length} nodes:\n\n`;
         content.nodes.forEach((node, index) => {
           displayContent += `${node.label}\n`;
         });
       } else {
-        displayContent = "Mind map content available";
+        displayContent = "לא הועלתה מפת חשיבה עדיין";
+        hasContent = false;
       }
     } else if (formatKey === 'code') {
       if (content.code) {
@@ -414,6 +422,62 @@ const TemplateBasedLessonView = () => {
                             allowFullScreen
                             className="rounded-lg shadow-lg"
                           ></iframe>
+                        </div>
+                      )}
+                      
+                      {formatKey === 'presentation' && (content.rawContent?.presentation_url || content.rawContent?.file) && (
+                        <div className="mb-4">
+                          <h4 className="text-lg font-semibold mb-2">Presentation File:</h4>
+                          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                            <div className="flex items-center gap-3">
+                              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-800 rounded-lg flex items-center justify-center">
+                                <span className="text-2xl">📊</span>
+                              </div>
+                              <div className="flex-1">
+                                <div className="font-medium text-blue-900 dark:text-blue-100">
+                                  {content.rawContent.file?.name || 'Presentation'}
+                                </div>
+                                <div className="text-sm text-blue-600 dark:text-blue-300">
+                                  {content.rawContent.file?.size ? `${(content.rawContent.file.size / 1024 / 1024).toFixed(2)} MB` : 'Presentation file'}
+                                </div>
+                              </div>
+                              <a
+                                href={content.rawContent.presentation_url || content.rawContent.file?.path}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+                              >
+                                View/Download
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {formatKey === 'mindmap' && (content.rawContent?.mindmap_url || content.rawContent?.file) && (
+                        <div className="mb-4">
+                          <h4 className="text-lg font-semibold mb-2">Mind Map Image:</h4>
+                          <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                            <div className="flex items-center gap-3 mb-3">
+                              <div className="w-12 h-12 bg-green-100 dark:bg-green-800 rounded-lg flex items-center justify-center">
+                                <span className="text-2xl">🧠</span>
+                              </div>
+                              <div className="flex-1">
+                                <div className="font-medium text-green-900 dark:text-green-100">
+                                  {content.rawContent.file?.name || 'Mind Map'}
+                                </div>
+                                <div className="text-sm text-green-600 dark:text-green-300">
+                                  {content.rawContent.file?.size ? `${(content.rawContent.file.size / 1024 / 1024).toFixed(2)} MB` : 'Mind map image'}
+                                </div>
+                              </div>
+                            </div>
+                            <img
+                              src={content.rawContent.mindmap_url || content.rawContent.file?.url}
+                              alt="Mind Map"
+                              className="w-full max-w-2xl mx-auto rounded-lg shadow-lg"
+                              style={{ maxHeight: '400px', objectFit: 'contain' }}
+                            />
+                          </div>
                         </div>
                       )}
                       

@@ -103,7 +103,7 @@ app.use('/api/courses', require('./routes/courses'));
 app.use('/api/lessons', require('./routes/lessons'));
 app.use('/api/content', require('./routes/content'));
 app.use('/api/ai', require('./routes/ai'));
-app.use('/api/upload', require('../routes/upload'));
+app.use('/api/upload', require('./routes/upload'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {
