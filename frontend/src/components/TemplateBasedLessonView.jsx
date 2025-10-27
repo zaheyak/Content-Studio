@@ -399,6 +399,29 @@ const TemplateBasedLessonView = () => {
                         </div>
                       )}
                       
+                      {formatKey === 'video' && content.rawContent?.files && content.rawContent.files.length > 0 && (
+                        <div className="mb-4">
+                          <h4 className="text-lg font-semibold mb-2">Uploaded Video:</h4>
+                          <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                            <video
+                              width="100%"
+                              height="315"
+                              controls
+                              className="rounded-lg shadow-lg"
+                            >
+                              <source
+                                src={`${import.meta.env.VITE_API_URL || 'https://content-studio-backend-production.up.railway.app'}${content.rawContent.files[0].path}`}
+                                type={content.rawContent.files[0].type || 'video/mp4'}
+                              />
+                              Your browser does not support the video tag.
+                            </video>
+                            <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                              {content.rawContent.files[0].name} ({(content.rawContent.files[0].size / 1024 / 1024).toFixed(2)} MB)
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                      
                       {formatKey === 'presentation' && (content.rawContent?.presentation_url || content.rawContent?.file) && (
                         <div className="mb-4">
                           <h4 className="text-lg font-semibold mb-2">Presentation File:</h4>
