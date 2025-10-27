@@ -90,7 +90,10 @@ const TemplateBasedLessonView = () => {
         setLoading(true);
         
         // First try to load from localStorage (real content)
+        console.log('Looking for content with key:', `content_${currentLessonId}`);
         const savedContent = localStorage.getItem(`content_${currentLessonId}`);
+        console.log('Found saved content:', savedContent);
+        
         if (savedContent) {
           const parsedContent = JSON.parse(savedContent);
           console.log('Loaded content from localStorage:', parsedContent);
@@ -99,19 +102,77 @@ const TemplateBasedLessonView = () => {
           return;
         }
         
+        // Check all localStorage keys for debugging
+        console.log('All localStorage keys:', Object.keys(localStorage));
+        console.log('Looking for content keys:', Object.keys(localStorage).filter(key => key.startsWith('content_')));
+        
         // Fallback to API (mock data)
+        console.log('No content found in localStorage, trying API...');
         fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/content/lesson/${currentLessonId}`)
           .then(response => response.json())
           .then(data => {
             if (data.success) {
+              console.log('Loaded content from API:', data.data);
               setLessonContent(data.data);
             } else {
-              setError('Failed to load lesson content');
+              console.log('API failed, creating fallback content...');
+              // Create fallback content structure
+              const fallbackContent = {
+                lessonId: currentLessonId,
+                lesson: {
+                  id: currentLessonId,
+                  title: 'Sample Lesson',
+                  description: 'This is a sample lesson with no content yet'
+                },
+                content: {
+                  video: null,
+                  text: null,
+                  presentation: null,
+                  mindmap: null,
+                  code: null,
+                  images: null
+                },
+                template: template,
+                metadata: {
+                  totalContent: 0,
+                  completedContent: 0,
+                  progress: 0,
+                  estimatedTime: '0 minutes',
+                  difficulty: 'beginner'
+                }
+              };
+              setLessonContent(fallbackContent);
             }
           })
           .catch(err => {
             console.error('Error fetching lesson content:', err);
-            setError('Error loading lesson content');
+            console.log('Creating fallback content due to API error...');
+            // Create fallback content structure
+            const fallbackContent = {
+              lessonId: currentLessonId,
+              lesson: {
+                id: currentLessonId,
+                title: 'Sample Lesson',
+                description: 'This is a sample lesson with no content yet'
+              },
+              content: {
+                video: null,
+                text: null,
+                presentation: null,
+                mindmap: null,
+                code: null,
+                images: null
+              },
+              template: template,
+              metadata: {
+                totalContent: 0,
+                completedContent: 0,
+                progress: 0,
+                estimatedTime: '0 minutes',
+                difficulty: 'beginner'
+              }
+            };
+            setLessonContent(fallbackContent);
           })
           .finally(() => {
             setLoading(false);

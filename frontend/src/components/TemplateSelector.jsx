@@ -91,7 +91,9 @@ const TemplateSelector = ({ onSelectTemplate }) => {
         onSelectTemplate(selectedTemplate);
       }
       // Navigate to lesson content view with the selected template
-      const lessonId = 'default-lesson'; // You can get this from context or props
+      // Get lesson ID from context or use a default
+      const lessonId = selectedLesson?.id || 'default-lesson';
+      console.log('Navigating to lesson content with lessonId:', lessonId, 'and template:', selectedTemplate.id);
       window.location.href = `/lesson-content/${lessonId}?template=${selectedTemplate.id}`;
     }
   };
