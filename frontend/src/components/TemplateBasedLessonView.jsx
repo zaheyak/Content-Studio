@@ -252,27 +252,27 @@ const TemplateBasedLessonView = () => {
     } else if (formatKey === 'presentation') {
       if (content.presentation_url || content.file) {
         const file = content.file || { name: 'Presentation', path: content.presentation_url };
-        displayContent = `Uploaded Presentation: ${file.name}\nPath: ${file.path || content.presentation_url}`;
+        displayContent = `Uploaded Presentation: ${file.name}`;
       } else if (content.slides && content.slides.length > 0) {
         displayContent = `Presentation with ${content.slides.length} slides:\n\n`;
         content.slides.forEach((slide, index) => {
           displayContent += `Slide ${index + 1}: ${slide.title}\n${slide.content}\n\n`;
         });
       } else {
-        displayContent = "לא הועלתה מצגת עדיין";
+        displayContent = "No presentation uploaded yet";
         hasContent = false;
       }
     } else if (formatKey === 'mindmap') {
       if (content.mindmap_url || content.file) {
         const file = content.file || { name: 'Mind Map', path: content.mindmap_url };
-        displayContent = `Uploaded Mind Map: ${file.name}\nPath: ${file.path || content.mindmap_url}`;
+        displayContent = `Uploaded Mind Map: ${file.name}`;
       } else if (content.nodes && content.nodes.length > 0) {
         displayContent = `Mind Map with ${content.nodes.length} nodes:\n\n`;
         content.nodes.forEach((node, index) => {
           displayContent += `${node.label}\n`;
         });
       } else {
-        displayContent = "לא הועלתה מפת חשיבה עדיין";
+        displayContent = "No mind map uploaded yet";
         hasContent = false;
       }
     } else if (formatKey === 'code') {
@@ -423,7 +423,7 @@ const TemplateBasedLessonView = () => {
                               className="rounded-lg shadow-lg"
                             >
                               <source
-                                src={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}${content.rawContent.files[0].path}`}
+                                src={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/upload/lessons/${lessonContent.lessonId}/videos/${content.rawContent.files[0].name || content.rawContent.files[0].path?.split('/').pop()}`}
                                 type={content.rawContent.files[0].type || 'video/mp4'}
                               />
                               Your browser does not support the video tag.
@@ -452,7 +452,7 @@ const TemplateBasedLessonView = () => {
                                 </div>
                               </div>
                               <a
-                                href={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}${content.rawContent.presentation_url || content.rawContent.file?.path}`}
+                                href={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/upload/lessons/${lessonContent.lessonId}/presentations/${content.rawContent.file?.name || content.rawContent.presentation_url?.split('/').pop()}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
@@ -482,7 +482,7 @@ const TemplateBasedLessonView = () => {
                               </div>
                             </div>
                             <img
-                              src={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}${content.rawContent.mindmap_url || content.rawContent.file?.path}`}
+                              src={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/upload/lessons/${lessonContent.lessonId}/mindmaps/${content.rawContent.file?.name || content.rawContent.mindmap_url?.split('/').pop()}`}
                               alt="Mind Map"
                               className="w-full max-w-2xl mx-auto rounded-lg shadow-lg"
                               style={{ maxHeight: '400px', objectFit: 'contain' }}
@@ -523,7 +523,7 @@ const TemplateBasedLessonView = () => {
                             {content.rawContent.files.map((file, index) => (
                               <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                                 <img
-                                  src={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}${file.path || file.url}`}
+                                  src={`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/upload/lessons/${lessonContent.lessonId}/images/${file.name || file.path?.split('/').pop()}`}
                                   alt={file.name}
                                   className="w-full h-48 object-cover rounded-lg mb-2"
                                 />
