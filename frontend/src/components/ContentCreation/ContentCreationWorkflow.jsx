@@ -266,11 +266,11 @@ const navigate = useNavigate();
         contentHTML += `<h4>Transcription:</h4><div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; white-space: pre-wrap;">${content.transcription}</div>`;
       }
     } else if (formatId === 'text') {
-      if (content.content) {
-        contentHTML += `<h4>Manual Content:</h4><div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; white-space: pre-wrap;">${content.content}</div>`;
+      if (content.data?.content) {
+        contentHTML += `<h4>Manual Content:</h4><div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; white-space: pre-wrap;">${content.data.content}</div>`;
       }
-      if (content.generated) {
-        contentHTML += `<h4>AI Generated Content:</h4><div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; white-space: pre-wrap;">${content.generated}</div>`;
+      if (content.data?.generated) {
+        contentHTML += `<h4>AI Generated Content:</h4><div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; white-space: pre-wrap;">${content.data.generated}</div>`;
       }
     } else if (formatId === 'presentation') {
       if (content.slides?.length > 0) {
@@ -837,7 +837,7 @@ const navigate = useNavigate();
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                handleViewFormat(format.id, generatedContent);
+                                handleViewFormat(format.id, contentData[format.id]);
                               }}
                               style={styles.viewButton}
                               onMouseEnter={(e) => {
