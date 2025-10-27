@@ -12,12 +12,34 @@
     "presentation": {
       "method": "upload",
       "file": {
-        "path": "/uploads/lessons/3/presentations/test4.pptx",
-        "name": "test4.pptx",
-        "size": 4096000
+        "path": "/uploads/lessons/3/React.pptx",
+        "name": "React.pptx",
+        "size": 9435212
       },
       "type": "presentation",
-      "presentation_url": "/uploads/lessons/3/presentations/test4.pptx"
+      "presentation_url": "/uploads/lessons/3/React.pptx"
+    },
+    "mindmap": {
+      "method": "upload",
+      "file": {
+        "path": "/uploads/lessons/3/mind.webp",
+        "name": "mind.webp",
+        "size": 109782
+      },
+      "type": "mindmap",
+      "mindmap_url": "/uploads/lessons/3/mind.webp"
+    },
+    "images": {
+      "method": "upload",
+      "files": [
+        {
+          "path": "/uploads/lessons/3/explain.webp",
+          "name": "explain.webp",
+          "size": 106176
+        }
+      ],
+      "type": "images",
+      "count": 1
     }
   },
   "template": {
@@ -60,10 +82,10 @@
   "createdAt": "2025-10-27T15:35:08.577Z",
   "updatedAt": "2025-10-27T15:35:08.577Z",
   "metadata": {
-    "totalContent": 2,
-    "completedContent": 2,
-    "progress": 33,
-    "estimatedTime": "45 minutes",
+    "totalContent": 4,
+    "completedContent": 4,
+    "progress": 67,
+    "estimatedTime": "30 minutes",
     "difficulty": "beginner"
   }
 }
