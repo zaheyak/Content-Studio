@@ -40,6 +40,15 @@
       ],
       "type": "images",
       "count": 1
+    },
+    "video": {
+      "method": "youtube",
+      "videoId": "Y2hgEGPzTZY",
+      "url": "https://www.youtube.com/watch?v=Y2hgEGPzTZY",
+      "embedUrl": "https://www.youtube.com/embed/Y2hgEGPzTZY",
+      "title": "React Components Tutorial",
+      "duration": "15:30",
+      "type": "video"
     }
   },
   "template": {
