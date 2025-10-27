@@ -15,6 +15,22 @@ import TemplateSelector from './components/TemplateSelector'
 function AppContent() {
   const { loading, error, theme } = useApp()
 
+  // Clear old localStorage on first load
+  React.useEffect(() => {
+    const hasCleared = localStorage.getItem('localStorage_cleared_v1');
+    if (!hasCleared) {
+      // Clear all old content_ keys
+      const keys = Object.keys(localStorage);
+      keys.forEach(key => {
+        if (key.startsWith('content_')) {
+          localStorage.removeItem(key);
+        }
+      });
+      localStorage.setItem('localStorage_cleared_v1', 'true');
+      console.log('✅ Cleared old localStorage data');
+    }
+  }, []);
+
   // Render loading state
   if (loading) {
     return <LoadingSpinner />
