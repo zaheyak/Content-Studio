@@ -199,12 +199,14 @@ const TemplateBasedLessonView = () => {
     
     console.log(`Getting content for format: ${formatName} (key: ${formatKey})`);
     console.log('Content found:', content);
+    console.log('Lesson content structure:', lessonContent);
     
     if (!content) {
       return { 
         title: formatName, 
         content: "No content available for " + formatName,
-        hasContent: false
+        hasContent: false,
+        rawContent: null
       };
     }
     
@@ -225,7 +227,7 @@ const TemplateBasedLessonView = () => {
       } else {
         displayContent = "Video content available";
       }
-    } else if (formatKey === 'text') {
+    } else if (formatKey === 'text' || formatKey === 'explanation') {
       if (content.generated) {
         displayContent = content.generated;
       } else if (content.content) {
@@ -267,7 +269,7 @@ const TemplateBasedLessonView = () => {
         displayContent = "Code content available";
         hasContent = false;
       }
-    } else if (formatKey === 'images') {
+    } else if (formatKey === 'images' || formatKey === 'image') {
       if (content.files && content.files.length > 0) {
         displayContent = `Images (${content.files.length}):\n\n`;
         content.files.forEach((file, index) => {
@@ -454,7 +456,7 @@ const TemplateBasedLessonView = () => {
                       )}
                       
                       {/* Text Content */}
-                      {formatKey === 'text' && content.rawContent && (
+                      {(formatKey === 'text' || formatKey === 'explanation') && content.rawContent && (
                         <div className="mb-4">
                           <h4 className="text-lg font-semibold mb-2">Text Content:</h4>
                           <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
