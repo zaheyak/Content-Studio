@@ -114,10 +114,8 @@ const navigate = useNavigate();
   const uploadFileToBackend = async (file, type, lessonId) => {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('lessonId', lessonId);
-    formData.append('type', type);
 
-    const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/upload/${type}`, {
+    const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/upload/${type}?lessonId=${lessonId}`, {
       method: 'POST',
       body: formData
     });

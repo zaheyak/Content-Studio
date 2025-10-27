@@ -30,7 +30,7 @@ export default function ImageContentCreation({ lesson, course, onComplete, onNex
           formData.append('files', file);
         });
 
-        const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/upload/images`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'https://content-studio-production-76b6.up.railway.app'}/api/upload/images?lessonId=${lesson.id}`, {
           method: 'POST',
           body: formData
         });

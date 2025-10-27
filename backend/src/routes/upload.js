@@ -14,24 +14,50 @@ if (!fs.existsSync(uploadsDir)) {
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const lessonId = req.body.lessonId || 'default';
-    const type = req.body.type || 'general';
-    const uploadPath = path.join(uploadsDir, 'lessons', lessonId, type);
-    
-    // Create directory if it doesn't exist
-    if (!fs.existsSync(uploadPath)) {
-      fs.mkdirSync(uploadPath, { recursive: true });
+    try {
+      // Get lessonId from query parameters or body
+      const lessonId = req.query.lessonId || req.body.lessonId || 'default';
+      // Get type from URL path since we're using /api/upload/{type}
+      const urlParts = req.originalUrl.split('/');
+      const type = urlParts[urlParts.length - 1];
+      
+      // Use plural form for type to match the directory structure
+      const typeDir = type === 'presentation' ? 'presentations' : 
+                     type === 'mindmap' ? 'mindmaps' : 
+                     type === 'image' ? 'images' : 
+                     type === 'video' ? 'videos' : type;
+      
+      const uploadPath = path.join(uploadsDir, 'lessons', lessonId, typeDir);
+      
+      console.log('Multer destination - lessonId:', lessonId, 'type:', type, 'typeDir:', typeDir, 'uploadPath:', uploadPath);
+      console.log('Request query:', req.query);
+      console.log('Request body keys:', Object.keys(req.body || {}));
+      
+      // Create directory if it doesn't exist
+      if (!fs.existsSync(uploadPath)) {
+        fs.mkdirSync(uploadPath, { recursive: true });
+        console.log('Created upload directory:', uploadPath);
+      }
+      
+      cb(null, uploadPath);
+    } catch (error) {
+      console.error('Error in multer destination:', error);
+      cb(error);
     }
-    
-    cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
-    // Generate unique filename with timestamp
-    const timestamp = Date.now();
-    const ext = path.extname(file.originalname);
-    const name = path.basename(file.originalname, ext);
-    const filename = `${name}_${timestamp}${ext}`;
-    cb(null, filename);
+    try {
+      // Generate unique filename with timestamp
+      const timestamp = Date.now();
+      const ext = path.extname(file.originalname);
+      const name = path.basename(file.originalname, ext);
+      const filename = `${name}_${timestamp}${ext}`;
+      console.log('Multer filename - original:', file.originalname, 'generated:', filename);
+      cb(null, filename);
+    } catch (error) {
+      console.error('Error in multer filename:', error);
+      cb(error);
+    }
   }
 });
 
@@ -40,12 +66,16 @@ const upload = multer({
   limits: {
     fileSize: 50 * 1024 * 1024 // 50MB limit
   },
+  onError: (err, next) => {
+    console.error('Multer error:', err);
+    next(err);
+  },
   fileFilter: (req, file, cb) => {
     // Get type from URL path since we're using /api/upload/{type}
     const urlParts = req.originalUrl.split('/');
     const type = urlParts[urlParts.length - 1];
     
-    console.log('File filter - URL type:', type, 'File:', file.originalname);
+    console.log('File filter - URL type:', type, 'File:', file.originalname, 'MIME:', file.mimetype);
     
     // Allow all file types for now - we'll filter by MIME type
     if (type === 'presentation') {
@@ -53,29 +83,37 @@ const upload = multer({
       if (file.mimetype === 'application/vnd.openxmlformats-officedocument.presentationml.presentation' ||
           file.mimetype === 'application/pdf' ||
           file.mimetype === 'application/vnd.ms-powerpoint') {
+        console.log('Presentation file accepted');
         cb(null, true);
       } else {
+        console.log('Presentation file rejected - invalid MIME type:', file.mimetype);
         cb(new Error('Invalid file type for presentation. Allowed: .pptx, .pdf, .ppt'));
       }
     } else if (type === 'mindmap') {
       // Allow image files
       if (file.mimetype.startsWith('image/')) {
+        console.log('Mindmap file accepted');
         cb(null, true);
       } else {
+        console.log('Mindmap file rejected - invalid MIME type:', file.mimetype);
         cb(new Error('Invalid file type for mindmap. Allowed: .png, .jpg, .jpeg, .gif, .webp'));
       }
     } else if (type === 'images') {
       // Allow image files
       if (file.mimetype.startsWith('image/')) {
+        console.log('Image file accepted');
         cb(null, true);
       } else {
+        console.log('Image file rejected - invalid MIME type:', file.mimetype);
         cb(new Error('Invalid file type for images. Allowed: .png, .jpg, .jpeg, .gif, .webp'));
       }
     } else if (type === 'videos') {
       // Allow video files
       if (file.mimetype.startsWith('video/')) {
+        console.log('Video file accepted');
         cb(null, true);
       } else {
+        console.log('Video file rejected - invalid MIME type:', file.mimetype);
         cb(new Error('Invalid file type for videos. Allowed: .mp4, .avi, .mov, .wmv, .flv, .webm'));
       }
     } else {
@@ -85,9 +123,28 @@ const upload = multer({
   }
 });
 
+// Test endpoint to check if multer is working
+router.post('/test', upload.single('file'), (req, res) => {
+  console.log('Test upload - file:', req.file);
+  console.log('Test upload - body:', req.body);
+  res.json({ success: true, file: req.file, body: req.body });
+});
+
 // Upload presentation endpoint
 router.post('/presentation', upload.single('file'), (req, res) => {
   try {
+    console.log('Presentation upload request:', {
+      query: req.query,
+      body: req.body,
+      file: req.file ? {
+        originalname: req.file.originalname,
+        filename: req.file.filename,
+        size: req.file.size,
+        path: req.file.path,
+        destination: req.file.destination
+      } : 'No file'
+    });
+
     if (!req.file) {
       return res.status(400).json({
         success: false,
@@ -95,7 +152,7 @@ router.post('/presentation', upload.single('file'), (req, res) => {
       });
     }
 
-    const lessonId = req.body.lessonId;
+    const lessonId = req.query.lessonId || req.body.lessonId;
     const filePath = `/uploads/lessons/${lessonId}/presentations/${req.file.filename}`;
     const fullPath = path.join(uploadsDir, 'lessons', lessonId, 'presentations', req.file.filename);
 
@@ -104,6 +161,7 @@ router.post('/presentation', upload.single('file'), (req, res) => {
       filename: req.file.filename,
       size: req.file.size,
       path: filePath,
+      fullPath: fullPath,
       lessonId: lessonId
     });
 
