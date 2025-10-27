@@ -99,7 +99,7 @@ class MockDataLoader {
       console.log(`Dynamic file ${dynamicFile} not found, trying static files...`);
     }
     
-    // Fallback to static files
+    // Fallback to static files - only if lessonId matches exactly
     const contentFiles = [
       'standalone-lesson-1-content.json',
       'standalone-lesson-2-content.json', 
@@ -118,6 +118,8 @@ class MockDataLoader {
       }
     }
     
+    // If no specific lesson found, return null instead of fallback
+    console.log(`No lesson content found for lessonId: ${lessonId}`);
     return null;
   }
 
