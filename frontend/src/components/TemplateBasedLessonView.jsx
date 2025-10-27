@@ -237,6 +237,9 @@ const TemplateBasedLessonView = () => {
     const formatKey = formatName.toLowerCase().replace(' ', '');
     const content = lessonContent.content[formatKey];
     
+    console.log(`Getting content for format: ${formatName} (key: ${formatKey})`);
+    console.log('Content found:', content);
+    
     if (!content) {
       return { 
         title: formatName, 
@@ -308,7 +311,7 @@ const TemplateBasedLessonView = () => {
     }
     
     return {
-      title: content.title || formatName,
+      title: content.title || content.type || formatName,
       content: displayContent,
       hasContent: hasContent,
       rawContent: content
@@ -324,13 +327,13 @@ const TemplateBasedLessonView = () => {
             <span className="text-2xl">🎯</span>
           </div>
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-3">
-            {lessonContent.lesson.title}
+            {lessonContent.lesson?.title || lessonContent.lessonTitle || 'Lesson Title'}
           </h1>
           <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
             Following the <strong>{template.name}</strong> template structure
           </p>
           <p className="text-base text-gray-500 dark:text-gray-400 mt-2">
-            {lessonContent.lesson.description}
+            {lessonContent.lesson?.description || 'Lesson description'}
           </p>
           {lessonContent.metadata && (
             <div className="mt-4 flex items-center justify-center gap-4 text-sm text-gray-500 dark:text-gray-400">
