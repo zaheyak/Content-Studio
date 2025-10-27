@@ -21,6 +21,8 @@ export default function VideoContentCreation({ lesson, course, onComplete, onNex
   const [avatarPrompt, setAvatarPrompt] = useState('');
   const [generatedContent, setGeneratedContent] = useState(null);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [youtubeVideoId, setYoutubeVideoId] = useState('');
+  const [isProcessingYouTube, setIsProcessingYouTube] = useState(false);
   const fileInputRef = useRef(null);
 
   const handleFileUpload = async (event) => {
@@ -90,17 +92,40 @@ export default function VideoContentCreation({ lesson, course, onComplete, onNex
     }, 3000);
   };
 
+  // Extract YouTube video ID from URL
+  const extractYouTubeId = (url) => {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  };
+
   const handleYouTubeProcessing = async (url) => {
+    if (!url.trim()) return;
+    
+    setIsProcessingYouTube(true);
+    
+    // Extract video ID from URL
+    const videoId = extractYouTubeId(url);
+    
+    if (!videoId) {
+      alert('Invalid YouTube URL. Please enter a valid YouTube video URL.');
+      setIsProcessingYouTube(false);
+      return;
+    }
+    
     // Simulate YouTube video processing
     setTimeout(() => {
       setGeneratedContent({
         type: 'youtube',
+        videoId: videoId,
         url: url,
         title: 'YouTube Video Title',
         duration: '5:45',
-        status: 'processed'
+        status: 'processed',
+        embedUrl: `https://www.youtube.com/embed/${videoId}`
       });
       setIsCompleted(true);
+      setIsProcessingYouTube(false);
     }, 2000);
   };
 
@@ -115,7 +140,11 @@ export default function VideoContentCreation({ lesson, course, onComplete, onNex
         prompt: avatarPrompt,
         generated: generatedContent
       } : {
+        videoId: generatedContent?.videoId,
         url: generatedContent?.url,
+        embedUrl: generatedContent?.embedUrl,
+        title: generatedContent?.title,
+        duration: generatedContent?.duration,
         processed: generatedContent
       },
       completed: true
@@ -568,11 +597,13 @@ export default function VideoContentCreation({ lesson, course, onComplete, onNex
           <div>
             <div style={{ marginBottom: '1rem' }}>
               <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500', color: theme.colors.text }}>
-                YouTube Video URL:
+                YouTube Video URL or Video ID:
               </label>
               <input
-                type="url"
-                placeholder="https://www.youtube.com/watch?v=..."
+                type="text"
+                value={youtubeVideoId}
+                onChange={(e) => setYoutubeVideoId(e.target.value)}
+                placeholder="https://www.youtube.com/watch?v=... or dQw4w9WgXcQ"
                 style={styles.youtubeInput}
                 onFocus={(e) => {
                   e.target.style.borderColor = styles.youtubeInputFocus.borderColor;
@@ -582,39 +613,60 @@ export default function VideoContentCreation({ lesson, course, onComplete, onNex
                 }}
                 onKeyPress={(e) => {
                   if (e.key === 'Enter') {
-                    handleYouTubeProcessing(e.target.value);
+                    handleYouTubeProcessing(youtubeVideoId);
                   }
                 }}
               />
+              <div style={{ fontSize: '0.75rem', color: theme.colors.textSecondary, marginTop: '0.25rem' }}>
+                You can paste a full YouTube URL or just the video ID (e.g., dQw4w9WgXcQ)
+              </div>
             </div>
             
             <button
-              onClick={() => {
-                const input = document.querySelector('input[type="url"]');
-                if (input?.value) {
-                  handleYouTubeProcessing(input.value);
+              onClick={() => handleYouTubeProcessing(youtubeVideoId)}
+              disabled={!youtubeVideoId.trim() || isProcessingYouTube}
+              style={{
+                ...styles.processButton,
+                ...(isProcessingYouTube || !youtubeVideoId.trim() ? styles.generateButtonDisabled : {})
+              }}
+              onMouseEnter={(e) => {
+                if (!isProcessingYouTube && youtubeVideoId.trim()) {
+                  e.target.style.backgroundColor = styles.processButtonHover.backgroundColor;
                 }
               }}
-              style={styles.processButton}
-              onMouseEnter={(e) => {
-                e.target.style.backgroundColor = styles.processButtonHover.backgroundColor;
-              }}
               onMouseLeave={(e) => {
-                e.target.style.backgroundColor = styles.processButton.backgroundColor;
+                if (!isProcessingYouTube && youtubeVideoId.trim()) {
+                  e.target.style.backgroundColor = styles.processButton.backgroundColor;
+                }
               }}
             >
               <PlayIcon style={styles.icon} />
-              Process YouTube Video
+              {isProcessingYouTube ? 'Processing...' : 'Process YouTube Video'}
             </button>
 
             {generatedContent && (
               <div style={styles.generatedContent}>
                 <div style={styles.contentTitle}>Processed YouTube Video:</div>
                 <div style={styles.contentText}>
+                  Video ID: {generatedContent.videoId}
                   URL: {generatedContent.url}
                   Title: {generatedContent.title}
                   Duration: {generatedContent.duration}
                   Status: {generatedContent.status}
+                </div>
+                {/* YouTube Preview */}
+                <div style={{ marginTop: '1rem' }}>
+                  <div style={styles.contentTitle}>Preview:</div>
+                  <iframe
+                    width="100%"
+                    height="315"
+                    src={generatedContent.embedUrl}
+                    title="YouTube video player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                    style={{ borderRadius: '8px' }}
+                  ></iframe>
                 </div>
               </div>
             )}

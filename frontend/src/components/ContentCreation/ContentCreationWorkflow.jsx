@@ -128,7 +128,13 @@ const navigate = useNavigate();
             url: URL.createObjectURL(content.video.data.file)
           }] : [],
           transcription: content.video.data?.transcription || '',
-          generated: content.video.data?.generated || null
+          generated: content.video.data?.generated || null,
+          // YouTube video data
+          videoId: content.video.data?.videoId || null,
+          url: content.video.data?.url || null,
+          embedUrl: content.video.data?.embedUrl || null,
+          title: content.video.data?.title || null,
+          duration: content.video.data?.duration || null
         } : null,
         text: content.text ? {
           type: 'text',
@@ -250,6 +256,7 @@ const navigate = useNavigate();
     let contentHTML = `<h3>${formatNames[formatId] || 'Content'}</h3>`;
     
     if (formatId === 'video') {
+      // Handle uploaded files
       if (content.files?.length > 0) {
         contentHTML += `<h4>Uploaded Videos:</h4>`;
         content.files.forEach((file, index) => {
@@ -262,6 +269,51 @@ const navigate = useNavigate();
           `;
         });
       }
+      
+      // Handle YouTube videos
+      if (content.data?.videoId) {
+        contentHTML += `<h4>YouTube Video:</h4>`;
+        contentHTML += `
+          <div style="margin: 1rem 0; padding: 1rem; border: 1px solid #e0e0e0; border-radius: 8px;">
+            <strong>Video ID:</strong> ${content.data.videoId}<br>
+            <strong>Title:</strong> ${content.data.title || 'YouTube Video'}<br>
+            <strong>Duration:</strong> ${content.data.duration || 'Unknown'}<br>
+            <strong>URL:</strong> <a href="${content.data.url}" target="_blank">${content.data.url}</a>
+          </div>
+        `;
+        
+        // Add YouTube embed
+        if (content.data.embedUrl) {
+          contentHTML += `
+            <div style="margin: 1rem 0;">
+              <h5>Video Preview:</h5>
+              <iframe 
+                width="100%" 
+                height="315" 
+                src="${content.data.embedUrl}" 
+                title="YouTube video player" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen
+                style="border-radius: 8px; max-width: 100%;"
+              ></iframe>
+            </div>
+          `;
+        }
+      }
+      
+      // Handle AI generated content
+      if (content.data?.generated) {
+        contentHTML += `<h4>AI Generated Content:</h4>`;
+        contentHTML += `
+          <div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; white-space: pre-wrap;">
+            <strong>Prompt:</strong> ${content.data.generated.prompt || 'N/A'}<br>
+            <strong>Duration:</strong> ${content.data.generated.duration || 'N/A'}<br>
+            <strong>Status:</strong> ${content.data.generated.status || 'N/A'}
+          </div>
+        `;
+      }
+      
       if (content.transcription) {
         contentHTML += `<h4>Transcription:</h4><div style="background: #f5f5f5; padding: 1rem; border-radius: 8px; white-space: pre-wrap;">${content.transcription}</div>`;
       }
