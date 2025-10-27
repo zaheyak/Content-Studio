@@ -10,7 +10,7 @@ const TemplateBasedLessonView = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchLessonContent = async () => {
+    const loadLessonContent = () => {
       // Get lesson ID from URL params or context
       const currentLessonId = lessonId || selectedLesson?.id;
       
@@ -22,23 +22,42 @@ const TemplateBasedLessonView = () => {
 
       try {
         setLoading(true);
-        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/content/lesson/${currentLessonId}`);
-        const data = await response.json();
         
-        if (data.success) {
-          setLessonContent(data.data);
-        } else {
-          setError('Failed to load lesson content');
+        // First try to load from localStorage (real content)
+        const savedContent = localStorage.getItem(`content_${currentLessonId}`);
+        if (savedContent) {
+          const parsedContent = JSON.parse(savedContent);
+          console.log('Loaded content from localStorage:', parsedContent);
+          setLessonContent(parsedContent);
+          setLoading(false);
+          return;
         }
+        
+        // Fallback to API (mock data)
+        fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/content/lesson/${currentLessonId}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              setLessonContent(data.data);
+            } else {
+              setError('Failed to load lesson content');
+            }
+          })
+          .catch(err => {
+            console.error('Error fetching lesson content:', err);
+            setError('Error loading lesson content');
+          })
+          .finally(() => {
+            setLoading(false);
+          });
       } catch (err) {
-        console.error('Error fetching lesson content:', err);
+        console.error('Error loading lesson content:', err);
         setError('Error loading lesson content');
-      } finally {
         setLoading(false);
       }
     };
 
-    fetchLessonContent();
+    loadLessonContent();
   }, [lessonId, selectedLesson?.id]);
 
   if (loading) {
@@ -85,7 +104,84 @@ const TemplateBasedLessonView = () => {
 
   const getContentForFormat = (formatName) => {
     const formatKey = formatName.toLowerCase().replace(' ', '');
-    return lessonContent.content[formatKey] || { title: formatName, content: "Content for " + formatName };
+    const content = lessonContent.content[formatKey];
+    
+    if (!content) {
+      return { 
+        title: formatName, 
+        content: "No content available for " + formatName,
+        hasContent: false
+      };
+    }
+    
+    // Handle different content types
+    let displayContent = "";
+    let hasContent = true;
+    
+    if (formatKey === 'video') {
+      if (content.videoId) {
+        // YouTube video
+        displayContent = `YouTube Video: ${content.title || 'Video'}\nDuration: ${content.duration || 'Unknown'}\nVideo ID: ${content.videoId}`;
+      } else if (content.files && content.files.length > 0) {
+        // Uploaded video
+        displayContent = `Uploaded Video: ${content.files[0].name}\nSize: ${(content.files[0].size / 1024 / 1024).toFixed(2)} MB`;
+      } else if (content.generated) {
+        // AI generated video
+        displayContent = `AI Generated Video\nPrompt: ${content.generated.prompt || 'N/A'}\nDuration: ${content.generated.duration || 'N/A'}`;
+      } else {
+        displayContent = "Video content available";
+      }
+    } else if (formatKey === 'text') {
+      if (content.generated) {
+        displayContent = content.generated;
+      } else if (content.content) {
+        displayContent = content.content;
+      } else {
+        displayContent = "Text content available";
+      }
+    } else if (formatKey === 'presentation') {
+      if (content.slides && content.slides.length > 0) {
+        displayContent = `Presentation with ${content.slides.length} slides:\n\n`;
+        content.slides.forEach((slide, index) => {
+          displayContent += `Slide ${index + 1}: ${slide.title}\n${slide.content}\n\n`;
+        });
+      } else {
+        displayContent = "Presentation content available";
+      }
+    } else if (formatKey === 'mindmap') {
+      if (content.nodes && content.nodes.length > 0) {
+        displayContent = `Mind Map with ${content.nodes.length} nodes:\n\n`;
+        content.nodes.forEach((node, index) => {
+          displayContent += `${node.label}\n`;
+        });
+      } else {
+        displayContent = "Mind map content available";
+      }
+    } else if (formatKey === 'code') {
+      if (content.code) {
+        displayContent = `Code (${content.language || 'Unknown language'}):\n\n${content.code}`;
+      } else {
+        displayContent = "Code content available";
+      }
+    } else if (formatKey === 'images') {
+      if (content.files && content.files.length > 0) {
+        displayContent = `Images (${content.files.length}):\n\n`;
+        content.files.forEach((file, index) => {
+          displayContent += `${index + 1}. ${file.name} - ${file.description || 'No description'}\n`;
+        });
+      } else {
+        displayContent = "Image content available";
+      }
+    } else {
+      displayContent = content.content || `Content for ${formatName}`;
+    }
+    
+    return {
+      title: content.title || formatName,
+      content: displayContent,
+      hasContent: hasContent,
+      rawContent: content
+    };
   };
 
   return (
@@ -168,17 +264,34 @@ const TemplateBasedLessonView = () => {
                       </span>
                     </div>
                     
+                    {/* Content Display */}
                     <div className="prose prose-lg dark:prose-invert max-w-none">
-                      <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                      {formatKey === 'video' && content.rawContent?.videoId && (
+                        <div className="mb-4">
+                          <h4 className="text-lg font-semibold mb-2">Video Preview:</h4>
+                          <iframe
+                            width="100%"
+                            height="315"
+                            src={content.rawContent.embedUrl}
+                            title="YouTube video player"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            className="rounded-lg shadow-lg"
+                          ></iframe>
+                        </div>
+                      )}
+                      
+                      <div className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
                         {content.content}
-                      </p>
+                      </div>
                     </div>
 
                     {/* Action Button */}
                     <div className="mt-6">
                       <button className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-xl transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-500/50 focus:ring-offset-2 shadow-lg hover:shadow-xl hover:-translate-y-1">
                         <span>📖</span>
-                        View {format.name} Content
+                        {content.hasContent ? `View ${format.name} Content` : `Add ${format.name} Content`}
                         <span>→</span>
                       </button>
                     </div>
