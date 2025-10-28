@@ -418,7 +418,7 @@ const TemplateBasedLessonView = () => {
                     {/* Content Display */}
                     <div className="prose prose-lg dark:prose-invert max-w-none">
                       {console.log('DEBUG - Video check:', { formatKey, hasVideoId: !!content?.videoId, content, rawContent: content?.rawContent })}
-                      {formatKey === 'video' && content?.videoId && (
+                      {formatKey === 'video' && content?.rawContent?.videoId && (
                         <div className="mb-4">
                           <h4 className="text-lg font-semibold mb-2">YouTube Video:</h4>
                           <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-4">
@@ -428,24 +428,24 @@ const TemplateBasedLessonView = () => {
                               </div>
                               <div className="flex-1">
                                 <div className="font-medium text-red-900 dark:text-red-100">
-                                  {content.title || 'YouTube Video'}
+                                  {content.rawContent?.title || 'YouTube Video'}
                                 </div>
                                 <div className="text-sm text-red-600 dark:text-red-300">
-                                  Duration: {content.duration || 'Unknown'} | Video ID: {content.videoId}
+                                  Duration: {content.rawContent?.duration || 'Unknown'} | Video ID: {content.rawContent?.videoId}
                                 </div>
                               </div>
                             </div>
                             <iframe
                               width="100%"
                               height="400"
-                              src={content.embedUrl || `https://www.youtube.com/embed/${content.videoId}`}
-                              title={content.title || "YouTube Video"}
+                              src={content.rawContent?.embedUrl || `https://www.youtube.com/embed/${content.rawContent?.videoId}`}
+                              title={content.rawContent?.title || "YouTube Video"}
                               frameBorder="0"
                               allowFullScreen
                             ></iframe>
                             <div className="mt-3 flex gap-2">
                               <a
-                                href={content.url || `https://www.youtube.com/watch?v=${content.videoId}`}
+                                href={content.rawContent?.url || `https://www.youtube.com/watch?v=${content.rawContent?.videoId}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-colors"
@@ -454,7 +454,7 @@ const TemplateBasedLessonView = () => {
                               </a>
                               <button
                                 onClick={() => {
-                                  const url = content.url || `https://www.youtube.com/watch?v=${content.videoId}`;
+                                  const url = content.rawContent?.url || `https://www.youtube.com/watch?v=${content.rawContent?.videoId}`;
                                   navigator.clipboard.writeText(url);
                                   alert('Video URL copied to clipboard!');
                                 }}
@@ -490,8 +490,8 @@ const TemplateBasedLessonView = () => {
                         </div>
                       )}
                       
-                      {console.log('DEBUG - Presentation check:', { formatKey, hasPresentationUrl: !!content?.presentation_url, hasFile: !!content?.file, content })}
-                      {formatKey === 'presentation' && (content?.presentation_url || content?.file) && (
+                      {console.log('DEBUG - Presentation check:', { formatKey, hasPresentationUrl: !!content?.rawContent?.presentation_url, hasFile: !!content?.rawContent?.file, content })}
+                      {formatKey === 'presentation' && (content?.rawContent?.presentation_url || content?.rawContent?.file) && (
                         <div className="mb-4">
                           <h4 className="text-lg font-semibold mb-2">Presentation File:</h4>
                           <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
@@ -501,17 +501,17 @@ const TemplateBasedLessonView = () => {
                               </div>
                               <div className="flex-1">
                                 <div className="font-medium text-blue-900 dark:text-blue-100">
-                                  {content.file?.name || 'Presentation'}
+                                  {content.rawContent?.file?.name || 'Presentation'}
                                 </div>
                                 <div className="text-sm text-blue-600 dark:text-blue-300">
-                                  {content.file?.size ? `${(content.file.size / 1024 / 1024).toFixed(2)} MB` : 'Presentation file'}
+                                  {content.rawContent?.file?.size ? `${(content.rawContent.file.size / 1024 / 1024).toFixed(2)} MB` : 'Presentation file'}
                                 </div>
                                 <div className="text-xs text-gray-500 mt-1">
-                                  URL: {content.presentation_url || content.file?.path}
+                                  URL: {content.rawContent?.presentation_url || content.rawContent?.file?.path}
                                 </div>
                               </div>
                             <a
-                              href={content.presentation_url || content.file?.path}
+                              href={content.rawContent?.presentation_url || content.rawContent?.file?.path}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
@@ -523,7 +523,7 @@ const TemplateBasedLessonView = () => {
                         </div>
                       )}
                       
-                      {formatKey === 'mindmap' && (content?.mindmap_url || content?.file) && (
+                      {formatKey === 'mindmap' && (content?.rawContent?.mindmap_url || content?.rawContent?.file) && (
                         <div className="mb-4">
                           <h4 className="text-lg font-semibold mb-2">Mind Map Image:</h4>
                           <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
@@ -533,15 +533,15 @@ const TemplateBasedLessonView = () => {
                               </div>
                               <div className="flex-1">
                                 <div className="font-medium text-green-900 dark:text-green-100">
-                                  {content.file?.name || 'Mind Map'}
+                                  {content.rawContent?.file?.name || 'Mind Map'}
                                 </div>
                                 <div className="text-sm text-green-600 dark:text-green-300">
-                                  {content.file?.size ? `${(content.file.size / 1024 / 1024).toFixed(2)} MB` : 'Mind map image'}
+                                  {content.rawContent?.file?.size ? `${(content.rawContent.file.size / 1024 / 1024).toFixed(2)} MB` : 'Mind map image'}
                                 </div>
                               </div>
                             </div>
                         <img
-                          src={content.mindmap_url || content.file?.path}
+                          src={content.rawContent?.mindmap_url || content.rawContent?.file?.path}
                           alt="Mind Map"
                           className="w-full max-w-2xl mx-auto rounded-lg shadow-lg"
                           style={{ maxHeight: '400px', objectFit: 'contain' }}
@@ -575,11 +575,11 @@ const TemplateBasedLessonView = () => {
                       )}
                       
                       {/* Images Content */}
-                      {formatKey === 'images' && content?.files && content.files.length > 0 && (
+                      {formatKey === 'images' && content?.rawContent?.files && content.rawContent.files.length > 0 && (
                         <div className="mb-4">
                           <h4 className="text-lg font-semibold mb-2">Images:</h4>
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {content.files.map((file, index) => (
+                            {content.rawContent.files.map((file, index) => (
                               <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
                         <img
                           src={file.path}
