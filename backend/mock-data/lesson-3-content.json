@@ -49,6 +49,13 @@
       "title": "React Components Tutorial",
       "duration": "15:30",
       "type": "video"
+    },
+    "code": {
+      "method": "manual",
+      "code": "import React from \"react\";\n\nfunction Greeting(props) {\n  return (\n    <div>\n      <h1>שלום {props.name}!</h1>\n      <p>ברוך הבא לאפליקציה שלנו 🎉</p>\n    </div>\n  );\n}\n\nexport default Greeting;",
+      "language": "javascript",
+      "title": "React Component Example",
+      "type": "code"
     }
   },
   "template": {

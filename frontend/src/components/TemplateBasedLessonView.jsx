@@ -577,12 +577,26 @@ const TemplateBasedLessonView = () => {
                       )}
                       
                       {/* Code Content */}
-                      {formatKey === 'code' && content?.code && (
+                      {formatKey === 'code' && content?.rawContent?.code && (
                         <div className="mb-4">
                           <h4 className="text-lg font-semibold mb-2">Code Content:</h4>
                           <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
-                            <pre className="text-green-400 text-sm">
-                              <code>{content.code}</code>
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-xs text-gray-400">
+                                {content.rawContent?.language || 'javascript'}
+                              </span>
+                              <button
+                                onClick={() => {
+                                  navigator.clipboard.writeText(content.rawContent?.code || '');
+                                  alert('Code copied to clipboard!');
+                                }}
+                                className="text-xs text-gray-400 hover:text-white transition-colors"
+                              >
+                                📋 Copy
+                              </button>
+                            </div>
+                            <pre className="text-green-400 text-sm leading-relaxed whitespace-pre-wrap">
+                              <code>{content.rawContent?.code}</code>
                             </pre>
                           </div>
                         </div>
