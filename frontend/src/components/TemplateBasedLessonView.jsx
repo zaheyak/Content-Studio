@@ -257,9 +257,9 @@ const TemplateBasedLessonView = () => {
       }
     } else if (formatKey === 'text' || formatKey === 'explanation') {
       if (content.generated) {
-        displayContent = content.generated;
+        displayContent = content.generated.replace(/\\n/g, '\n');
       } else if (content.content) {
-        displayContent = content.content;
+        displayContent = content.content.replace(/\\n/g, '\n');
       } else {
         displayContent = "Text content available";
         hasContent = false;
@@ -292,7 +292,7 @@ const TemplateBasedLessonView = () => {
       }
     } else if (formatKey === 'code') {
       if (content.code) {
-        displayContent = `Code (${content.language || 'Unknown language'}):\n\n${content.code}`;
+        displayContent = `Code (${content.language || 'Unknown language'}):\n\n${content.code.replace(/\\n/g, '\n')}`;
       } else {
         displayContent = "Code content available";
         hasContent = false;
@@ -320,7 +320,9 @@ const TemplateBasedLessonView = () => {
       title: content.title || content.type || formatName,
       content: displayContent,
       hasContent: hasContent,
-      rawContent: content
+      rawContent: content,
+      // For images, also include the files directly
+      files: content.files
     };
   };
 
@@ -570,7 +572,7 @@ const TemplateBasedLessonView = () => {
                           <h4 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Text Content:</h4>
                           <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
                             <div className="text-gray-700 dark:text-gray-200 leading-relaxed whitespace-pre-wrap">
-                              {content.generated || content.content || 'No text content available'}
+                              {(content.generated || content.content || 'No text content available').replace(/\\n/g, '\n')}
                             </div>
                           </div>
                         </div>
@@ -603,11 +605,11 @@ const TemplateBasedLessonView = () => {
                       )}
                       
                       {/* Images Content */}
-                      {formatKey === 'images' && content?.rawContent?.files && content.rawContent.files.length > 0 && (
+                      {formatKey === 'images' && (content?.files || content?.rawContent?.files) && (content.files?.length > 0 || content.rawContent?.files?.length > 0) && (
                         <div className="mb-4">
                           <h4 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Images:</h4>
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {content.rawContent.files.map((file, index) => (
+                            {(content.files || content.rawContent?.files || []).map((file, index) => (
                               <div key={index} className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
                         <img
                           src={file.path}
