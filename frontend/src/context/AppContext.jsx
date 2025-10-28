@@ -16,7 +16,11 @@ export const AppProvider = ({ children }) => {
   const [lessons, setLessons] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [theme, setTheme] = useState('day-mode')
+  const [theme, setTheme] = useState(() => {
+    // Load theme from localStorage or default to day-mode
+    const savedTheme = localStorage.getItem('theme')
+    return savedTheme || 'day-mode'
+  })
 
   // Modal states
   const [showNewLessonModal, setShowNewLessonModal] = useState(false)
@@ -30,7 +34,13 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     loadData()
     document.body.className = theme
-    document.documentElement.className = theme
+    
+    // Apply dark class to html element for Tailwind CSS
+    if (theme === 'night-mode') {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
   }, [theme])
 
   // Data loading function
@@ -57,7 +67,18 @@ export const AppProvider = ({ children }) => {
 
   // Theme management
   const toggleTheme = () => {
-    setTheme(theme === 'day-mode' ? 'night-mode' : 'day-mode')
+    const newTheme = theme === 'day-mode' ? 'night-mode' : 'day-mode'
+    setTheme(newTheme)
+    
+    // Save to localStorage
+    localStorage.setItem('theme', newTheme)
+    
+    // Apply dark class to html element for Tailwind CSS
+    if (newTheme === 'night-mode') {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
   }
 
   // Lesson content management - now handled by backend
