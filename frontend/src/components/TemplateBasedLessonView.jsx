@@ -420,8 +420,8 @@ const TemplateBasedLessonView = () => {
                       {console.log('DEBUG - Video check:', { formatKey, hasVideoId: !!content?.videoId, content, rawContent: content?.rawContent })}
                       {formatKey === 'video' && content?.rawContent?.videoId && (
                         <div className="mb-4">
-                          <h4 className="text-lg font-semibold mb-2">YouTube Video:</h4>
-                          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mb-4">
+                          <h4 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">YouTube Video:</h4>
+                          <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 rounded-lg p-4 mb-4">
                             <div className="flex items-center gap-3 mb-3">
                               <div className="w-12 h-12 bg-red-100 dark:bg-red-800 rounded-lg flex items-center justify-center">
                                 <span className="text-2xl">🎥</span>
@@ -469,8 +469,8 @@ const TemplateBasedLessonView = () => {
                       
                       {formatKey === 'video' && content?.files && content.files.length > 0 && (
                         <div className="mb-4">
-                          <h4 className="text-lg font-semibold mb-2">Uploaded Video:</h4>
-                          <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                          <h4 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Uploaded Video:</h4>
+                          <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
                             <video
                               width="100%"
                               height="315"
@@ -483,7 +483,7 @@ const TemplateBasedLessonView = () => {
                               />
                               Your browser does not support the video tag.
                             </video>
-                            <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                            <div className="mt-2 text-sm text-gray-600 dark:text-gray-300">
                               {content.files[0].name} ({(content.files[0].size / 1024 / 1024).toFixed(2)} MB)
                             </div>
                           </div>
@@ -493,8 +493,8 @@ const TemplateBasedLessonView = () => {
                       {console.log('DEBUG - Presentation check:', { formatKey, hasPresentationUrl: !!content?.rawContent?.presentation_url, hasFile: !!content?.rawContent?.file, content })}
                       {formatKey === 'presentation' && (content?.rawContent?.presentation_url || content?.rawContent?.file) && (
                         <div className="mb-4">
-                          <h4 className="text-lg font-semibold mb-2">Presentation File:</h4>
-                          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                          <h4 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Presentation File:</h4>
+                          <div className="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-4">
                             <div className="flex items-center gap-3">
                               <div className="w-12 h-12 bg-blue-100 dark:bg-blue-800 rounded-lg flex items-center justify-center">
                                 <span className="text-2xl">📊</span>
@@ -506,7 +506,7 @@ const TemplateBasedLessonView = () => {
                                 <div className="text-sm text-blue-600 dark:text-blue-300">
                                   {content.rawContent?.file?.size ? `${(content.rawContent.file.size / 1024 / 1024).toFixed(2)} MB` : 'Presentation file'}
                                 </div>
-                                <div className="text-xs text-gray-500 mt-1">
+                                <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                   URL: {content.rawContent?.presentation_url || content.rawContent?.file?.path}
                                 </div>
                               </div>
@@ -539,8 +539,8 @@ const TemplateBasedLessonView = () => {
                       {console.log('DEBUG - Mindmap check:', { formatKey, hasMindmapUrl: !!content?.rawContent?.mindmap_url, hasFile: !!content?.rawContent?.file, content: content?.rawContent })}
                       {formatKey === 'mindmap' && (content?.rawContent?.mindmap_url || content?.rawContent?.file) && (
                         <div className="mb-4">
-                          <h4 className="text-lg font-semibold mb-2">Mind Map Image:</h4>
-                          <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                          <h4 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Mind Map Image:</h4>
+                          <div className="bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 rounded-lg p-4">
                             <div className="flex items-center gap-3 mb-3">
                               <div className="w-12 h-12 bg-green-100 dark:bg-green-800 rounded-lg flex items-center justify-center">
                                 <span className="text-2xl">🧠</span>
@@ -567,9 +567,9 @@ const TemplateBasedLessonView = () => {
                       {/* Text Content */}
                       {(formatKey === 'text' || formatKey === 'explanation') && content && (
                         <div className="mb-4">
-                          <h4 className="text-lg font-semibold mb-2">Text Content:</h4>
-                          <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                            <div className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
+                          <h4 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Text Content:</h4>
+                          <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
+                            <div className="text-gray-700 dark:text-gray-200 leading-relaxed whitespace-pre-wrap">
                               {content.generated || content.content || 'No text content available'}
                             </div>
                           </div>
@@ -579,10 +579,10 @@ const TemplateBasedLessonView = () => {
                       {/* Code Content */}
                       {formatKey === 'code' && content?.rawContent?.code && (
                         <div className="mb-4">
-                          <h4 className="text-lg font-semibold mb-2">Code Content:</h4>
-                          <div className="bg-gray-900 rounded-lg p-4 overflow-x-auto">
+                          <h4 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Code Content:</h4>
+                          <div className="bg-gray-900 dark:bg-gray-950 rounded-lg p-4 overflow-x-auto border border-gray-700 dark:border-gray-600">
                             <div className="flex items-center justify-between mb-2">
-                              <span className="text-xs text-gray-400">
+                              <span className="text-xs text-gray-400 dark:text-gray-500">
                                 {content.rawContent?.language || 'javascript'}
                               </span>
                               <button
@@ -590,12 +590,12 @@ const TemplateBasedLessonView = () => {
                                   navigator.clipboard.writeText(content.rawContent?.code || '');
                                   alert('Code copied to clipboard!');
                                 }}
-                                className="text-xs text-gray-400 hover:text-white transition-colors"
+                                className="text-xs text-gray-400 hover:text-white dark:text-gray-500 dark:hover:text-gray-300 transition-colors"
                               >
                                 📋 Copy
                               </button>
                             </div>
-                            <pre className="text-green-400 text-sm leading-relaxed whitespace-pre-wrap">
+                            <pre className="text-green-400 dark:text-green-300 text-sm leading-relaxed whitespace-pre-wrap">
                               <code>{content.rawContent?.code}</code>
                             </pre>
                           </div>
@@ -605,16 +605,16 @@ const TemplateBasedLessonView = () => {
                       {/* Images Content */}
                       {formatKey === 'images' && content?.rawContent?.files && content.rawContent.files.length > 0 && (
                         <div className="mb-4">
-                          <h4 className="text-lg font-semibold mb-2">Images:</h4>
+                          <h4 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Images:</h4>
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                             {content.rawContent.files.map((file, index) => (
-                              <div key={index} className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+                              <div key={index} className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
                         <img
                           src={file.path}
                           alt={file.name}
                           className="w-full h-48 object-cover rounded-lg mb-2"
                         />
-                                <div className="text-sm text-gray-600 dark:text-gray-400">
+                                <div className="text-sm text-gray-600 dark:text-gray-300">
                                   {file.name}
                                 </div>
                               </div>
@@ -626,7 +626,7 @@ const TemplateBasedLessonView = () => {
                       
                       {/* Only show text content if it's a text format and no other content is displayed */}
                       {(formatKey === 'text' || formatKey === 'explanation') && !content?.presentation_url && !content?.mindmap_url && !content?.files && !content?.code && !content?.videoId && (
-                        <div className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
+                        <div className="text-gray-700 dark:text-gray-200 leading-relaxed whitespace-pre-wrap">
                           {content.content}
                         </div>
                       )}
