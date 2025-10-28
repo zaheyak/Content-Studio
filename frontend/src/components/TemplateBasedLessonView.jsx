@@ -434,16 +434,17 @@ const TemplateBasedLessonView = () => {
                                 </div>
                               </div>
                             </div>
-                            <iframe
-                              width="100%"
-                              height="315"
-                              src={content.embedUrl || `https://www.youtube.com/embed/${content.videoId}`}
-                              title="YouTube video player"
-                              frameBorder="0"
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                              allowFullScreen
-                              className="rounded-lg shadow-lg"
-                            ></iframe>
+                            <div className="videoWrapper">
+                              <iframe
+                                width="100%"
+                                height="400"
+                                src={content.embedUrl || `https://www.youtube.com/embed/${content.videoId}`}
+                                title={content.title || "YouTube Video"}
+                                frameBorder="0"
+                                allowFullScreen
+                                className="rounded-lg shadow-lg"
+                              ></iframe>
+                            </div>
                             <div className="mt-3 flex gap-2">
                               <a
                                 href={content.url || `https://www.youtube.com/watch?v=${content.videoId}`}
@@ -615,16 +616,17 @@ const TemplateBasedLessonView = () => {
                                 </div>
                               </div>
                             </div>
-                            <iframe
-                              width="100%"
-                              height="315"
-                              src={content.embedUrl || `https://www.youtube.com/embed/${content.videoId}`}
-                              title="YouTube video player"
-                              frameBorder="0"
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                              allowFullScreen
-                              className="rounded-lg shadow-lg"
-                            ></iframe>
+                            <div className="videoWrapper">
+                              <iframe
+                                width="100%"
+                                height="400"
+                                src={content.embedUrl || `https://www.youtube.com/embed/${content.videoId}`}
+                                title={content.title || "YouTube Video"}
+                                frameBorder="0"
+                                allowFullScreen
+                                className="rounded-lg shadow-lg"
+                              ></iframe>
+                            </div>
                             <div className="mt-3 flex gap-2">
                               <a
                                 href={content.url || `https://www.youtube.com/watch?v=${content.videoId}`}
