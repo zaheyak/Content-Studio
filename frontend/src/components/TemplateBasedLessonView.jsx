@@ -523,6 +523,7 @@ const TemplateBasedLessonView = () => {
                         </div>
                       )}
                       
+                      {console.log('DEBUG - Mindmap check:', { formatKey, hasMindmapUrl: !!content?.rawContent?.mindmap_url, hasFile: !!content?.rawContent?.file, content: content?.rawContent })}
                       {formatKey === 'mindmap' && (content?.rawContent?.mindmap_url || content?.rawContent?.file) && (
                         <div className="mb-4">
                           <h4 className="text-lg font-semibold mb-2">Mind Map Image:</h4>
