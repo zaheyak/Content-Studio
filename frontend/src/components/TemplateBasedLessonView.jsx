@@ -623,13 +623,6 @@ const TemplateBasedLessonView = () => {
                         </div>
                       )}
                       
-                      
-                      {/* Only show text content if it's a text format and no other content is displayed */}
-                      {(formatKey === 'text' || formatKey === 'explanation') && !content?.presentation_url && !content?.mindmap_url && !content?.files && !content?.code && !content?.videoId && (
-                        <div className="text-gray-700 dark:text-gray-200 leading-relaxed whitespace-pre-wrap">
-                          {content.content}
-                        </div>
-                      )}
                     </div>
 
                     {/* Action Button */}
