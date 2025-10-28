@@ -390,7 +390,19 @@ const TemplateBasedLessonView = () => {
           ) : (
             template.formats.map((format, index) => {
             const content = getContentForFormat(format.name);
-            const formatKey = format.name.toLowerCase().replace(' ', '');
+            // Use the same formatKey logic as in getContentForFormat
+            const formatMapping = {
+              'video': 'video',
+              'explanation': 'text',
+              'text': 'text',
+              'code': 'code',
+              'mind map': 'mindmap',
+              'mindmap': 'mindmap',
+              'image': 'images',
+              'images': 'images',
+              'presentation': 'presentation'
+            };
+            const formatKey = formatMapping[format.name.toLowerCase()] || format.name.toLowerCase().replace(' ', '');
             const displayContent = content.content || '';
             return (
               <div
