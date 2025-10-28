@@ -389,6 +389,7 @@ const TemplateBasedLessonView = () => {
             template.formats.map((format, index) => {
             const content = getContentForFormat(format.name);
             const formatKey = format.name.toLowerCase().replace(' ', '');
+            const displayContent = content.content || '';
             return (
               <div
                 key={index}
