@@ -72,7 +72,7 @@ router.get('/lesson/:lessonId', (req, res) => {
           content.mindmap_url = `${baseUrl}${content.mindmap_url}`;
         }
         
-        // Fix video files
+        // Fix video and image files
         if (content.files && Array.isArray(content.files)) {
           content.files = content.files.map(file => ({
             ...file,
