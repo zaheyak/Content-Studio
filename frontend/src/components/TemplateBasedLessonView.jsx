@@ -434,17 +434,14 @@ const TemplateBasedLessonView = () => {
                                 </div>
                               </div>
                             </div>
-                            <div className="videoWrapper">
-                              <iframe
-                                width="100%"
-                                height="400"
-                                src={content.embedUrl || `https://www.youtube.com/embed/${content.videoId}`}
-                                title={content.title || "YouTube Video"}
-                                frameBorder="0"
-                                allowFullScreen
-                                className="rounded-lg shadow-lg"
-                              ></iframe>
-                            </div>
+                            <iframe
+                              width="100%"
+                              height="400"
+                              src={content.embedUrl || `https://www.youtube.com/embed/${content.videoId}`}
+                              title={content.title || "YouTube Video"}
+                              frameBorder="0"
+                              allowFullScreen
+                            ></iframe>
                             <div className="mt-3 flex gap-2">
                               <a
                                 href={content.url || `https://www.youtube.com/watch?v=${content.videoId}`}
