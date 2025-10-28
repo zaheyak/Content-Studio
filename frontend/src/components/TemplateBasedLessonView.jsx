@@ -605,11 +605,14 @@ const TemplateBasedLessonView = () => {
                       )}
                       
                       {/* Images Content */}
+                      {console.log('DEBUG - Images check:', { formatKey, hasFiles: !!content?.files, hasRawContentFiles: !!content?.rawContent?.files, content })}
                       {formatKey === 'images' && (content?.files || content?.rawContent?.files) && (content.files?.length > 0 || content.rawContent?.files?.length > 0) && (
                         <div className="mb-4">
                           <h4 className="text-lg font-semibold mb-2 text-gray-900 dark:text-white">Images:</h4>
                           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {(content.files || content.rawContent?.files || []).map((file, index) => (
+                            {(content.files || content.rawContent?.files || []).map((file, index) => {
+                              console.log('Image file:', file);
+                              return (
                               <div key={index} className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
                         <img
                           src={file.path}
@@ -620,7 +623,8 @@ const TemplateBasedLessonView = () => {
                                   {file.name}
                                 </div>
                               </div>
-                            ))}
+                              );
+                            })}
                           </div>
                         </div>
                       )}
