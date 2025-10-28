@@ -417,6 +417,7 @@ const TemplateBasedLessonView = () => {
                     
                     {/* Content Display */}
                     <div className="prose prose-lg dark:prose-invert max-w-none">
+                      {console.log('DEBUG - Video check:', { formatKey, hasVideoId: !!content?.videoId, content, rawContent: content?.rawContent })}
                       {formatKey === 'video' && content?.videoId && (
                         <div className="mb-4">
                           <h4 className="text-lg font-semibold mb-2">YouTube Video:</h4>
@@ -489,6 +490,7 @@ const TemplateBasedLessonView = () => {
                         </div>
                       )}
                       
+                      {console.log('DEBUG - Presentation check:', { formatKey, hasPresentationUrl: !!content?.presentation_url, hasFile: !!content?.file, content })}
                       {formatKey === 'presentation' && (content?.presentation_url || content?.file) && (
                         <div className="mb-4">
                           <h4 className="text-lg font-semibold mb-2">Presentation File:</h4>
