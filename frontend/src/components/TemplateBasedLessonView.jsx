@@ -510,14 +510,27 @@ const TemplateBasedLessonView = () => {
                                   URL: {content.rawContent?.presentation_url || content.rawContent?.file?.path}
                                 </div>
                               </div>
-                            <a
-                              href={content.rawContent?.presentation_url || content.rawContent?.file?.path}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
-                            >
-                              View/Download
-                            </a>
+                            <div className="flex gap-2">
+                              <a
+                                href={content.rawContent?.presentation_url || content.rawContent?.file?.path}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
+                              >
+                                📥 Download
+                              </a>
+                              <button
+                                onClick={() => {
+                                  const url = content.rawContent?.presentation_url || content.rawContent?.file?.path;
+                                  // Try to open with PowerPoint Online
+                                  const onlineUrl = `https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(url)}`;
+                                  window.open(onlineUrl, '_blank');
+                                }}
+                                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm font-medium transition-colors"
+                              >
+                                👁️ View Online
+                              </button>
+                            </div>
                             </div>
                           </div>
                         </div>
