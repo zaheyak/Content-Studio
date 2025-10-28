@@ -150,7 +150,7 @@ const TemplateBasedLessonView = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-emerald-900 dark:via-green-800 dark:to-teal-900 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 animate-spin">
             <span className="text-2xl">⏳</span>
@@ -164,7 +164,7 @@ const TemplateBasedLessonView = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-emerald-900 dark:via-green-800 dark:to-teal-900 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 bg-gradient-to-r from-red-500 to-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-2xl">❌</span>
@@ -178,7 +178,7 @@ const TemplateBasedLessonView = () => {
 
   if (!template || !lessonContent) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-emerald-900 dark:via-green-800 dark:to-teal-900 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
             <span className="text-2xl">📚</span>
@@ -325,7 +325,7 @@ const TemplateBasedLessonView = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-emerald-900 dark:via-green-800 dark:to-teal-900">
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Header */}
         <div className="text-center mb-8">
@@ -351,7 +351,7 @@ const TemplateBasedLessonView = () => {
         </div>
 
         {/* Template Structure Indicator */}
-        <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-700/50 p-6 mb-8 shadow-xl">
+        <div className="bg-white/90 dark:bg-emerald-900/90 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-emerald-700/50 p-6 mb-8 shadow-xl">
           <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
             <span className="w-2 h-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"></span>
             Template Structure: {template.name}
@@ -393,7 +393,7 @@ const TemplateBasedLessonView = () => {
             return (
               <div
                 key={index}
-                className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-gray-700/50 p-8 shadow-xl hover:shadow-2xl transition-all duration-300"
+                className="bg-white/90 dark:bg-emerald-900/90 backdrop-blur-sm rounded-2xl border border-gray-200/50 dark:border-emerald-700/50 p-8 shadow-xl hover:shadow-2xl transition-all duration-300"
               >
                 <div className="flex items-start gap-6">
                   {/* Step Number */}
