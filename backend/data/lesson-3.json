@@ -22,12 +22,12 @@
     "mindmap": {
       "method": "upload",
       "file": {
-        "path": "/uploads/lessons/3/mind.webp",
-        "name": "mind.webp",
+        "path": "/uploads/lessons/3/mind.png",
+        "name": "mind.png",
         "size": 109782
       },
       "type": "mindmap",
-      "mindmap_url": "/uploads/lessons/3/mind.webp"
+      "mindmap_url": "/uploads/lessons/3/mind.png"
     },
     "images": {
       "method": "upload",
